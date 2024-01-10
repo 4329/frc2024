@@ -21,10 +21,7 @@ public class CenterOnTargetCommand extends Command {
     private final PIDController rotationPID;
     private CommandXboxController xboxController;
     private Timer timer = new Timer();
-    GenericEntry swervepwooo = Shuffleboard.getTab("ikfsdal").add("swervepwooo", 0.000005).getEntry();
-    GenericEntry swervetwooo = Shuffleboard.getTab("ikfsdal").add("johnwuzhere", 0).getEntry();
     GenericEntry aprilTagOrLimLigh;
-    GenericEntry pointset;
 
 
     private boolean usingAprilTag;
@@ -39,8 +36,7 @@ public class CenterOnTargetCommand extends Command {
         forwardPID = new PIDController(0, 0, 0);
         rotationPID = new PIDController(0.00002, 0, 0);
         addRequirements(limlighSubsystem, m_drivetrain);
-        aprilTagOrLimLigh = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
-        pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
+        aprilTagOrLimLigh = Shuffleboard.getTab("RobotData").add("painhahah", false).getEntry();
     }
 
     @Override
@@ -89,9 +85,9 @@ public class CenterOnTargetCommand extends Command {
             forwardPID.setSetpoint(0);
 
 
-            rotationPID.setP(swervepwooo.getDouble(0));
+            rotationPID.setP(0.000005);
 
-            rotationPID.setTolerance(swervetwooo.getDouble(0));
+            rotationPID.setTolerance(0);
 
             rotationPID.setSetpoint(0);
         }
@@ -152,17 +148,10 @@ public class CenterOnTargetCommand extends Command {
         if ((!centerPID.atSetpoint() || !rotationPID.atSetpoint() || !forwardPID.atSetpoint())) {
 
             drivetrain.unlock();
-
             drivetrain.drive(forwardCalc, centerCalc, rotationCalc, false);
-
-            pointset.setBoolean(false);
-
         } else {
 
             drivetrain.lock();
-
-            pointset.setBoolean(true);
-
         }
 
     }

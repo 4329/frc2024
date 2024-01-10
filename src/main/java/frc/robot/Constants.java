@@ -79,7 +79,7 @@ public final class Constants {
         new Translation2d(-kWheelBaseLength / 2, -kWheelBaseWidth / 2));
 
     public static final double kMaxAcceleration = 3.0;
-    public static final double kMaxSpeedMetersPerSecond = 3.25;
+    public static final double kMaxSpeedMetersPerSecond = 4;
     public static final double kMaxAngularSpeed = Math.PI;
     public static final double kMaxAngularAccel = Math.PI;
 
@@ -121,7 +121,7 @@ public final class Constants {
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
-    public static final double[] kTurnPID = { 1.50, 0, 0 }; // should show some minor oscillation when no weight is
+    public static final double[] kTurnPID = { 1.20, 0, 0 }; // should show some minor oscillation when no weight is
                                                              // loaded on the modules
   }
 
