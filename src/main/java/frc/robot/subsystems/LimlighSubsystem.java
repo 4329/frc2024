@@ -17,9 +17,6 @@ public class LimlighSubsystem extends SubsystemBase {
 
     NetworkTable limligh;
     Drivetrain drivetrain;
-    GenericEntry pose;
-    GenericEntry asdfg;
-    GenericEntry jflaiss;
     double[] hrm;
 
     public enum Alliance {
@@ -38,8 +35,6 @@ public class LimlighSubsystem extends SubsystemBase {
     public LimlighSubsystem(Drivetrain drivetrain) {
 
         limligh = NetworkTableInstance.getDefault().getTable("limelight-limligh");
-        pose = Shuffleboard.getTab("ikfsdal").add("pose?", "yes").getEntry();
-        asdfg = Shuffleboard.getTab("ikfsdal").add("targetZ?", 0).getEntry();
         this.drivetrain = drivetrain;
 
         if (NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false)) {
@@ -49,7 +44,6 @@ public class LimlighSubsystem extends SubsystemBase {
 
             currentAlliance = Alliance.BLUE;
         }
-        // jflaiss = Shuffleboard.getTab("ikfsdal").add("pipeline", 0).getEntry();
     }
 
     public boolean targetVisible() {
@@ -139,10 +133,6 @@ public class LimlighSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        // //getPose();
-        // pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
-        // asdfg.setDouble(getCalculatedPoseZ());
-        // // switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
     }
 
 }
