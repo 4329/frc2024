@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,6 +25,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.utilities.FieldRelativeAccel;
 import frc.robot.utilities.FieldRelativeSpeed;
+import frc.robot.utilities.HoorayConfig;
 
 /**
  * Implements a swerve Drivetrain Subsystem for the Robot
@@ -31,6 +33,8 @@ import frc.robot.utilities.FieldRelativeSpeed;
 public class Drivetrain extends SubsystemBase {
 
   public boolean isLocked;
+
+  private final SwerveDrivePoseEstimator estimator;
 
   // Create the PIDController for the Keep Angle PID
   private final PIDController m_keepAnglePID = new PIDController(DriveConstants.kKeepAnglePID[0],
@@ -98,6 +102,12 @@ public class Drivetrain extends SubsystemBase {
 
     pitchOffset = ahrs.getPitch();
     rollOffset = ahrs.getRoll();
+
+    estimator = new SwerveDrivePoseEstimator(
+        Constants.DriveConstants.kDriveKinematics,
+        getGyro(),
+        getModulePositions(),
+        getPose());
   }
 
 

@@ -53,8 +53,7 @@ public final class Constants {
     public static final int kBackRightTurningEncoderPort = (HoorayConfig.gimmeConfig().getBackRightTurningEncoderPort());
 
     public static final double kFrontLeftOffset = HoorayConfig.gimmeConfig().getFrontLeftOffset(); // Encoder Offset in Radians
-    public static final double kFrontRightOffset = HoorayConfig.gimmeConfig().getFrontRightOffset(); // Encoder Offset in
-                                                                                                // Radians
+    public static final double kFrontRightOffset = HoorayConfig.gimmeConfig().getFrontRightOffset(); // Encoder Offset in Radians
     public static final double kBackLeftOffset = HoorayConfig.gimmeConfig().getBackLeftOffset(); // Encoder Offset in Radians
     public static final double kBackRightOffset = HoorayConfig.gimmeConfig().getBackRightOffset(); // Encoder Offset in Radians
 
@@ -66,11 +65,11 @@ public final class Constants {
     // NOTE: 2910 Swerve the wheels are not directly under the center of rotation
     // (Take into consideration when measuring)
     // Center distance in meters between right and left wheels on robot
-    public static final double kWheelBaseWidth = 0.5207;
+    public static final double kWheelBaseWidth = 0.5461;
     // Center distance in meters between front and back wheels on robot
-    public static final double kWheelBaseLength = 0.644525;
+    public static final double kWheelBaseLength = 0.675;
 
-    // Because the swerve modules poisition does not change, define a constant
+    // Because the swerve modules position does not change, define a constant
     // SwerveDriveKinematics for use throughout the code
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBaseLength / 2, kWheelBaseWidth / 2),
@@ -88,20 +87,16 @@ public final class Constants {
 
     // Minimum allowable rotation command (in radians/s) assuming user input is
     // squared using quadraticTransform, this value is always positive and should be
-    // compared agaisnt the absolute value of the drive command
+    // compared against the absolute value of the drive command
     public static final double kMinRotationCommand = DriveConstants.kMaxAngularSpeed
         * Math.pow(DriveConstants.kInnerDeadband, 2);
-    // Minimum allowable tranlsation command (in m/s) assuming user input is squared
+    // Minimum allowable translation command (in m/s) assuming user input is squared
     // using quadraticTransform, this value is always positive and should be
-    // compared agaisnt the absolute value of the drive command
+    // compared against the absolute value of the drive command
     public static final double kMinTranslationCommand = DriveConstants.kMaxSpeedMetersPerSecond
         * Math.pow(DriveConstants.kInnerDeadband, 2);
 
     public static final double[] kKeepAnglePID = { 0.550, 0, 0 };
-
-    public static final double maxRampRoll = 15;
-    public static final double maxRampDeviation = 0.1;
-    public static final double maxRampSpeed = 0.5;
   }
 
   /**
@@ -117,7 +112,7 @@ public final class Constants {
     public static final double kVelocityFactor = (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
 
     // NOTE: You shoulds ALWAYS define a reasonable current limit when using
-    // brushless motors due to the extremely high stall current avaialble
+    // brushless motors due to the extremely high stall current available
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
@@ -158,33 +153,7 @@ public final class Constants {
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands
   }
 
-  public static final class ColorConstants {
-
-    public static final double confidenceLevel = 1;
-  }
-
-  public static final class ArmExtendConstants {
-
-    public static final double armExtendSpeed = 0.4;
-  }
-
-  public static final class ArmRotationConstants {
-
-    public static final double armRotateSpeed = 0.25;
-  }
-
-  public static final class WristConstants {
-    
-    public static final double wristRotationSpeed = 0.2;
-  }
-
   public static final class CANIDConstants {
 
-    public static final int clawRight = 13;
-    public static final int clawLeft = 14;
-    public static final int armRotation1 = 15;
-    public static final int armRotation2 = 16;
-    public static final int armExtension = 20;
-    public static final int wristRotate = 21;
   }
 }

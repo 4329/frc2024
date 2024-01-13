@@ -7,36 +7,34 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.subsystems.LimlighSubsystem;
+import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
 public class CenterOnTargetCommand extends Command {
 
-    private final LimlighSubsystem limlighSubsystem;
+    private final LimlihSubsystem limlihSubsystem;
     private final Drivetrain drivetrain;
     private final double targetId;
-    private final PIDController centerPID;
-    private final PIDController forwardPID;
+
     private final PIDController rotationPID;
     private CommandXboxController xboxController;
     private Timer timer = new Timer();
-    GenericEntry aprilTagOrLimLigh;
+    // GenericEntry aprilTag;
 
+    // private boolean usingAprilTag;
 
-    private boolean usingAprilTag;
+    public CenterOnTargetCommand(LimlihSubsystem limlihSubsystem, Drivetrain m_drivetrain, double targetId,
+            CommandXboxController xboxController) {
 
-    public CenterOnTargetCommand(LimlighSubsystem limlighSubsystem, Drivetrain m_drivetrain, double targetId, CommandXboxController xboxController) {
-
-        this.limlighSubsystem = limlighSubsystem;
+        this.limlihSubsystem = limlihSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
         this.xboxController = xboxController;
-        centerPID = new PIDController(0, 0, 0);
-        forwardPID = new PIDController(0, 0, 0);
+
         rotationPID = new PIDController(0.00002, 0, 0);
-        addRequirements(limlighSubsystem, m_drivetrain);
-        aprilTagOrLimLigh = Shuffleboard.getTab("RobotData").add("painhahah", false).getEntry();
+        addRequirements(limlihSubsystem, m_drivetrain);
+        // aprilTag = Shuffleboard.getTab("RobotData").add("painhahah", false).getEntry();
     }
 
     @Override
@@ -46,52 +44,35 @@ public class CenterOnTargetCommand extends Command {
         timer.reset();
         timer.start();
 
-        if (limlighSubsystem.getPipeline() == 0) {
+        // if (limlihSubsystem.getPipeline() == 0) {
 
-            usingAprilTag = true;
+        // usingAprilTag = true;
 
-            centerPID.setP(0.075);
+        rotationPID.setP(0.05);
+        rotationPID.setTolerance(0);
+        rotationPID.setSetpoint(0);
+        // } else {
 
-            centerPID.setTolerance(7);
+        // usingAprilTag = false;
 
-            centerPID.setSetpoint(-4);
+        // centerPID.setP(0);
 
-            forwardPID.setP(1.5);
+        // centerPID.setTolerance(10000);
 
-            forwardPID.setTolerance(0.05);
+        // centerPID.setSetpoint(0);
 
-            forwardPID.setSetpoint(6.3);
+        // forwardPID.setP(0);
 
-            rotationPID.setP(0.03);
+        // forwardPID.setTolerance(10000);
 
-            rotationPID.setTolerance(1.5);
+        // forwardPID.setSetpoint(0);
 
-            rotationPID.setSetpoint(5);
+        // rotationPID.setP(0.000005);
 
-        } else {
+        // rotationPID.setTolerance(0);
 
-            usingAprilTag = false;
-
-            centerPID.setP(0);
-
-            centerPID.setTolerance(10000);
-
-            centerPID.setSetpoint(0);
-
-            forwardPID.setP(0);
-
-            forwardPID.setTolerance(10000);
-
-            forwardPID.setSetpoint(0);
-
-
-            rotationPID.setP(0.000005);
-
-            rotationPID.setTolerance(0);
-
-            rotationPID.setSetpoint(0);
-        }
-
+        // rotationPID.setSetpoint(0);
+        // }
 
     }
 
@@ -99,82 +80,90 @@ public class CenterOnTargetCommand extends Command {
 
     public void execute() {
 
-        double centerCalc = 0;
-        double forwardCalc = 0;
+        // double centerCalc = 0;
+        // double forwardCalc = 0;
         double rotationCalc = 0;
-        if ((limlighSubsystem.getTargetId() == targetId && usingAprilTag)) {
+        if ((limlihSubsystem.getTargetId() == targetId)) {
 
-            centerCalc = centerPID.calculate(limlighSubsystem.getTargetx());
+            // aprilTag.setBoolean(true);
 
-            forwardCalc = forwardPID.calculate(limlighSubsystem.getCalculatedPoseZ());
+            // centerCalc = centerPID.calculate(limlihSubsystem.getTargetx());
+            // forwardCalc = forwardPID.calculate(limlihSubsystem.getCalculatedPoseZ());
+            rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX());
 
-            rotationCalc = rotationPID.calculate(limlighSubsystem.getCalculatedPoseRot());
-
-            aprilTagOrLimLigh.setBoolean(true);
-
-        } else if (limlighSubsystem.targetVisible()) {
-
-            aprilTagOrLimLigh.setBoolean(false);
-
-            rotationCalc = rotationPID.calculate(limlighSubsystem.getTargetx(), 0);
-            forwardCalc = forwardPID.calculate(0);
-            centerCalc = centerPID.calculate(0);
-
-            if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed) {
-
+            if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
-            } else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed) {
-
+            else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
-            } else if (rotationPID.atSetpoint()){
-
+            else if (rotationPID.atSetpoint())
                 rotationCalc = 0;
-            }
-          
 
             double adjTranslation = ((Constants.DriveConstants.kMaxAngularSpeed - Math.abs(rotationCalc))
-                / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
+                    / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
 
             drivetrain.drive(
+                    -inputTransform(xboxController.getLeftY())
+                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+                    -inputTransform(xboxController.getLeftX())
+                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+                    rotationCalc,
+                    true);
+            // System.out.println(rotationCalc);
+        } // else if (limlihSubsystem.targetVisible()) {
 
-                -inputTransform(xboxController.getLeftY()) * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
-                -inputTransform(xboxController.getLeftX()) * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
-                rotationCalc,
-                true
-            );
-            
-        }
+        // aprilTag.setBoolean(false);
 
-        if ((!centerPID.atSetpoint() || !rotationPID.atSetpoint() || !forwardPID.atSetpoint())) {
+        // rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetx(), 0);
+        // forwardCalc = forwardPID.calculate(0);
+        // centerCalc = centerPID.calculate(0);
 
-            drivetrain.unlock();
-            drivetrain.drive(forwardCalc, centerCalc, rotationCalc, false);
-        } else {
+        // if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
+        // rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
+        // else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
+        // rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
+        // else if (rotationPID.atSetpoint())
+        // rotationCalc = 0;
 
-            drivetrain.lock();
-        }
+        // double adjTranslation = ((Constants.DriveConstants.kMaxAngularSpeed -
+        // Math.abs(rotationCalc))
+        // / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
+
+        // drivetrain.drive(
+        // -inputTransform(xboxController.getLeftY()) *
+        // (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+        // -inputTransform(xboxController.getLeftX()) *
+        // (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+        // rotationCalc,
+        // true
+        // );
+
+        // }
+
+        // if (!rotationPID.atSetpoint()) {
+
+        //     drivetrain.unlock();
+        //     drivetrain.drive(0, 0, rotationCalc, false);
+        // } else {
+        //     drivetrain.lock();
+        // }
 
     }
 
     @Override
 
     public boolean isFinished() {
-
         return false;
-
     }
 
     @Override
 
     public void end(boolean interrupted) {
-
         drivetrain.unlock();
 
-        aprilTagOrLimLigh.setBoolean(false);
-
+        // aprilTag.setBoolean(false);
     }
 
-    private double inputTransform(double input){
+    private double inputTransform(double input) {
 
         return MathUtils.singedSquare(MathUtils.applyDeadband(input));
     }
