@@ -1,7 +1,9 @@
 package frc.robot;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -13,18 +15,24 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 
@@ -42,10 +50,17 @@ public class RobotContainer {
   private final CommandXboxController operatorController;
   private final DriveByController m_drive;
 
+  // Subsystem Declarations
+  private final LimlihSubsystem limlihSubsystem;
+
+  // Command Declarations
   private final ExampleCommand exampleCommand;
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
+
+  private final CenterOnTargetCommand centerOnTargetCommand;
+
 
 
   /**
@@ -55,33 +70,29 @@ public class RobotContainer {
    */
 
   public RobotContainer(Drivetrain drivetrain) {
-
-    // pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
-        // .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
-
-    initializeCamera();
-
+    
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
+    
+    // Subsystem Instantiations
+    limlihSubsystem = new LimlihSubsystem();
 
-    m_chooser = new SendableChooser<>();
-
+    // Command Instantiations
     exampleCommand = new ExampleCommand();
     resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)),
-        drivetrain);
+    drivetrain);
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
-        drivetrain);
+    drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
-    //aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
-    configureButtonBindings();  /**
-                                * Configure the button bindings to commands using configureButtonBindings
-                                * function
-                                */
+    centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
+    
+    
+    m_chooser = new SendableChooser<>();
+    initializeCamera();
+    configureButtonBindings();
     configureAutoChooser(drivetrain);
-
-    // centerOnTargetCommand = new CenterOnTargetCommand(limlighSubsystem, 0, m_robotDrive);
   }
 
   /**
@@ -114,21 +125,24 @@ public class RobotContainer {
     return eventMap;
   }
 
-  private void ajksfd() {
+  private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-            m_robotDrive::getPose,
-            m_robotDrive::resetOdometry,
-            m_robotDrive::getChassisSpeed,
-            m_robotDrive::setModuleStates,
-            new HolonomicPathFollowerConfig(
-                    new PIDConstants(Constants.AutoConstants.kPXController),
-                    new PIDConstants(Constants.AutoConstants.kPThetaController),
-                    Constants.AutoConstants.kMaxSpeed,
-                    0.4,
-                    new ReplanningConfig()
-            ),
-            () -> {return false;},
-            m_robotDrive
+        m_robotDrive::getPose,
+        m_robotDrive::resetOdometry,
+        m_robotDrive::getChassisSpeed,
+        m_robotDrive::setModuleStates,
+        new HolonomicPathFollowerConfig(
+            new PIDConstants(Constants.AutoConstants.kPXController),
+            new PIDConstants(Constants.AutoConstants.kPThetaController),
+            Constants.AutoConstants.kMaxSpeed,
+            0.4,
+            new ReplanningConfig()
+        ),
+        () -> {
+          Optional<Alliance> alliance = DriverStation.getAlliance();
+          return alliance.isPresent() ? alliance.get().equals(DriverStation.Alliance.Red) : false;
+        },
+        m_robotDrive
     );
   }
 
@@ -179,7 +193,7 @@ public class RobotContainer {
     driverController.a().onTrue(exampleCommand);
     driverController.b().onTrue(exampleCommand);
     driverController.x().onTrue(exampleCommand);
-    driverController.y().onTrue(exampleCommand);
+    driverController.y().whileTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
     driverController.povRight().onTrue(exampleCommand);
@@ -215,85 +229,36 @@ public class RobotContainer {
   //SwerveAutoBuilder swerveAutoBuilder;
 
   private void configureAutoChooser(Drivetrain drivetrain) {
-//
-//    //swerveAutoBuilder = createAutoBuilder();
-//    File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
-//
-//    for (File pathFile : pathPlannerDirectory.listFiles()) {
-//
+    configureAutoBuilder();
+
+    //swerveAutoBuilder = createAutoBuilder();
+    File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
+    pathPlannerDirectory = new File(pathPlannerDirectory, "autos");
+
+    for (File pathFile : pathPlannerDirectory.listFiles()) {
+
 //      System.out.println(pathFile);
-//
-//      if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
-//
-//        String name = pathFile.getName().replace(".path", "");
-//
+
+      if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
+
+        String name = pathFile.getName().replace(".auto", "");
+
 //        List<PathConstraints> constraints = getPathConstraints(name);
-//
+
 //        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name, constraints);
-//
-//        Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
-//        if (name.endsWith("BalanceAuto")) {
-//
+
+        Command pathCommand =  new PathPlannerAuto(name);
+        if (name.endsWith("BalanceAuto")) {
 //          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
-//        } else {
-//
-//          m_chooser.addOption(name, pathCommand);
-//        }
-//
-//
-//      }
-//    }
-    ajksfd();
-//    Command nooowhy = new PathPlannerAuto("Example Path");
-    m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
+        } else {
+          m_chooser.addOption(name, pathCommand);
+        }
+      }
+    }
+//    m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
-
-//  private List<PathConstraints> getPathConstraints(String name) {
-//
-//
-//    List<PathConstraints> listConstraints = new ArrayList<>();
-//
-//    if (name.equalsIgnoreCase("1HighCubeAcrossCenterBalanceAuto")) {
-//
-//      System.out.println("is constrained");
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(1.75, 1.85));
-//      listConstraints.add(new PathConstraints(3, 3));
-//
-//    } else if (name.equalsIgnoreCase("2PieceOpenAuto")) {
-//
-//      System.out.println("is constrained");
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(2, 1.5));
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//
-//    } else if (name.equalsIgnoreCase("1HighConeAcrossCenterBalanceAuto")) {
-//
-//      System.out.println("is constrained");
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(1.75, 1.85));
-//      listConstraints.add(new PathConstraints(3, 3));
-//
-//    } else if (name.equalsIgnoreCase("1MidConeAcrossCenterBalanceAuto")) {
-//
-//      System.out.println("is constrained");
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(3.25, 2.5));
-//      listConstraints.add(new PathConstraints(1.75, 1.85));
-//      listConstraints.add(new PathConstraints(3, 3));
-//    } else {
-//
-//      System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
-//      listConstraints.add(new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-//    }
-//
-//    return listConstraints;
-//  }
       
 
   public void autonomousInit() {
@@ -310,11 +275,6 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
-    // if (jsdaklfsd.getBoolean(false)) {
-
-    //   aprilTagMiddleCommand.schedule();
-    //   jsdaklfsd.setBoolean(false);
-    // }
   }
 
   /**

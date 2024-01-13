@@ -11,44 +11,21 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.swerve.Drivetrain;
 
-public class LimlighSubsystem extends SubsystemBase {
+public class LimlihSubsystem extends SubsystemBase {
 
-    NetworkTable limligh;
-    Drivetrain drivetrain;
+    NetworkTable limlih;
+//    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
 
-    public enum Alliance {
+    public LimlihSubsystem() {
 
-        RED,
-        BLUE
-    };
-    // public enum LimlighPipeline {
-
-    //     FIDUCIAL,
-    //     RETROREFLECTIVE
-    // }
-
-    Alliance currentAlliance;
-
-    public LimlighSubsystem(Drivetrain drivetrain) {
-
-        limligh = NetworkTableInstance.getDefault().getTable("limelight-limligh");
-        this.drivetrain = drivetrain;
-
-        if (NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false)) {
-
-            currentAlliance = Alliance.RED;
-        } else {
-
-            currentAlliance = Alliance.BLUE;
-        }
+        limlih = NetworkTableInstance.getDefault().getTable("limelight-limlih");
     }
 
     public boolean targetVisible() {
 
-        return limligh.getEntry("tv").getDouble(0) == 1;
+        return limlih.getEntry("tv").getDouble(0) == 1;
     }
 
     /**
@@ -58,9 +35,9 @@ public class LimlighSubsystem extends SubsystemBase {
      * 
      * @return the target x angle
      */
-    public double getTargetx() {
+    public double getTargetX() {
 
-        return limligh.getEntry("tx").getDouble(0);
+        return limlih.getEntry("tx").getDouble(0);
     }
 
     public double getCalculatedPoseZ() {
@@ -80,9 +57,9 @@ public class LimlighSubsystem extends SubsystemBase {
      * 
      * @return the target y angle
      */
-    public double getTargety() {
+    public double getTargetY() {
         
-        return limligh.getEntry("ty").getDouble(0);
+        return limlih.getEntry("ty").getDouble(0);
     }
 
     /**
@@ -90,27 +67,18 @@ public class LimlighSubsystem extends SubsystemBase {
      * 
      * @return target area
      */
-    public double getTargeta() {
+    public double getTargetA() {
 
-        return limligh.getEntry("ta").getDouble(0);
+        return limlih.getEntry("ta").getDouble(0);
     }
 
     public double getTargetId() {
 
-        return limligh.getEntry("tid").getDouble(0);
+        return limlih.getEntry("tid").getDouble(0);
     }
 
     public Pose2d getPose() {
-
-        // if (Alliance.RED.equals(currentAlliance)) {
-
-        //     hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        // } else {
-
-        //     hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        // }
-
-        hrm = limligh.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+        hrm = limlih.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
 
         return new Pose2d(
             
@@ -121,18 +89,18 @@ public class LimlighSubsystem extends SubsystemBase {
 
     public void switchPipeline(double pipeline) {
 
-        limligh.getEntry("pipeline").setDouble(pipeline);
+        limlih.getEntry("pipeline").setDouble(pipeline);
     }
 
     public double getPipeline() {
 
-        return limligh.getEntry("pipeline").getDouble(0);
+        return limlih.getEntry("pipeline").getDouble(0);
     }
 
 
     @Override
     public void periodic() {
-
+        
     }
 
 }
