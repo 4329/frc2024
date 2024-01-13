@@ -18,30 +18,9 @@ public class LimlihSubsystem extends SubsystemBase {
 //    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
 
-    public enum Alliance {
-
-        RED,
-        BLUE
-    };
-    // public enum LimlihPipeline {
-
-    //     FIDUCIAL,
-    //     RETROREFLECTIVE
-    // }
-
-    Alliance currentAlliance;
-
     public LimlihSubsystem() {
 
         limlih = NetworkTableInstance.getDefault().getTable("limelight-limlih");
-
-        if (NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false)) {
-
-            currentAlliance = Alliance.RED;
-        } else {
-
-            currentAlliance = Alliance.BLUE;
-        }
     }
 
     public boolean targetVisible() {
@@ -99,15 +78,6 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-
-        // if (Alliance.RED.equals(currentAlliance)) {
-
-        //     hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        // } else {
-
-        //     hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        // }
-
         hrm = limlih.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
 
         return new Pose2d(

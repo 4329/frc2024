@@ -34,8 +34,6 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean isLocked;
 
-  private final SwerveDrivePoseEstimator estimator;
-
   // Create the PIDController for the Keep Angle PID
   private final PIDController m_keepAnglePID = new PIDController(DriveConstants.kKeepAnglePID[0],
       DriveConstants.kKeepAnglePID[1], DriveConstants.kKeepAnglePID[2]);
@@ -98,16 +96,8 @@ public class Drivetrain extends SubsystemBase {
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
     ahrs.reset();
 
-    // ahrs.calibrate();
-
     pitchOffset = ahrs.getPitch();
     rollOffset = ahrs.getRoll();
-
-    estimator = new SwerveDrivePoseEstimator(
-        Constants.DriveConstants.kDriveKinematics,
-        getGyro(),
-        getModulePositions(),
-        getPose());
   }
 
 

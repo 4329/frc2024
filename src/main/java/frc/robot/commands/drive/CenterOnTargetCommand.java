@@ -35,7 +35,6 @@ public class CenterOnTargetCommand extends Command {
     }
 
     @Override
-
     public void initialize() {
         timer.reset();
         timer.start();
@@ -46,7 +45,6 @@ public class CenterOnTargetCommand extends Command {
     }
 
     @Override
-
     public void execute() {
         double rotationCalc = 0;
         if (limlihSubsystem.getTargetId() == targetId || limlihSubsystem.getTargetId() == 5) {
@@ -74,7 +72,6 @@ public class CenterOnTargetCommand extends Command {
     }
 
     @Override
-
     public boolean isFinished() {
         return false;
     }
