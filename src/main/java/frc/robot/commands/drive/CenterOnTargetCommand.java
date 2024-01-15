@@ -15,14 +15,14 @@ public class CenterOnTargetCommand extends Command {
 
     private final LimlihSubsystem limlihSubsystem;
     private final Drivetrain drivetrain;
-    private final double targetId;
+    private final int targetId;
 
     private final PIDController rotationPID;
     private CommandXboxController xboxController;
     private Timer timer = new Timer();
 
 
-    public CenterOnTargetCommand(LimlihSubsystem limlihSubsystem, Drivetrain m_drivetrain, double targetId,
+    public CenterOnTargetCommand(LimlihSubsystem limlihSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
 
         this.limlihSubsystem = limlihSubsystem;
@@ -47,9 +47,9 @@ public class CenterOnTargetCommand extends Command {
     @Override
     public void execute() {
         double rotationCalc = 0;
-        if (limlihSubsystem.getTargetId() == targetId || limlihSubsystem.getTargetId() == 5) {
+        if (limlihSubsystem.getTargetVisible(targetId)) {
 
-            rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX());
+            rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX(targetId));
 
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;

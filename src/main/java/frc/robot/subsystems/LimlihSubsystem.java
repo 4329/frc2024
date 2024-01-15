@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.ejml.equation.IntegerSequence.For;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,21 +13,30 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.LimelightHelpers;
+import frc.robot.utilities.LimelightHelpers.LimelightResults;
+import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase {
 
-    NetworkTable limlih;
 //    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
+    String limelightHelpNetworkTableName = "limelight-limlih";
+    LimelightTarget_Fiducial[] limelightResults;
 
     public LimlihSubsystem() {
 
-        limlih = NetworkTableInstance.getDefault().getTable("limelight-limlih");
     }
 
-    public boolean targetVisible() {
-
-        return limlih.getEntry("tv").getDouble(0) == 1;
+    public boolean getTargetVisible(int id) {
+       boolean targetVisible = false;
+       for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+            if (LIMGHT.fiducialID == id) {
+                targetVisible = true;
+            }
+        }
+        return targetVisible;
     }
 
     /**
@@ -35,19 +46,20 @@ public class LimlihSubsystem extends SubsystemBase {
      * 
      * @return the target x angle
      */
-    public double getTargetX() {
+    public double getTargetX(int id) {
 
-        return limlih.getEntry("tx").getDouble(0);
+        return limelightTarget_Fiducial(id).tx;
+
     }
 
-    public double getCalculatedPoseZ() {
+    public double getCalculatedPoseZ(int id) {
 
-        return getPose().getX();
+        return getPose(id).getX();
     }
 
-    public double getCalculatedPoseRot() {
+    public double getCalculatedPoseRot(int id) {
 
-        return getPose().getRotation().getDegrees();
+        return getPose(id).getRotation().getDegrees();
     }
 
     /**
@@ -57,9 +69,9 @@ public class LimlihSubsystem extends SubsystemBase {
      * 
      * @return the target y angle
      */
-    public double getTargetY() {
+    public double getTargetY(int id) {
         
-        return limlih.getEntry("ty").getDouble(0);
+        return limelightTarget_Fiducial(id).ty;
     }
 
     /**
@@ -67,39 +79,45 @@ public class LimlihSubsystem extends SubsystemBase {
      * 
      * @return target area
      */
-    public double getTargetA() {
+    public double getTargetA(int id) {
 
-        return limlih.getEntry("ta").getDouble(0);
+        return limelightTarget_Fiducial(id).ta;
     }
 
-    public double getTargetId() {
+   /*  public double getTargetId(int id) {
 
-        return limlih.getEntry("tid").getDouble(0);
+        return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
+    }
+*/
+    public Pose2d getPose(int id) {
+       return limelightTarget_Fiducial(id).getRobotPose_FieldSpace2D();
     }
 
-    public Pose2d getPose() {
-        hrm = limlih.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+    public void switchPipeline(int pipeline) {
 
-        return new Pose2d(
-            
-            new Translation2d(hrm[0], hrm[1]),
-            Rotation2d.fromDegrees(hrm[5])
-        );
-    }
-
-    public void switchPipeline(double pipeline) {
-
-        limlih.getEntry("pipeline").setDouble(pipeline);
+        LimelightHelpers.setPipelineIndex(limelightHelpNetworkTableName, pipeline);
     }
 
     public double getPipeline() {
 
-        return limlih.getEntry("pipeline").getDouble(0);
+        return LimelightHelpers.getCurrentPipelineIndex(limelightHelpNetworkTableName);
     }
 
+    public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
+
+        LimelightTarget_Fiducial limelightTarget_Fiducial = new LimelightTarget_Fiducial();
+        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+            if (LIMGHT.fiducialID == id) {
+                limelightTarget_Fiducial = LIMGHT;
+            }
+        }
+        return limelightTarget_Fiducial;
+    }
 
     @Override
     public void periodic() {
+        
+        limelightResults = LimelightHelpers.getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
         
     }
 
