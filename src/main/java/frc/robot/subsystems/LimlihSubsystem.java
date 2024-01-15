@@ -30,13 +30,12 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     public boolean getTargetVisible(int id) {
-       boolean targetVisible = false;
        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
-                targetVisible = true;
+            return true;
             }
         }
-        return targetVisible;
+        return false;
     }
 
     /**
@@ -48,7 +47,7 @@ public class LimlihSubsystem extends SubsystemBase {
      */
     public double getTargetX(int id) {
 
-        return limelightTarget_Fiducial(id).tx;
+        return getFiducial(id).tx;
 
     }
 
@@ -71,7 +70,7 @@ public class LimlihSubsystem extends SubsystemBase {
      */
     public double getTargetY(int id) {
         
-        return limelightTarget_Fiducial(id).ty;
+        return getFiducial(id).ty;
     }
 
     /**
@@ -81,7 +80,7 @@ public class LimlihSubsystem extends SubsystemBase {
      */
     public double getTargetA(int id) {
 
-        return limelightTarget_Fiducial(id).ta;
+        return getFiducial(id).ta;
     }
 
    /*  public double getTargetId(int id) {
@@ -90,7 +89,7 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 */
     public Pose2d getPose(int id) {
-       return limelightTarget_Fiducial(id).getRobotPose_FieldSpace2D();
+       return getFiducial(id).getRobotPose_FieldSpace2D();
     }
 
     public void switchPipeline(int pipeline) {
@@ -103,22 +102,19 @@ public class LimlihSubsystem extends SubsystemBase {
         return LimelightHelpers.getCurrentPipelineIndex(limelightHelpNetworkTableName);
     }
 
-    public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
-
-        LimelightTarget_Fiducial limelightTarget_Fiducial = new LimelightTarget_Fiducial();
+    public LimelightTarget_Fiducial getFiducial(int id) {
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
-                limelightTarget_Fiducial = LIMGHT;
+                return LIMGHT;
             }
         }
-        return limelightTarget_Fiducial;
+        return null;
     }
 
     @Override
     public void periodic() {
         
         limelightResults = LimelightHelpers.getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
-        
     }
 
 }
