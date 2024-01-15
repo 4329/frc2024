@@ -20,25 +20,24 @@ import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase {
-    NetworkTable limlih;
 
+//    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
-    // private LimelightResults limelightResults;
-    
 
     public LimlihSubsystem() {
 
     }
 
     public boolean getTargetVisible(int id) {
-        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+       boolean targetVisible = false;
+       for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
-                return true;
+                targetVisible = true;
             }
         }
-        return false;
+        return targetVisible;
     }
 
     /**
@@ -50,18 +49,18 @@ public class LimlihSubsystem extends SubsystemBase {
      */
     public double getTargetX(int id) {
 
-        return getFiducial(id).tx;
+        return limelightTarget_Fiducial(id).tx;
 
     }
 
     public double getCalculatedPoseZ(int id) {
 
-        return getRobotFieldPoseByTag(id).getX();
+        return getPose(id).getX();
     }
 
     public double getCalculatedPoseRot(int id) {
 
-        return getRobotFieldPoseByTag(id).getRotation().getDegrees();
+        return getPose(id).getRotation().getDegrees();
     }
 
     /**
@@ -72,8 +71,8 @@ public class LimlihSubsystem extends SubsystemBase {
      * @return the target y angle
      */
     public double getTargetY(int id) {
-
-        return getFiducial(id).ty;
+        
+        return limelightTarget_Fiducial(id).ty;
     }
 
     /**
@@ -115,6 +114,15 @@ public class LimlihSubsystem extends SubsystemBase {
         return getFiducial(id).getTargetPose_RobotSpace();
     }
 
+   /*  public double getTargetId(int id) {
+
+        return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
+    }
+*/
+    public Pose2d getPose(int id) {
+       return limelightTarget_Fiducial(id).getRobotPose_FieldSpace2D();
+    }
+
     public void switchPipeline(int pipeline) {
 
         LimelightHelpers.setPipelineIndex(limelightHelpNetworkTableName, pipeline);
@@ -149,6 +157,17 @@ public class LimlihSubsystem extends SubsystemBase {
             seeingThings[i] = getFiducial(i) != null;
         }
         Logger.recordOutput("kdsmfkl", seeingThings);
+    }
+
+    public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
+
+        LimelightTarget_Fiducial limelightTarget_Fiducial = new LimelightTarget_Fiducial();
+        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+            if (LIMGHT.fiducialID == id) {
+                limelightTarget_Fiducial = LIMGHT;
+            }
+        }
+        return limelightTarget_Fiducial;
     }
 
     @Override
