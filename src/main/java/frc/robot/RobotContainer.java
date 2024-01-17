@@ -232,7 +232,7 @@ public class RobotContainer {
     driverController.a().whileTrue(shootCommand);
     driverController.b().onTrue(exampleCommand);
     driverController.x().whileTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand));
-    driverController.y().whileTrue(centerOnTargetCommand);
+    driverController.y().onTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
     driverController.povRight().onTrue(exampleCommand);

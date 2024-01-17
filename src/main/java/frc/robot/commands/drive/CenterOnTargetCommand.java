@@ -39,8 +39,8 @@ public class CenterOnTargetCommand extends Command {
         timer.reset();
         timer.start();
 
-        rotationPID.setP(0.05);
-        rotationPID.setTolerance(0);
+        rotationPID.setP(0.035);
+        rotationPID.setTolerance(0.2);
         rotationPID.setSetpoint(0);
     }
 
@@ -68,12 +68,14 @@ public class CenterOnTargetCommand extends Command {
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
+                    System.out.println("Execute Called");
         }
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+       System.out.println("Is finished"+rotationPID.atSetpoint());
+        return rotationPID.atSetpoint();
     }
 
     private double inputTransform(double input) {
