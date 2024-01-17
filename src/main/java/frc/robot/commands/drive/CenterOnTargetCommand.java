@@ -68,18 +68,21 @@ public class CenterOnTargetCommand extends Command {
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
-                    System.out.println("Execute Called");
         }
     }
 
     @Override
     public boolean isFinished() {
-       System.out.println("Is finished"+rotationPID.atSetpoint());
         return rotationPID.atSetpoint();
     }
 
     private double inputTransform(double input) {
         return MathUtils.singedSquare(MathUtils.applyDeadband(input));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.stop();
     }
 
 }

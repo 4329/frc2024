@@ -28,9 +28,18 @@ public class DriveToTargetCommand extends Command {
         this.drivetrain = drivetrain;
         this.limlihSubsystem = limlihSubsystem;
 
-        this.rotationPID = new PIDController(0.82, 0, 0);//(.82, 0, 0)
-        this.forwardsbackwardsPidController = new PIDController(1, 0, 0.);//(1, 0, 0)
-        this.leftrightPidController = new PIDController(0.665, 0, 0.0001);//(.665, 0, 0.0001)
+
+
+        this.rotationPID = new PIDController(1.4, 0, 0);//(.82, 0, 0)
+        rotationPID.setTolerance(0.1);
+
+        this.forwardsbackwardsPidController = new PIDController(0.7, 0, 0.);//(1, 0, 0)
+        forwardsbackwardsPidController.setTolerance(0.5);
+
+        this.leftrightPidController = new PIDController(0.72, 0, 0);//(.665, 0, 0.0001)
+        leftrightPidController.setTolerance(0.35);
+
+
 
         this.targetId = targetId;
         this.targetDistance = targetDistance;
@@ -48,6 +57,7 @@ public class DriveToTargetCommand extends Command {
     @Override
     public void execute() {
         if (limlihSubsystem.getTargetVisible(targetId)) {
+                System.out.println("DriveToTarget Execute Called");
 
             double rotOutput = rotationPID.calculate(-limlihSubsystem.getCalculatedPoseRot(targetId));
             double forwardsbackwardsOutput = forwardsbackwardsPidController.calculate(limlihSubsystem.getTargetSpacePose(targetId).getZ());
@@ -58,6 +68,22 @@ public class DriveToTargetCommand extends Command {
             drivetrain.drive(0, 0, 0, false);
         }
         IsTargetVis.setBoolean(limlihSubsystem.getTargetVisible(targetId));
+    }
+
+    @Override
+    public boolean isFinished() {
+        System.out.println(" DriveToTarget IsFinished Called " + rotationPID.atSetpoint() + " fwbw " + forwardsbackwardsPidController.atSetpoint() + " LR " + leftrightPidController.atSetpoint());
+        return
+        rotationPID.atSetpoint() &&
+        forwardsbackwardsPidController.atSetpoint() &&
+        leftrightPidController.atSetpoint();
+
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+       System.out.println("DriveToTarget end Called");
+        drivetrain.stop();
     }
 
 }
