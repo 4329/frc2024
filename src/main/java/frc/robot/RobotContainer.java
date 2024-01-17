@@ -151,10 +151,7 @@ public class RobotContainer {
             0.4,
             new ReplanningConfig()
         ),
-        () -> {
-          Optional<Alliance> alliance = DriverStation.getAlliance();
-          return alliance.isPresent() ? alliance.get().equals(DriverStation.Alliance.Red) : false;
-        },
+        () -> { return false; },
         m_robotDrive
     );
   }

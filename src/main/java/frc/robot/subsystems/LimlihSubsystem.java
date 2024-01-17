@@ -19,8 +19,8 @@ import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase {
+    NetworkTable limlih;
 
-//    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
