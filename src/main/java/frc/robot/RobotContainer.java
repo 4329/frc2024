@@ -38,6 +38,7 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 
@@ -60,6 +61,7 @@ public class RobotContainer {
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
+  PoseEstimationSubsystem poseEstimationSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -70,8 +72,6 @@ public class RobotContainer {
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
 
-
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -79,6 +79,8 @@ public class RobotContainer {
    */
 
   public RobotContainer(Drivetrain drivetrain) {
+
+
     m_robotDrive = drivetrain;
     
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -90,6 +92,7 @@ public class RobotContainer {
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
+    poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();

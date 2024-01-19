@@ -35,7 +35,7 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+      Logger.addDataReceiver(new WPILOGWriter("/media/sdd1/logs")); // Log to a USB stick ("/U/logs")
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
@@ -47,8 +47,8 @@ public class Robot extends LoggedRobot {
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
     // the "Understanding Data Flow" page
-    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may
-                    // be added.
+Logger.start();
+
 
     HoorayConfig.gimmeConfig();
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -111,7 +111,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-
+    
+                    // be added.
     drivetrain.brakeMode();
     m_robotContainer.teleopInit();
     // This makes sure that the autonomous stops running when

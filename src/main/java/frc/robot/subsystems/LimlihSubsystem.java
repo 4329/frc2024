@@ -26,13 +26,13 @@ public class LimlihSubsystem extends SubsystemBase {
     LimelightTarget_Fiducial[] limelightResults;
 
     public LimlihSubsystem() {
-//
+
     }
 
     public boolean getTargetVisible(int id) {
-       for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
-            return true;
+                return true;
             }
         }
         return false;
@@ -69,7 +69,7 @@ public class LimlihSubsystem extends SubsystemBase {
      * @return the target y angle
      */
     public double getTargetY(int id) {
-        
+
         return getFiducial(id).ty;
     }
 
@@ -83,13 +83,29 @@ public class LimlihSubsystem extends SubsystemBase {
         return getFiducial(id).ta;
     }
 
-   /*  public double getTargetId(int id) {
-
-        return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
-    }
-*/
+    /*
+     * public double getTargetId(int id) {
+     * 
+     * return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
+     * }
+     */
+    /**
+     * Pose calculated with a single marker
+     * 
+     * @param id
+     * @return Pose
+     */
     public Pose2d getPose(int id) {
-       return getFiducial(id).getRobotPose_FieldSpace2D();
+        return getFiducial(id).getRobotPose_FieldSpace2D();
+    }
+    
+    /**
+     * Pose calculated with all markers
+     * 
+     * @return Pose
+     */
+    public Pose2d getPose() {
+        return LimelightHelpers.getBotPose2d(limelightHelpNetworkTableName);
     }
 
     public Pose3d getTargetPoseInRobotSpace(int id) {
@@ -115,10 +131,19 @@ public class LimlihSubsystem extends SubsystemBase {
         return null;
     }
 
+    public boolean seeingAnything() {
+        if (limelightResults.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void periodic() {
-        
-        limelightResults = LimelightHelpers.getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+
+        limelightResults = LimelightHelpers
+                .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
     }
 
 }
