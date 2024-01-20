@@ -265,6 +265,7 @@ public class Drivetrain extends SubsystemBase {
                                                                         // last drive time to the current time
       lastDriveTime = keepAngleTimer.get();
     }
+    
     timeSinceRot = keepAngleTimer.get() - lastRotTime; // update variable to the current time - the last rotate time
     timeSinceDrive = keepAngleTimer.get() - lastDriveTime; // update variable to the current time - the last drive time
     if (timeSinceRot < 0.5) { // Update keepAngle up until 0.5s after rotate command stops to allow rotation
