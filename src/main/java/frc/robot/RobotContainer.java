@@ -10,24 +10,25 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -36,6 +37,7 @@ import frc.robot.commands.drive.ResetOdometryCommand;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 
@@ -55,6 +57,7 @@ public class RobotContainer {
 
   // Subsystem Declarations
   private final LimlihSubsystem limlihSubsystem;
+  private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
 
@@ -65,6 +68,7 @@ public class RobotContainer {
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
+  private final ShootCommand shootCommand;
 
 
 
@@ -83,6 +87,7 @@ public class RobotContainer {
     
     // Subsystem Instantiations
     limlihSubsystem = new LimlihSubsystem();
+    shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
 
@@ -94,6 +99,7 @@ public class RobotContainer {
     drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
+    shootCommand = new ShootCommand(shootSubsystem);
     
     
     m_chooser = new SendableChooser<>();
@@ -197,7 +203,7 @@ public class RobotContainer {
     driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().onTrue(exampleCommand);
+    driverController.a().whileTrue(shootCommand);
     driverController.b().onTrue(exampleCommand);
     driverController.x().onTrue(exampleCommand);
     driverController.y().whileTrue(centerOnTargetCommand);

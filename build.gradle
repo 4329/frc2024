@@ -37,10 +37,10 @@ deploy {
     }
 }
 
-task cleanPathPlanner(type: Exec) {
+// task cleanPathPlanner(type: Exec) {
     
-    commandLine "git-bash", './cleanPathPlanner.sh'
-}
+//     //commandLine "git-bash", './cleanPathPlanner.sh'
+// }
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
@@ -106,7 +106,7 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
-deployArtifact.dependsOn(cleanPathPlanner)
+//deployArtifact.dependsOn(cleanPathPlanner)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
