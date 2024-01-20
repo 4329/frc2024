@@ -60,6 +60,7 @@ public class RobotContainer {
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
+  private final ShootJoystick shootJoystick;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -90,6 +91,7 @@ public class RobotContainer {
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
+    shootJoystick = new ShootJoystick();
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();

@@ -7,7 +7,7 @@ import frc.robot.subsystems.ShootSubsystem;
 public class ShootCommand extends Command{
     
     private ShootSubsystem shootSubsystem;
-    public Button m_Y; 
+    private double setPoint = 50; 
     
 
     public ShootCommand(ShootSubsystem shootSubsystem){
@@ -17,14 +17,14 @@ public class ShootCommand extends Command{
 
     @Override
     public void initialize() {
-        
+        shootSubsystem.changeSetpoint(setPoint);
+        System.out.println("initilize was called iiiiiiii");
     }
 
     @Override
     public void execute() {
-        System.out.println(shootSubsystem.getVelocityRPM());
-        shootSubsystem.changeSetpoint();
         //shootSubsystem.shoot();
+        System.out.println("execute was called eeeeeeeeeee");
     }
 
 
@@ -36,7 +36,9 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("end was called uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
         shootSubsystem.stop();
+        shootSubsystem.changeSetpoint(0);
     }
 
 
