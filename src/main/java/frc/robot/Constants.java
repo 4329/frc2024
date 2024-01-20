@@ -155,5 +155,10 @@ public final class Constants {
 
   public static final class CANIDConstants {
 
+    public static final int armRotation1 = 1;
+
+  }
+  public static final class LimlihConstants{
+    public static final double limlihHeight = 7;
   }
 }
