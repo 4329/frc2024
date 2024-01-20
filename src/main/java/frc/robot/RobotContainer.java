@@ -126,7 +126,7 @@ public class RobotContainer {
 
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -1.5);
+    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
     
     m_chooser = new SendableChooser<>();
     initializeCamera();
@@ -231,8 +231,8 @@ public class RobotContainer {
 
     driverController.a().whileTrue(shootCommand);
     driverController.b().onTrue(exampleCommand);
-    driverController.x().whileTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand));
-    driverController.y().whileTrue(centerOnTargetCommand);
+    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));
+    driverController.y().onTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
     driverController.povRight().onTrue(exampleCommand);

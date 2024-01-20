@@ -48,7 +48,7 @@ public class CenterOnTargetCommand extends Command {
     public void execute() {
         double rotationCalc = 0;
         if (limlihSubsystem.getTargetVisible(targetId)) {
-
+            System.out.println("sdajfjdsalfjsdakflkdsfds");
             rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX(targetId));
 
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)

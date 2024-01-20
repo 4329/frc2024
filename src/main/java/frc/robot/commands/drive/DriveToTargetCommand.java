@@ -30,14 +30,14 @@ public class DriveToTargetCommand extends Command {
 
 
 
-        this.rotationPID = new PIDController(1.4, 0, 0);//(.82, 0, 0)
+        this.rotationPID = new PIDController(1.25, 0, 0);//(1.25, 0, 0)
         rotationPID.setTolerance(0.1);
 
-        this.forwardsbackwardsPidController = new PIDController(0.7, 0, 0.);//(1, 0, 0)
+        this.forwardsbackwardsPidController = new PIDController(0.7, 0, 0.);//(0.7, 0, 0)
         forwardsbackwardsPidController.setTolerance(0.5);
 
-        this.leftrightPidController = new PIDController(0.72, 0, 0);//(.665, 0, 0.0001)
-        leftrightPidController.setTolerance(0.35);
+        this.leftrightPidController = new PIDController(0.58, 0, 0);//(0.72, 0, 0.0001)
+        leftrightPidController.setTolerance(0.45);
 
 
 
@@ -63,7 +63,7 @@ public class DriveToTargetCommand extends Command {
             double forwardsbackwardsOutput = forwardsbackwardsPidController.calculate(limlihSubsystem.getTargetSpacePose(targetId).getZ());
             double leftrightOutput = leftrightPidController.calculate(-limlihSubsystem.getTargetSpacePose(targetId).getX());
             oaijifsd.setDouble(rotOutput);
-            drivetrain.drive(forwardsbackwardsOutput, leftrightOutput, rotOutput, true);
+            drivetrain.drive(0, leftrightOutput, 0, true);
         } else {
             drivetrain.drive(0, 0, 0, false);
         }

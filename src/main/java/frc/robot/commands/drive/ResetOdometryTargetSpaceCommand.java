@@ -33,7 +33,7 @@ public class ResetOdometryTargetSpaceCommand extends Command {
     @Override
     public boolean isFinished() {
 
-        return limlihSubsystem.getTargetVisible(targetID);
+        return true;
 
     }
 }
