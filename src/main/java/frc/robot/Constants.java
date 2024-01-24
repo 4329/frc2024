@@ -155,10 +155,13 @@ public final class Constants {
 
   public static final class CANIDConstants {
 
-    public static final int armRotation1 = 1;
+    public static final int armRotation1 = 11;
 
   }
-  public static final class LimlihConstants{
+  public static final class LimlihConstants {
     public static final double limlihHeight = 7;
+  }
+  public static final class ArmAngleSubsystemConstants {
+    public static final double armGearRatio = 1;
   }
 }
