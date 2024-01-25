@@ -17,9 +17,9 @@ import frc.robot.utilities.SparkFactory;
 public class ShootSubsystem extends SubsystemBase {
 
     public final CANSparkMax m_rightShoot;
-    //public final CANSparkMax m_leftShoot;
+    public final CANSparkMax m_leftShoot;
     public final RelativeEncoder m_shootEncoderRight;
-    //public final RelativeEncoder m_shootEncoderLeft;
+    public final RelativeEncoder m_shootEncoderLeft;
     public final SparkPIDController m_aimBot;
     //public final PIDController m_aimBot;
     private static final int rightID = 13;
@@ -37,31 +37,33 @@ public class ShootSubsystem extends SubsystemBase {
     GenericEntry min;
     GenericEntry set;
     GenericEntry outPut;
+    GenericEntry outPut1;
 
     GenericEntry iz;
     GenericEntry ff;
-    private double kP = 0.0015;
+    private double kP = 0.000025;
     private double kI = 0;
-    private double kD = 0;
+    private double kD = 0.0000;
     // private double kIz = 0;
-    // private double kFF = 0.000015;
+    private double kFF = 0.000169;
     private double kMaxOutput = 1;
     private double kMinOutput = -1;
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
         m_rightShoot = SparkFactory.createCANSparkMax(rightID, false);
-        //m_leftShoot = SparkFactory.createCANSparkMax(12, true);
+        m_leftShoot = SparkFactory.createCANSparkMax(12, true);
         m_aimBot = m_rightShoot.getPIDController();
         //m_aimBot = new PIDController(P, I, D);
         m_shootEncoderRight = m_rightShoot.getEncoder();
-        //m_shootEncoderLeft = m_leftShoot.getEncoder();
+        m_shootEncoderLeft = m_leftShoot.getEncoder();
         m_aimBot.setP(kP);
         m_aimBot.setI(kI);
         m_aimBot.setD(kD);
         // m_aimBot.setIZone(kIz);
-        // m_aimBot.setFF(kFF);
+        m_aimBot.setFF(kFF);
         m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
+        m_leftShoot.follow(m_rightShoot, true);
 
         // System.out.println("P: " + kP + " I: " + kI + " D: " + kD);
         // System.out.println("kMinOutput" + kMinOutput + " kMaxOutput" + kMaxOutput);
@@ -77,7 +79,11 @@ public class ShootSubsystem extends SubsystemBase {
 
         set = Shuffleboard.getTab("shoot").add("Setpoint", 0).getEntry();
         outPut = Shuffleboard.getTab("shoot").add("outPut", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+        outPut1 = Shuffleboard.getTab("shoot").add("outPutValue", 0).getEntry();
+
         
+        m_rightShoot.burnFlash();
+        m_leftShoot.burnFlash();
     }
 
     // converts the velocity to RPM
@@ -98,7 +104,7 @@ public class ShootSubsystem extends SubsystemBase {
     public void stop(){
         m_rightShoot.setIdleMode(IdleMode.kCoast);
        // m_rightShoot.set(0.0);
-        System.out.println("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+        System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
     }
 
     // Takes the setpoint for the motor and makes the motor race towards the
@@ -124,6 +130,8 @@ public class ShootSubsystem extends SubsystemBase {
         // D = d.getDouble(0);
         // setpoint = set.getDouble(0.5);
         outPut.setDouble(m_shootEncoderRight.getVelocity());
+        outPut1.setDouble(m_shootEncoderRight.getVelocity());
+
         //System.out.println("periodic: hhhhhhhhhhhhhhhhhhh" +m_rightShoot.get());
         m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
 
