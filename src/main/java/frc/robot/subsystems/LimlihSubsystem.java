@@ -19,8 +19,8 @@ import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase {
+    NetworkTable limlih;
 
-//    GenericEntry george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
@@ -30,9 +30,9 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     public boolean getTargetVisible(int id) {
-       for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
+        for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
-            return true;
+                return true;
             }
         }
         return false;
@@ -53,12 +53,12 @@ public class LimlihSubsystem extends SubsystemBase {
 
     public double getCalculatedPoseZ(int id) {
 
-        return getPose(id).getX();
+        return getRobotFieldPoseByTag(id).getX();
     }
 
     public double getCalculatedPoseRot(int id) {
 
-        return getPose(id).getRotation().getDegrees();
+        return getRobotFieldPoseByTag(id).getRotation().getDegrees();
     }
 
     /**
@@ -69,7 +69,7 @@ public class LimlihSubsystem extends SubsystemBase {
      * @return the target y angle
      */
     public double getTargetY(int id) {
-        
+
         return getFiducial(id).ty;
     }
 
@@ -83,13 +83,29 @@ public class LimlihSubsystem extends SubsystemBase {
         return getFiducial(id).ta;
     }
 
-   /*  public double getTargetId(int id) {
-
-        return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
+    /*
+     * public double getTargetId(int id) {
+     * 
+     * return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
+     * }
+     */
+    /**
+     * Pose calculated with a single marker
+     * 
+     * @param id
+     * @return Pose
+     */
+    public Pose2d getRobotFieldPoseByTag(int id) {
+        return getFiducial(id).getRobotPose_FieldSpace2D();
     }
-*/
-    public Pose2d getPose(int id) {
-       return getFiducial(id).getRobotPose_FieldSpace2D();
+    
+    /**
+     * Pose calculated with all markers
+     * 
+     * @return Pose
+     */
+    public Pose2d getRobotPose() {
+        return LimelightHelpers.getBotPose2d(limelightHelpNetworkTableName);
     }
 
     public Pose3d getTargetPoseInRobotSpace(int id) {
@@ -115,10 +131,19 @@ public class LimlihSubsystem extends SubsystemBase {
         return null;
     }
 
+    public boolean seeingAnything() {
+        if (limelightResults.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void periodic() {
-        
-        limelightResults = LimelightHelpers.getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+
+        limelightResults = LimelightHelpers
+                .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
     }
 
 }

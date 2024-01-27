@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //import com.ctre.phoenix.motorcontrol.NeutralMode;
 //import com.revrobotics.CANEncoder;
 
@@ -75,13 +74,14 @@ public class SwerveModule {
       double[] tuningVals) {
 
     m_driveMotor = SparkFactory.createCANSparkMax(driveMotorChannel, false); // Define the drive motor as the SparkMAX
-                                                                             // with the input driveMotorChannel
+    // with the input driveMotorChannel
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive motor
     m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation); // Enable voltage compensation so
-                                                                               // feedforward and gains scale with bus
-                                                                               // voltage
+    // feedforward and gains scale with bus
+    // voltage
     // Motor direction is not inverted
     m_driveEncoder = m_driveMotor.getEncoder(); // Obtain the driveEncoder from the drive SparkMAX
+    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kPositionFactor);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kVelocityFactor); // Set velocity conversion factor so
                                                                                  // that encoder and PID control is in
                                                                                  // terms of velocity in m/s

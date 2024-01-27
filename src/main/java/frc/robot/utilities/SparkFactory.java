@@ -4,7 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.ExternalFollower;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
 
@@ -50,6 +50,5 @@ public class SparkFactory {
   public static CANSparkMax createCANSparkMax(int id) {
 
     return createCANSparkMax(id, false);
-
   }
 }

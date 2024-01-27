@@ -105,11 +105,13 @@ public final class Constants {
   public static final class ModuleConstants {
     // Units of %power/s, ie 4.0 means it takes 0.25s to reach 100% power from 0%
     public static final double kTranslationRampRate = 4.0;
-    private static final double kTranslationGearRatio = 8.33333333;
+    private static final double kTranslationGearRatio = 6.75;
 
     private static final double kWheelDiameter = 0.09845; // Wheel Diameter in meters
 
     public static final double kVelocityFactor = (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
+    
+    public static final double kPositionFactor = 1.0 / kTranslationGearRatio;
 
     // NOTE: You shoulds ALWAYS define a reasonable current limit when using
     // brushless motors due to the extremely high stall current available
@@ -163,5 +165,10 @@ public final class Constants {
   }
   public static final class ArmAngleSubsystemConstants {
     public static final double armGearRatio = 1;
+  }
+
+  public static final class FieldConstants {
+    public static final double fieldWidth = 16;
+    public static final double fieldLength = 8;
   }
 }
