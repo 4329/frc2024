@@ -12,72 +12,78 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.SparkFactory;
 
 public class ArmAngleSubsystem extends SubsystemBase {
-
+    
     private CANSparkMax armMotor;
-
+    
     private RelativeEncoder armEncoder;
     private SparkPIDController armPID;
-
+    
     private boolean brake;
-
-    private float maxValue;
-    private float minValue;
-
-    private double radians;
-    private final double tolerance;
-
+    
+    private final double tolerance = 0.1;
+    private double setPoint;
+    
+    private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
-
+    
     public ArmAngleSubsystem() {
-
-        maxValue = 60f;
-        minValue = 15f;
-
+        
         armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
-
+        
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, minValue);
-
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
+        
         armEncoder.setPosition(0);
-        armPID.setP(0.5);
+        armPID.setP(0.15);
         armPID.setI(0);
-        armPID.setD(0.5);
-
+        armPID.setD(1.5);
+        
+        
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
-        tolerance = 0.1;
-
+        
+        
         setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
         
     }
-
+    
     public void setArmAngle(Pose3d pose) {
-        radians = Math.atan2(pose.getY(), pose.getZ()*-1);
-        
+        double radians = Math.atan2(goalConstant, pose.getZ());
+        radians = MathUtils.clamp(0, 1.22, radians);
+        double ticksPerRad = ArmAngle.HORIZONTAL.getValue()/1.22;
+
+        setPoint = radians * ticksPerRad;
     }
     
     public boolean atSetpoint() {
-        return Math.abs(armEncoder.getPosition()-radians)<=tolerance;
+        return Math.abs(armEncoder.getPosition()-setPoint)<=tolerance;
         
     }
     
     @Override
     public void periodic() {
-        setpointGE.setDouble(radians);
+        setpointGE.setDouble(setPoint);
         positionGE.setDouble(armEncoder.getPosition());
-        armPID.setReference(radians, ControlType.kPosition);
+        armPID.setReference(setPoint, ControlType.kPosition);
     }
 
-    
-   
-    
+    public void setArmAngle(ArmAngle armAngle) {
+
+        setPoint = armAngle.getValue();
+
+
+    }
+
+
 
 }

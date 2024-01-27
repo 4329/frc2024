@@ -1,42 +1,37 @@
 package frc.robot.commands.armCommands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
-import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.utilities.ArmAngle;
 
 public class ArmAngleCommand extends Command {
-
-    public LimlihSubsystem limlihSubsystem;
-    public ArmAngleSubsystem armAngleSubsystem;
     
-    public ArmAngleCommand(LimlihSubsystem limlihSubsystem, ArmAngleSubsystem armAngleSubsystem) {
-        this.limlihSubsystem = limlihSubsystem;
+    private ArmAngleSubsystem armAngleSubsystem;
+    private ArmAngle armAngle;
+
+
+
+
+    public ArmAngleCommand(ArmAngleSubsystem armAngleSubsystem, ArmAngle armAngle) {
         this.armAngleSubsystem = armAngleSubsystem;
+        this.armAngle = armAngle;
+        addRequirements(armAngleSubsystem);
+
     }
 
-    private int Alliance() {
-        if (DriverStation.Alliance.Red.equals(DriverStation.getAlliance()))
-            return 7;
-        return 4;
-    }
+
+
 
     @Override
     public void initialize() {
-      armAngleSubsystem.setArmAngle(limlihSubsystem.getTargetPoseInRobotSpace(Alliance()));
+
+        armAngleSubsystem.setArmAngle(armAngle);
+   
     }
-    
+
+
     @Override
     public boolean isFinished() {
-       
         return armAngleSubsystem.atSetpoint();
-    }
-    
-    @Override
-    public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
-    }
-    
-    
+    }    
 }
