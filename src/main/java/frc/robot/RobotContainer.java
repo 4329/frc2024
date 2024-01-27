@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
@@ -35,12 +36,14 @@ import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.HoorayConfig;
 
 /* (including subsystems, commands, and button mappings) should be declared here
@@ -63,13 +66,15 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
   private final ArmAngleSubsystem armAngleSubsystem;
-  private final PoseEstimationSubsystem poseEstimationSubsystem;
-  
+  private final PoseEstimationSubsystem poseEstimationSubsystem;  
+  private final ElevatorSubsystem elevatorSubsystem;
+
   // Command Declarations
   private final ExampleCommand exampleCommand;
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
+  
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -95,6 +100,7 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
+    elevatorSubsystem = new ElevatorSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
 
     // Command Instantiations
@@ -106,6 +112,7 @@ public class RobotContainer {
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
+
     
     
     m_chooser = new SendableChooser<>();
@@ -234,8 +241,8 @@ public class RobotContainer {
 
     operatorController.a().onTrue(exampleCommand);
     operatorController.b().whileTrue(new IntakeCommand(intakeSubsystem, indexSubsystem));
-     operatorController.x().whileTrue(exampleCommand);
-    operatorController.y().onTrue(exampleCommand);
+     operatorController.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO));
+    operatorController.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ONEHUNDRED));
 
     operatorController.povUp().onTrue(exampleCommand);
     operatorController.povRight().onTrue(exampleCommand);

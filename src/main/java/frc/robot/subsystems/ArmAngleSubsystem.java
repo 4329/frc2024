@@ -22,16 +22,17 @@ import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.SparkFactory;
 
 public class ArmAngleSubsystem extends SubsystemBase {
-    
+
     private CANSparkMax armMotor;
-    
+
     private RelativeEncoder armEncoder;
     private SparkPIDController armPID;
     
-    
+    private boolean brake;
+
     private final double tolerance = 0.1;
     private double setPoint;
-    
+
     private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
@@ -43,37 +44,40 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
-        
+
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
-        
+
         armEncoder.setPosition(0);
         armPID.setP(0.15);
         armPID.setI(0);
         armPID.setD(1.5);
-        
-        
+
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
-        
-        
+
         setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
-        
+
+
     }
-    
+
     public void setArmAngle(Pose3d pose) {
         double radians = Math.atan2(goalConstant, pose.getZ());
+
+
+
         radians = MathUtils.clamp(0, 1.22, radians);
-        double ticksPerRad = ArmAngle.HORIZONTAL.getValue()/1.22;
+        double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / 1.22;
 
         setPoint = radians * ticksPerRad;
+
     }
-    
+
     public boolean atSetpoint() {
-        return Math.abs(armEncoder.getPosition()-setPoint)<=tolerance;
-        
+        return Math.abs(armEncoder.getPosition() - setPoint) <= tolerance;
+
     }
 
     private void updateInputs(ArmAngleLog armAngleLog) {
@@ -95,9 +99,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         setPoint = armAngle.getValue();
 
-
     }
-
-
 
 }
