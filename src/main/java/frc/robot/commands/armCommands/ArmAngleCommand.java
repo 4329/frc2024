@@ -5,12 +5,9 @@ import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.utilities.ArmAngle;
 
 public class ArmAngleCommand extends Command {
-    
+
     private ArmAngleSubsystem armAngleSubsystem;
     private ArmAngle armAngle;
-
-
-
 
     public ArmAngleCommand(ArmAngleSubsystem armAngleSubsystem, ArmAngle armAngle) {
         this.armAngleSubsystem = armAngleSubsystem;
@@ -19,19 +16,15 @@ public class ArmAngleCommand extends Command {
 
     }
 
-
-
-
     @Override
     public void initialize() {
 
         armAngleSubsystem.setArmAngle(armAngle);
-   
-    }
 
+    }
 
     @Override
     public boolean isFinished() {
         return armAngleSubsystem.atSetpoint();
-    }    
+    }
 }

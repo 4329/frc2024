@@ -14,7 +14,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -26,13 +25,11 @@ public class LimlihSubsystem extends SubsystemBase {
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
-    private LimlihLogAutoLogged limlihLogAutoLogged;
     // private LimelightResults limelightResults;
     
 
     public LimlihSubsystem() {
 
-        limlihLogAutoLogged = new LimlihLogAutoLogged();
     }
 
     public boolean getTargetVisible(int id) {
