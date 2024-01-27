@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.ejml.equation.IntegerSequence.For;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -13,6 +14,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Model.LimlihLog;
+import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -24,9 +27,13 @@ public class LimlihSubsystem extends SubsystemBase {
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
+    private LimlihLogAutoLogged limlihLogAutoLogged;
+    // private LimelightResults limelightResults;
+    
 
     public LimlihSubsystem() {
 
+        limlihLogAutoLogged = new LimlihLogAutoLogged();
     }
 
     public boolean getTargetVisible(int id) {
@@ -139,11 +146,23 @@ public class LimlihSubsystem extends SubsystemBase {
         }
     }
 
+    private void updateInputs(LimlihLog limlihLog) {
+        // limlihLog.limelightResults = limelightResults;
+        Logger.processInputs("limlih position", limlihLogAutoLogged);
+        boolean[] seeingThings = new boolean[16];
+        for (int i = 0; i < 16; i++) {
+            seeingThings[i] = getFiducial(i) != null;
+        }
+        Logger.recordOutput("kdsmfkl", seeingThings);
+    }
+
     @Override
     public void periodic() {
 
         limelightResults = LimelightHelpers
                 .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+
+        updateInputs(limlihLogAutoLogged);
     }
 
 }
