@@ -27,11 +27,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
@@ -52,6 +55,8 @@ public class RobotContainer {
 
   // Subsystem Declarations
   private final LimlihSubsystem limlihSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
+  private final IndexSubsystem indexSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -78,6 +83,8 @@ public class RobotContainer {
     
     // Subsystem Instantiations
     limlihSubsystem = new LimlihSubsystem();
+    intakeSubsystem = new IntakeSubsystem();
+    indexSubsystem = new IndexSubsystem();
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -214,7 +221,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(exampleCommand);
-    operatorController.b().onTrue(exampleCommand);
+    operatorController.b().whileTrue(new IntakeCommand(intakeSubsystem, indexSubsystem));
      operatorController.x().whileTrue(exampleCommand);
     operatorController.y().onTrue(exampleCommand);
 
