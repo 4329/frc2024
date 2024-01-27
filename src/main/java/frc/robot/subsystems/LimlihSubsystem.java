@@ -53,12 +53,12 @@ public class LimlihSubsystem extends SubsystemBase {
 
     public double getCalculatedPoseZ(int id) {
 
-        return getPose(id).getX();
+        return getRobotFieldPoseByTag(id).getX();
     }
 
     public double getCalculatedPoseRot(int id) {
 
-        return getPose(id).getRotation().getDegrees();
+        return getRobotFieldPoseByTag(id).getRotation().getDegrees();
     }
 
     /**
@@ -95,7 +95,7 @@ public class LimlihSubsystem extends SubsystemBase {
      * @param id
      * @return Pose
      */
-    public Pose2d getPose(int id) {
+    public Pose2d getRobotFieldPoseByTag(int id) {
         return getFiducial(id).getRobotPose_FieldSpace2D();
     }
     
@@ -104,7 +104,7 @@ public class LimlihSubsystem extends SubsystemBase {
      * 
      * @return Pose
      */
-    public Pose2d getPose() {
+    public Pose2d getRobotPose() {
         return LimelightHelpers.getBotPose2d(limelightHelpNetworkTableName);
     }
 

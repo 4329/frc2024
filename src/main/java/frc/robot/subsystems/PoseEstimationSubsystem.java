@@ -41,7 +41,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
         if (limlihSubsystem.seeingAnything()) {
-            estimator.addVisionMeasurement(limlihSubsystem.getPose(), Timer.getFPGATimestamp());
+            estimator.addVisionMeasurement(limlihSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 
@@ -54,7 +54,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
-        poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getPose());
+        poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getRobotPose());
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
     }
