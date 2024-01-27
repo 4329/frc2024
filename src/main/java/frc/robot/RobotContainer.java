@@ -34,6 +34,7 @@ import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
@@ -61,8 +62,9 @@ public class RobotContainer {
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
-  PoseEstimationSubsystem poseEstimationSubsystem;
-
+  private final ArmAngleSubsystem armAngleSubsystem;
+  private final PoseEstimationSubsystem poseEstimationSubsystem;
+  
   // Command Declarations
   private final ExampleCommand exampleCommand;
   private final ResetOdometryCommand resetOdometryCommandForward;
@@ -92,6 +94,7 @@ public class RobotContainer {
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
+    armAngleSubsystem = new ArmAngleSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
 
     // Command Instantiations

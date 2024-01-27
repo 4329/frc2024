@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -12,6 +15,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Model.ArmAngleLog;
+import frc.robot.Model.ArmAngleLogAutoLogged;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.SparkFactory;
@@ -23,7 +28,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private RelativeEncoder armEncoder;
     private SparkPIDController armPID;
     
-    private boolean brake;
     
     private final double tolerance = 0.1;
     private double setPoint;
@@ -31,9 +35,11 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
+    private ArmAngleLogAutoLogged armAngleLogAutoLogged;
     
     public ArmAngleSubsystem() {
         
+        armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
         armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
@@ -69,12 +75,20 @@ public class ArmAngleSubsystem extends SubsystemBase {
         return Math.abs(armEncoder.getPosition()-setPoint)<=tolerance;
         
     }
+
+    private void updateInputs(ArmAngleLog armAngleLog) {
+        armAngleLog.setpoint = setPoint;
+        armAngleLog.position = armEncoder.getPosition();
+        Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
+
+    }
     
     @Override
     public void periodic() {
         setpointGE.setDouble(setPoint);
         positionGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setPoint, ControlType.kPosition);
+        updateInputs(armAngleLogAutoLogged);
     }
 
     public void setArmAngle(ArmAngle armAngle) {

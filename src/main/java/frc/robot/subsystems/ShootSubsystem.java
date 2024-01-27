@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -11,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Model.ShootLog;
+import frc.robot.Model.ShootLogAutoLogged;
 import frc.robot.utilities.SparkFactory;
 
 
@@ -48,6 +53,7 @@ public class ShootSubsystem extends SubsystemBase {
     private double kFF = 0.000169;
     private double kMaxOutput = 1;
     private double kMinOutput = -1;
+    private ShootLogAutoLogged shootLogAutoLogged;
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
@@ -64,6 +70,7 @@ public class ShootSubsystem extends SubsystemBase {
         m_aimBot.setFF(kFF);
         m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
         m_leftShoot.follow(m_rightShoot, true);
+        shootLogAutoLogged = new ShootLogAutoLogged();
 
         // System.out.println("P: " + kP + " I: " + kI + " D: " + kD);
         // System.out.println("kMinOutput" + kMinOutput + " kMaxOutput" + kMaxOutput);
@@ -115,10 +122,15 @@ public class ShootSubsystem extends SubsystemBase {
     // }
     // public void setpoints(double xP, double xI, double xD, double xSetpoint){
     //     m_aimBot.setP(xP);
-    //     m_aimBot.setP(xI);
+    //
     //     m_aimBot.setP(xD);
     //     m_aimBot.setSetpoint(xSetpoint);
     // }
+    private void updateInputs(ShootLog shootLog) {
+        shootLog.setpoint = setpoint;
+        shootLog.PIDOutput = m_rightShoot.get();
+        Logger.processInputs("Shooter", shootLogAutoLogged);
+    }
 
     @Override
     public void periodic() {
@@ -131,48 +143,12 @@ public class ShootSubsystem extends SubsystemBase {
         // setpoint = set.getDouble(0.5);
         outPut.setDouble(m_shootEncoderRight.getVelocity());
         outPut1.setDouble(m_shootEncoderRight.getVelocity());
-
+        updateInputs(shootLogAutoLogged);
+        
         //System.out.println("periodic: hhhhhhhhhhhhhhhhhhh" +m_rightShoot.get());
         m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
 
-        // System.out.println("gggggggggggggggggggggggggggggg" + P);
 
-        // setpoints(P, I, D, setpoint);
-        
-        // PIDOutput = m_aimBot.calculate(m_shootEncoderRight.getVelocity(), setpoint);
-        // m_rightShoot.set(PIDOutput);
-
-        // double Iz = iz.getDouble(0);
-        // double Ff = ff.getDouble(0);
-        // double Max = max.getDouble(0);
-        // double Min = min.getDouble(0);
-        // if PID coefficients on SmartDashboard have changed, write new values to
-        // controller
-        // if ((P != kP)) {
-        //     m_aimBot.setP(P);
-        //     kP = P;
-        // }
-        // if ((I != kI)) {
-        //     m_aimBot.setI(I);
-        //     kI = I;
-        // }
-        // if ((D != kD)) {
-        //     m_aimBot.setD(D);
-        //     kD = D;
-        // }
-        // if ((Iz != kIz)) {
-        //     m_aimBot.setIZone(Iz);
-        //     kIz = Iz;
-        // }
-        // if ((Ff != kFF)) {
-        //     m_aimBot.setFF(Ff);
-        //     kFF = Ff;
-        // }
-        // if ((Max != kMaxOutput) || (Min != kMinOutput)) {
-        //     m_aimBot.setOutputRange(Min, Max);
-        //     kMinOutput = Min;
-        //     kMaxOutput = Max;
-        // }
     }
 
 }
