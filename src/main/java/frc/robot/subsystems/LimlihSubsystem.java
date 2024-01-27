@@ -14,7 +14,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Model.LimlihLog;
 import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
@@ -146,9 +145,8 @@ public class LimlihSubsystem extends SubsystemBase {
         }
     }
 
-    private void updateInputs(LimlihLog limlihLog) {
-        // limlihLog.limelightResults = limelightResults;
-        Logger.processInputs("limlih position", limlihLogAutoLogged);
+    private void updateInputs() {
+       
         boolean[] seeingThings = new boolean[16];
         for (int i = 0; i < 16; i++) {
             seeingThings[i] = getFiducial(i) != null;
@@ -162,7 +160,7 @@ public class LimlihSubsystem extends SubsystemBase {
         limelightResults = LimelightHelpers
                 .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
 
-        updateInputs(limlihLogAutoLogged);
+        updateInputs();
     }
 
 }
