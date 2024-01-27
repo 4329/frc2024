@@ -16,7 +16,7 @@ import frc.robot.subsystems.swerve.Drivetrain;
 
 public class PoseEstimationSubsystem extends SubsystemBase {
 
-    PoseEstimationLogAutoLogged a;
+    PoseEstimationLogAutoLogged poseEstimationLogAutoLogged;
 
     private final Drivetrain drivetrain;
     private final LimlihSubsystem limlihSubsystem;
@@ -25,7 +25,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     public PoseEstimationSubsystem(Drivetrain drivetrain, LimlihSubsystem limlihSubsystem) {
         this.drivetrain = drivetrain;
         this.limlihSubsystem = limlihSubsystem;
-        a = new PoseEstimationLogAutoLogged();
+        poseEstimationLogAutoLogged = new PoseEstimationLogAutoLogged();
         estimator = new SwerveDrivePoseEstimator(
                 Constants.DriveConstants.kDriveKinematics,
                 drivetrain.getGyro(),
@@ -49,17 +49,21 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     public void periodic() {
         updateEstimation();
 
-        updateInputs(a);
+        updateInputs(poseEstimationLogAutoLogged);
     }
 
-    private void updateInputs(PoseEstimationLog stupid) {
-        stupid.combined = transformFieldToAdvantageKit(getPose());
-        stupid.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getPose());
-        stupid.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
-        Logger.processInputs("ohno", a);
+    private void updateInputs(PoseEstimationLog poseEstimationLog) {
+        poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
+        poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getPose());
+        poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
+        Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
     }
 
     private Pose2d transformFieldToAdvantageKit(Pose2d pose) {
-        return new Pose2d(pose.getX() + 8, pose.getY() + 4, pose.getRotation());
+        return new Pose2d(
+            pose.getX() + Constants.FieldConstants.fieldWidth / 2,
+            pose.getY() + Constants.FieldConstants.fieldLength / 2,
+            pose.getRotation()
+        );
     }
 }
