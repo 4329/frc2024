@@ -92,6 +92,10 @@ public class LimlihSubsystem extends SubsystemBase {
        return getFiducial(id).getRobotPose_FieldSpace2D();
     }
 
+    public Pose3d getTargetPoseInRobotSpace(int id) {
+        return getFiducial(id).getTargetPose_RobotSpace();
+    }
+
     public void switchPipeline(int pipeline) {
 
         LimelightHelpers.setPipelineIndex(limelightHelpNetworkTableName, pipeline);

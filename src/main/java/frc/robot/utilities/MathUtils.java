@@ -80,4 +80,26 @@ public class MathUtils {
     return meters * 39.37;
   }
 
+  public static double clamp(double min, double max, double value) {
+
+    if (value < min) {
+
+      return min;
+
+    }
+
+    else if (value > max) {
+
+      return max;
+
+    }
+
+    else {
+
+      return value;
+
+    }
+
+  }
+
 }
