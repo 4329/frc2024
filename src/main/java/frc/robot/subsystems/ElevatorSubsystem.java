@@ -3,6 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.SparkAnalogSensor.Mode;
+
+import java.security.spec.EncodedKeySpec;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAnalogSensor;
@@ -16,6 +21,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Model.Elevator;
+import frc.robot.Model.ElevatorAutoLogged;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.SparkFactory;
@@ -27,6 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private RelativeEncoder elevatorEncoder;
     private SparkPIDController elevatorPID;
 
+    ElevatorAutoLogged elevatorAutoLogged;
     private double setPoint;
     private final double tolerance = 0.1;
 
@@ -40,6 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
     public ElevatorSubsystem() {
+        elevatorAutoLogged=new ElevatorAutoLogged();
 
         elevatorMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.elevatorMotor1, false);
         elevatorMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.elevatorMotor2, false);
@@ -90,8 +99,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     }
 
+public void updateInputs(Elevator elevator) {
+    elevator.position=elevatorEncoder.getPosition();
+    elevator.setpoint=setPoint;
+    Logger.processInputs("George", elevatorAutoLogged);
+}
+
     @Override
     public void periodic() {
+        updateInputs(elevatorAutoLogged);
 
     elevatorPID.setReference(setPoint, ControlType.kPosition);
     /*digiput.setDouble(digitalInput.get()?1:0);
