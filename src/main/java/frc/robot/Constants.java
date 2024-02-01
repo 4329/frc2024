@@ -118,7 +118,7 @@ public final class Constants {
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
-    public static final double[] kTurnPID = { 1.20, 0, 0 }; // should show some minor oscillation when no weight is
+    public static final double[] kTurnPID = { 1.0, 0, 0 }; // should show some minor oscillation when no weight is
                                                              // loaded on the modules
   }
 
@@ -162,7 +162,7 @@ public final class Constants {
     public static final int elevatorMotor2 = 17;
   }
   public static final class LimlihConstants {
-    public static final double limlihHeight = 7;
+    public static final double limlihHeight = 0.7;
   }
   public static final class ArmAngleSubsystemConstants {
     public static final double armGearRatio = 1;

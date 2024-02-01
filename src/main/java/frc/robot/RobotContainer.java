@@ -26,10 +26,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShuffleBoardShootCommand;
+import frc.robot.commands.armCommands.ArmAngleCommand;
+import frc.robot.commands.armCommands.ArmDownCommand;
+import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -40,10 +43,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
-import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
+import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.ElevatorSetpoints;
+import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.HoorayConfig;
 
 /* (including subsystems, commands, and button mappings) should be declared here
@@ -74,6 +77,7 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
+  private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   
 
   private final CenterOnTargetCommand centerOnTargetCommand;
@@ -112,9 +116,10 @@ public class RobotContainer {
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
+    shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
 
     
-    
+    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
@@ -239,15 +244,15 @@ public class RobotContainer {
     operatorController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
     operatorController.back().onTrue(changeFieldOrientCommand);
 
-    operatorController.a().onTrue(exampleCommand);
-    operatorController.b().whileTrue(new IntakeCommand(intakeSubsystem, indexSubsystem));
-     operatorController.x().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO));
-    operatorController.y().onTrue(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ONEHUNDRED));
+    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));
+    operatorController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));//hi jonny was here
 
-    operatorController.povUp().onTrue(exampleCommand);
+    operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
     operatorController.povLeft().onTrue(exampleCommand);
-    operatorController.povDown().onTrue(exampleCommand);
+    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.INTAKE));
   }
 
   // jonathan was here today 2/3/2023

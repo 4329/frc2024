@@ -45,10 +45,10 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
 
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        // armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
+        // armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
 
         armEncoder.setPosition(0);
         armPID.setP(0.15);
@@ -60,15 +60,16 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
 
+        armMotor.burnFlash();
 
     }
 
     public void setArmAngle(Pose3d pose) {
+
         double radians = Math.atan2(goalConstant, pose.getZ());
 
-
-
         radians = MathUtils.clamp(0, 1.22, radians);
+
         double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / 1.22;
 
         setPoint = radians * ticksPerRad;
@@ -86,6 +87,24 @@ public class ArmAngleSubsystem extends SubsystemBase {
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
 
     }
+
+    public void armPositonUp() {
+        // if (setPoint > ArmAngle.ZERO.getValue()) {
+
+            setPoint += 1;
+        }
+
+       // }
+
+        
+    public void armPositonDown() {
+      //  if (setPoint < ArmAngle.FULL.getValue()) {
+
+            setPoint -= 1;
+      //  }
+        
+        }
+
     
     @Override
     public void periodic() {
@@ -100,5 +119,5 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setPoint = armAngle.getValue();
 
     }
-
+    
 }

@@ -62,7 +62,7 @@ public class SwerveAlignment {
                 // Front left
                 frontLeftAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
                                 .add("Front Left Angle", m_dDrivetrain.getFrontLeftAngle())
-                                .withWidget(BuiltInWidgets.kTextView)
+                                .withWidget(BuiltInWidgets.kGraph)
                                 .getEntry();
                 frontLeftRawAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
                                 .add("FL Raw Angle",

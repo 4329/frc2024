@@ -1,23 +1,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCommand extends Command {
+public class OutakeCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
     
     
     
-    public IntakeCommand(IntakeSubsystem intakeSubsystem) {
+    public OutakeCommand(IntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
         addRequirements(intakeSubsystem);
 
 
     }
-
-
 
  
     @Override
@@ -29,8 +26,8 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
 
-        System.out.println("intake in");
-        intakeSubsystem.in();
+        System.out.println("intake out");
+        intakeSubsystem.out();
 
     }
 
@@ -39,7 +36,7 @@ public class IntakeCommand extends Command {
     public void end(boolean interrupted) {
         intakeSubsystem.stop();
 
-        System.out.println("intake in stop");
+        System.out.println("intake out stop");
      
     }
 

@@ -18,13 +18,11 @@ public class ShootCommand extends Command{
     @Override
     public void initialize() {
         shootSubsystem.changeSetpoint(setPoint);
-        System.out.println("initilize was called iiiiiiii");
     }
 
     @Override
     public void execute() {
-        //shootSubsystem.shoot();
-        System.out.println("execute was called eeeeeeeeeee");
+        shootSubsystem.shoot();
     }
 
 
@@ -36,7 +34,6 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("end was called uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
         shootSubsystem.stop();
         shootSubsystem.changeSetpoint(0);
     }

@@ -88,15 +88,12 @@ public class ShootSubsystem extends SubsystemBase {
         outPut = Shuffleboard.getTab("shoot").add("outPut", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
         outPut1 = Shuffleboard.getTab("shoot").add("outPutValue", 0).getEntry();
 
-        
+        m_rightShoot.setIdleMode(IdleMode.kCoast);
+        m_leftShoot.setIdleMode(IdleMode.kCoast);
         m_rightShoot.burnFlash();
         m_leftShoot.burnFlash();
     }
 
-    // converts the velocity to RPM
-    public double getVelocityRPM() {
-        return m_shootEncoderRight.getVelocity() * 600 / 2048;
-    }
 
 
     public void changeSetpoint(double set) {
@@ -147,6 +144,14 @@ public class ShootSubsystem extends SubsystemBase {
         
         //System.out.println("periodic: hhhhhhhhhhhhhhhhhhh" +m_rightShoot.get());
         m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+
+
+    }
+
+    public void setRPM(double rpm) {
+
+        setpoint = rpm;
+        
 
 
     }
