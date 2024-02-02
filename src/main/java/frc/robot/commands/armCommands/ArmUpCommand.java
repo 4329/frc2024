@@ -15,14 +15,14 @@ public class ArmUpCommand extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
       
         armAngleSubsystem.armPositonUp();
     }
 
     @Override
     public boolean isFinished() {
-        return armAngleSubsystem.atSetpoint();
+        return false;
     }
     
     

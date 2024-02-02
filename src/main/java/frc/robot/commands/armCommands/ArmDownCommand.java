@@ -15,15 +15,20 @@ public class ArmDownCommand extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
       
         armAngleSubsystem.armPositonDown();
     }
 
     @Override
     public boolean isFinished() {
-        return armAngleSubsystem.atSetpoint();
+        return false;
     }
+
+    
+
+
+    
     
 
     

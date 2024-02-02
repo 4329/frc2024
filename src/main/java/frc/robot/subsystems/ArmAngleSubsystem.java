@@ -31,7 +31,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private boolean brake;
 
     private final double tolerance = 0.1;
-    private double setPoint;
+    private double setPoint = 0;
 
     private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
@@ -45,10 +45,10 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
 
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-        // armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
-        // armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
 
         armEncoder.setPosition(0);
         armPID.setP(0.15);
@@ -89,19 +89,19 @@ public class ArmAngleSubsystem extends SubsystemBase {
     }
 
     public void armPositonUp() {
-        // if (setPoint > ArmAngle.ZERO.getValue()) {
+        if (setPoint < ArmAngle.FULL.getValue() - 0.1) {
 
-            setPoint += 1;
+            setPoint += 0.1;
         }
 
-       // }
+       }
 
         
     public void armPositonDown() {
-      //  if (setPoint < ArmAngle.FULL.getValue()) {
+       if (setPoint > ArmAngle.ZERO.getValue() + 0.1) {
 
-            setPoint -= 1;
-      //  }
+            setPoint -= 0.1;
+       }
         
         }
 
@@ -112,6 +112,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
         positionGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setPoint, ControlType.kPosition);
         updateInputs(armAngleLogAutoLogged);
+        System.out.println("arm encoder at" + armEncoder.getPosition());
     }
 
     public void setArmAngle(ArmAngle armAngle) {
