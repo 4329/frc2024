@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.revrobotics.SparkAnalogSensor.Mode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAnalogSensor;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
@@ -28,9 +30,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double setPoint;
     private final double tolerance = 0.1;
 
-    private DigitalInput digitalInput;
-    GenericEntry digiput;
-    GenericEntry digiputLimit;
+    // private SparkAnalogSensor sparkAnalogSensor;
+    // GenericEntry digiput;
+    // GenericEntry digiputLimit;
+
+
 
     private SparkLimitSwitch m_reverseLimit;
 
@@ -61,16 +65,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor1.burnFlash();
         elevatorMotor2.burnFlash();
 
-        digitalInput = new DigitalInput(0);
+        /*digitalInput = new DigitalInput(0);
         digiput = Shuffleboard
         .getTab("MagenetSensor")
         .add("MagnetSensor", 1)
         .withWidget(BuiltInWidgets.kGraph)
-        .getEntry();
+        .getEntry();*/
 
         m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
-        digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+        //digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
     }
 
@@ -90,8 +94,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
 
     elevatorPID.setReference(setPoint, ControlType.kPosition);
-    digiput.setDouble(digitalInput.get()?1:0);
-    digiputLimit.setBoolean(m_reverseLimit.isPressed());
+    /*digiput.setDouble(digitalInput.get()?1:0);
+    digiputLimit.setBoolean(m_reverseLimit.isPressed());*/
 
     }
 

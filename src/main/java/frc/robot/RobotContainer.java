@@ -34,6 +34,7 @@ import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
+import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -81,6 +82,7 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final ShuffleBoardShootCommand shuffleBoardShootCommand;
+  private final AutoZero autoZero;
   
 
   private final CenterOnTargetCommand centerOnTargetCommand;
@@ -123,6 +125,8 @@ public class RobotContainer {
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
+    autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
+    
 
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
@@ -306,6 +310,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
+    // autoZero.schedule();
   }
 
   public void autonomousPeriodic() {
