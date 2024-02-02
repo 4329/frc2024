@@ -31,7 +31,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private boolean brake;
 
     private final double tolerance = 0.1;
-    private double setPoint;
+    private double setPoint = 0;
 
     private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
@@ -60,15 +60,16 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
 
+        armMotor.burnFlash();
 
     }
 
     public void setArmAngle(Pose3d pose) {
+
         double radians = Math.atan2(goalConstant, pose.getZ());
 
-
-
         radians = MathUtils.clamp(0, 1.22, radians);
+
         double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / 1.22;
 
         setPoint = radians * ticksPerRad;
@@ -86,6 +87,24 @@ public class ArmAngleSubsystem extends SubsystemBase {
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
 
     }
+
+    public void armPositonUp() {
+        if (setPoint < ArmAngle.FULL.getValue() - 0.1) {
+
+            setPoint += 0.1;
+        }
+
+       }
+
+        
+    public void armPositonDown() {
+       if (setPoint > ArmAngle.ZERO.getValue() + 0.1) {
+
+            setPoint -= 0.1;
+       }
+        
+        }
+
     
     @Override
     public void periodic() {
@@ -93,6 +112,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
         positionGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setPoint, ControlType.kPosition);
         updateInputs(armAngleLogAutoLogged);
+        System.out.println("arm encoder at" + armEncoder.getPosition());
     }
 
     public void setArmAngle(ArmAngle armAngle) {
@@ -100,5 +120,5 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setPoint = armAngle.getValue();
 
     }
-
+    
 }

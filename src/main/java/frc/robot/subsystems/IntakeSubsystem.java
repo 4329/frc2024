@@ -24,17 +24,20 @@ public class IntakeSubsystem extends SubsystemBase {
         bottomIntakeMotor.setIdleMode(IdleMode.kBrake);
         intakeLogAutoLogged = new IntakeLogAutoLogged();
 
-        bottomIntakeMotor.follow(topIntakeMotor, true);
+        bottomIntakeMotor.follow(topIntakeMotor, false);
+
+        topIntakeMotor.burnFlash();
+        bottomIntakeMotor.burnFlash();
 
     }
 
     public void in() {
-        topIntakeMotor.set(0.1);
+        topIntakeMotor.set(0.5);
 
     }
 
     public void out() {
-        topIntakeMotor.set(-0.1);
+        topIntakeMotor.set(-0.5);
 
     }
 

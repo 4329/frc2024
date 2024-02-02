@@ -23,19 +23,22 @@ public class IndexSubsystem extends SubsystemBase {
         bottomIndexMotor.setIdleMode(IdleMode.kBrake);
         indexLogAutoLogged = new IndexLogAutoLogged();
 
+        topIndexMotor.burnFlash();
+        bottomIndexMotor.burnFlash();
+
         // bottomIndexMotor.follow(topIndexMotor, true);
 
     }
 
     public void in() {
-        topIndexMotor.set(0.3);
-        bottomIndexMotor.set(-0.5);
+        topIndexMotor.set(0.8);
+        bottomIndexMotor.set(0.5);
 
     }
 
     public void out() {
-        topIndexMotor.set(-0.3);
-        bottomIndexMotor.set(0.5);
+        topIndexMotor.set(-0.8);
+        bottomIndexMotor.set(-0.5);
 
     }
 

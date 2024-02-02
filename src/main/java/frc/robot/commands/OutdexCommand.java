@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCommand extends Command {
+public class OutdexCommand extends Command {
 
-    private IntakeSubsystem intakeSubsystem;
+    private IndexSubsystem indexSubsystem;
     
     
     
-    public IntakeCommand(IntakeSubsystem intakeSubsystem) {
-        this.intakeSubsystem = intakeSubsystem;
-        addRequirements(intakeSubsystem);
+    public OutdexCommand(IndexSubsystem indexSubsystem) {
+        this.indexSubsystem = indexSubsystem;
+        addRequirements(indexSubsystem);
 
 
     }
@@ -29,17 +29,17 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
 
-        System.out.println("intake in");
-        intakeSubsystem.in();
+        System.out.println("index out");
+        indexSubsystem.out();
 
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.stop();
+        indexSubsystem.stop();
 
-        System.out.println("intake in stop");
+        System.out.println("index out stop");
      
     }
 
