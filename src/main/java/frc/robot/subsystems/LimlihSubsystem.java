@@ -78,13 +78,7 @@ public class LimlihSubsystem extends SubsystemBase {
 
         return getFiducial(id).ta;
     }
-
-    /*
-     * public double getTargetId(int id) {
-     * 
-     * return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
-     * }
-     */
+    
     /**
      * Pose calculated with a single marker
      * 
@@ -92,6 +86,7 @@ public class LimlihSubsystem extends SubsystemBase {
      * @return Pose
      */
     public Pose2d getRobotFieldPoseByTag(int id) {
+
         return getFiducial(id).getRobotPose_FieldSpace2D();
     }
     
@@ -112,8 +107,9 @@ public class LimlihSubsystem extends SubsystemBase {
 
         return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
     }
-    
+
     public Pose3d getTargetSpacePose(int id) {
+
         return getFiducial(id).getRobotPose_TargetSpace();
     }
 
@@ -123,6 +119,7 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     public double getCalculatedPoseY(int id) {
+
         return getTargetSpacePose(id).getY();
     }
 
