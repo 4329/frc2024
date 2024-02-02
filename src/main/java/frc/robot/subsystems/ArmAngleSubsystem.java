@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.revrobotics.SparkLimitSwitch.Type;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -45,8 +46,8 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
 
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
 
@@ -62,6 +63,24 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         armMotor.burnFlash();
 
+    }
+
+    public void incrementSetpoint(double increment) {
+        System.out.println("Armanglesubsystem Incrementsetpoint ran");
+        setPoint += increment;
+
+    }
+
+    public boolean endSensor() {
+
+        return armMotor.getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
+
+    }
+
+    public void resetZero() {
+
+        setPoint = 0;
+        armEncoder.setPosition(0);
     }
 
     public void setArmAngle(Pose3d pose) {

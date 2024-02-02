@@ -2,10 +2,18 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.revrobotics.SparkAnalogSensor.Mode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAnalogSensor;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.ArmAngle;
@@ -21,6 +29,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double setPoint;
     private final double tolerance = 0.1;
+
+    // private SparkAnalogSensor sparkAnalogSensor;
+    // GenericEntry digiput;
+    // GenericEntry digiputLimit;
+
+
+
+    private SparkLimitSwitch m_reverseLimit;
 
 
     public ElevatorSubsystem() {
@@ -48,6 +64,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         // elevatorEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
         elevatorMotor1.burnFlash();
         elevatorMotor2.burnFlash();
+
+        /*digitalInput = new DigitalInput(0);
+        digiput = Shuffleboard
+        .getTab("MagenetSensor")
+        .add("MagnetSensor", 1)
+        .withWidget(BuiltInWidgets.kGraph)
+        .getEntry();*/
+
+        m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        m_reverseLimit.enableLimitSwitch(true);
+        //digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
     }
 
     public void setElevatorPose(ElevatorSetpoints elevatorSetpoints) {
@@ -66,8 +94,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
 
     elevatorPID.setReference(setPoint, ControlType.kPosition);
+    /*digiput.setDouble(digitalInput.get()?1:0);
+    digiputLimit.setBoolean(m_reverseLimit.isPressed());*/
 
+    }
 
+    public void zeroElevator() {
+        elevatorMotor1.set(-0.1);
     }
 
 }
