@@ -39,8 +39,8 @@ public class CenterOnTargetCommand extends Command {
         timer.reset();
         timer.start();
 
-        rotationPID.setP(0.05);
-        rotationPID.setTolerance(0);
+        rotationPID.setP(0.035);
+        rotationPID.setTolerance(0.2);
         rotationPID.setSetpoint(0);
     }
 
@@ -48,7 +48,7 @@ public class CenterOnTargetCommand extends Command {
     public void execute() {
         double rotationCalc = 0;
         if (limlihSubsystem.getTargetVisible(targetId)) {
-
+            System.out.println("sdajfjdsalfjsdakflkdsfds");
             rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX(targetId));
 
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
@@ -73,11 +73,16 @@ public class CenterOnTargetCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return rotationPID.atSetpoint();
     }
 
     private double inputTransform(double input) {
         return MathUtils.singedSquare(MathUtils.applyDeadband(input));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.stop();
     }
 
 }

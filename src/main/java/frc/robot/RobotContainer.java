@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -37,11 +38,13 @@ import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
+import frc.robot.commands.drive.DriveToTargetCommand;
 import frc.robot.commands.drive.ResetOdometryCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
@@ -82,6 +85,9 @@ public class RobotContainer {
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
+  private final DriveToTargetCommand driveToTargetCommand;
+
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -120,6 +126,8 @@ public class RobotContainer {
 
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
@@ -223,8 +231,8 @@ public class RobotContainer {
 
     driverController.a().whileTrue(shootCommand);
     driverController.b().onTrue(exampleCommand);
-    driverController.x().onTrue(exampleCommand);
-    driverController.y().whileTrue(centerOnTargetCommand);
+    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));
+    driverController.y().onTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
     driverController.povRight().onTrue(exampleCommand);
