@@ -106,8 +106,7 @@ public class ShootSubsystem extends SubsystemBase {
     }
 
     public void stop(){
-        m_rightShoot.setIdleMode(IdleMode.kCoast);
-       // m_rightShoot.set(0.0);
+       m_rightShoot.stopMotor();
         //System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
     }
 

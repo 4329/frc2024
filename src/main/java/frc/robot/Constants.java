@@ -11,6 +11,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public final class Constants {
 
+  public static final double voltageCompensation = 12.0;
+
   /**
    * Static method containing all Drivetrain constants
    */
