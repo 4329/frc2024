@@ -46,10 +46,11 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
 
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
+        armMotor.enableVoltageCompensation(Constants.voltageCompensation);
 
         armEncoder.setPosition(0);
         armPID.setP(0.15);
