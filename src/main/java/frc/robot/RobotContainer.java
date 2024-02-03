@@ -133,8 +133,7 @@ public class RobotContainer {
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
-    autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
-    
+    autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem); 
 
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
@@ -261,7 +260,7 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
   
-    operatorController.rightBumper().whileTrue(exampleCommand); //arm up
+    operatorController.rightBumper().whileTrue(shootCommand).toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); //arm up
     operatorController.leftBumper().whileTrue(exampleCommand); //arm down
 
     operatorController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
