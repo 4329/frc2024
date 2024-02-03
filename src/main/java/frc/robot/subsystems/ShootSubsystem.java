@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
 import frc.robot.utilities.SparkFactory;
@@ -46,6 +47,7 @@ public class ShootSubsystem extends SubsystemBase {
 
     GenericEntry iz;
     GenericEntry ff;
+    GenericEntry rpmEntry;
     private double kP = 0.000025;
     private double kI = 0;
     private double kD = 0.0000;
@@ -57,7 +59,7 @@ public class ShootSubsystem extends SubsystemBase {
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
-        m_rightShoot = SparkFactory.createCANSparkMax(rightID, false);
+        m_rightShoot = SparkFactory.createCANSparkMax(rightID, true);
         m_leftShoot = SparkFactory.createCANSparkMax(12, true);
         m_aimBot = m_rightShoot.getPIDController();
         //m_aimBot = new PIDController(P, I, D);
@@ -70,6 +72,8 @@ public class ShootSubsystem extends SubsystemBase {
         m_aimBot.setFF(kFF);
         m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
         m_leftShoot.follow(m_rightShoot, true);
+        m_rightShoot.enableVoltageCompensation(Constants.voltageCompensation);
+        m_leftShoot.enableVoltageCompensation(Constants.voltageCompensation);
         shootLogAutoLogged = new ShootLogAutoLogged();
 
         // System.out.println("P: " + kP + " I: " + kI + " D: " + kD);
@@ -106,8 +110,7 @@ public class ShootSubsystem extends SubsystemBase {
     }
 
     public void stop(){
-        m_rightShoot.setIdleMode(IdleMode.kCoast);
-       // m_rightShoot.set(0.0);
+       m_rightShoot.stopMotor();
         //System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
     }
 

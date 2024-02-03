@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Model.IndexLogAutoLogged;
 import frc.robot.utilities.SparkFactory;
 
@@ -19,6 +20,8 @@ public class IndexSubsystem extends SubsystemBase {
 
         topIndexMotor = SparkFactory.createCANSparkMax(14);
         bottomIndexMotor = SparkFactory.createCANSparkMax(15);
+        topIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
+        bottomIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
         topIndexMotor.setIdleMode(IdleMode.kBrake);
         bottomIndexMotor.setIdleMode(IdleMode.kBrake);
         indexLogAutoLogged = new IndexLogAutoLogged();
@@ -32,13 +35,13 @@ public class IndexSubsystem extends SubsystemBase {
 
     public void in() {
         topIndexMotor.set(0.8);
-        bottomIndexMotor.set(0.5);
+        bottomIndexMotor.set(0.4);
 
     }
 
     public void out() {
         topIndexMotor.set(-0.8);
-        bottomIndexMotor.set(-0.5);
+        bottomIndexMotor.set(-0.4);
 
     }
 
