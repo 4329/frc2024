@@ -260,7 +260,7 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
   
-    operatorController.rightBumper().onTrue(shootCommand).toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); //arm up
+    operatorController.rightBumper().whileTrue(shootCommand).toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); //arm up
     operatorController.leftBumper().whileTrue(exampleCommand); //arm down
 
     operatorController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
