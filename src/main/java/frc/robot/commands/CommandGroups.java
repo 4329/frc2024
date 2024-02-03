@@ -40,8 +40,8 @@ public class CommandGroups {
 
 
             return new ParallelCommandGroup (
-                    new IndexHoldCommand(indexSubsystem),
-                    new ShootCommand(shootSubsystem).withTimeout(5)).withTimeout(7);
+                    new IndexCommand(indexSubsystem).withTimeout(3),
+                    new ShootCommand(shootSubsystem).withTimeout(3));
 
 
         
