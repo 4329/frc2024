@@ -14,15 +14,12 @@
     "backLeftTurningEncoderPort": 0,
     "backRightTurningEncoderPort": 2,
 
-    "frontLeftOffset": 2.5,
-    "frontRightOffset": 4.4,
-    "backLeftOffset": 3.05,
-    "backRightOffset": -0.75,
+    "frontLeftOffset": 2.4757,
+    "frontRightOffset": 4.4365,
+    "backLeftOffset": 3.025,
+    "backRightOffset": 5.5299,
     
-    "frontLeftOffset": 1.610887560911489,
-    "frontRightOffset": 0.96,
-    "backLeftOffset": -2.1553,
-    "backRightOffset": 3,
+
     "extraShuffleBoardToggle": false,
     "limelighturl": "http://10.43.29.11:5800",
     "rollDirection": 1
