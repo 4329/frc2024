@@ -1,44 +1,25 @@
 package frc.robot.utilities;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.swerve.Drivetrain;
 
 public class SwerveAlignment {
         private Drivetrain m_dDrivetrain;
-        public static final String SWERVE_ALIGNMENT = "Swerve Alignment";
         public static final String ALIGNMENT_SUGGESTION = "Alignment Suggestion";
 
         // Front left
-        private GenericEntry frontLeftAngleDisplay;
-        private GenericEntry frontLeftRawAngleDisplay;
-        private GenericEntry frontLeftOffsetDisplay;
-        private GenericEntry frontLeftAlignmentDisplayDeg;
-        private GenericEntry frontLeftAlignmentDisplayRad;
+        private GenericEntry frontLeftAlignmentDisplayRa;
         private double frontLeftInitialAngle;
         // Front right
-        private GenericEntry frontRightAngleDisplay;
-        private GenericEntry frontRightRawAngleDisplay;
-        private GenericEntry frontRightOffsetDisplay;
-        private GenericEntry frontRightAlignmentDisplayDeg;
-        private GenericEntry frontRightAlignmentDisplayRad;
+        private GenericEntry frontRightAlignmentDisplayRa;
         private double frontRightInitialAngle;
         // Back left
-        private GenericEntry backLeftAngleDisplay;
-        private GenericEntry backLeftRawAngleDisplay;
-        private GenericEntry backLeftOffsetDisplay;
-        private GenericEntry backLeftAlignmentDisplayDeg;
-        private GenericEntry backLeftAlignmentDisplayRad;
+        private GenericEntry backLeftAlignmentDisplayRa;
         private double backLeftInitialAngle;
         // Back right
-        private GenericEntry backRightAngleDisplay;
-        private GenericEntry backRightRawAngleDisplay;
-        private GenericEntry backRightOffsetDisplay;
-        private GenericEntry backRightAlignmentDisplayDeg;
-        private GenericEntry backRightAlignmentDisplayRad;
+        private GenericEntry backRightAlignmentDisplayRa;
         private double backRightInitialAngle;
 
         /**
@@ -56,90 +37,21 @@ public class SwerveAlignment {
                 frontRightInitialAngle = m_dDrivetrain.getFrontRightAngle() - DriveConstants.kFrontRightOffset;
                 backLeftInitialAngle = m_dDrivetrain.getBackLeftAngle() - DriveConstants.kBackLeftOffset;
                 backRightInitialAngle = m_dDrivetrain.getBackRightAngle() - DriveConstants.kBackRightOffset;
-                // Documentation:
-                Shuffleboard.getTab(SWERVE_ALIGNMENT).add("Documentation",
-                                "stem2u.sharepoint.com/sites/frc-4329/_layouts/15/Doc.aspx?sourcedoc={ee32bd41-c1a3-423a-87d6-f53d8420ff36}&action=edit&wd=target%28Software.one%7C2a079b56-fdcc-4604-b12e-be6a0710f6e0%2FSwerve%20Alignment%20Documentation%7Cc3883e58-a23c-4335-9693-aaef763459b2%2F%29")
-                                .withPosition(7, 1).withSize(4, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-                // Front left
-                frontLeftAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Front Left Angle", m_dDrivetrain.getFrontLeftAngle())
-                                .withWidget(BuiltInWidgets.kGraph)
-                                .getEntry();
-                frontLeftRawAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("FL Raw Angle",
-                                m_dDrivetrain.getFrontLeftAngle() - DriveConstants.kFrontLeftOffset)
-                                .withPosition(1, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontLeftOffsetDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Front Left Offset", DriveConstants.kFrontLeftOffset).withPosition(2, 0)
-                                .withSize(1, 2)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontLeftAlignmentDisplayDeg = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("FL Test Offset (d)",
-                                Math.toDegrees(m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle))
-                                .withPosition(0, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontLeftAlignmentDisplayRad = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
-                                .add("FL Test Offset (r)", m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle)
+                frontLeftAlignmentDisplayRa = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
+                                .add("FL Test Offset (ra)", m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle)
                                 .withPosition(1, 0)
                                 .withWidget(BuiltOutWidgets.kRadiableGyro).getEntry();
-                // Front right
-                frontRightAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Front Right Angle", m_dDrivetrain.getFrontLeftAngle()).withPosition(3, 0)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontRightRawAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("FR Raw Angle",
-                                m_dDrivetrain.getFrontRightAngle() - DriveConstants.kFrontRightOffset)
-                                .withPosition(4, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontRightOffsetDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Front Right Offset", DriveConstants.kFrontRightOffset).withPosition(5, 0)
-                                .withSize(1, 2)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontRightAlignmentDisplayDeg = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("FR Test Offset (d)",
-                                                Math.toDegrees(m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle))
-                                .withPosition(3, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
-                frontRightAlignmentDisplayRad = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
-                                .add("FR Test Offset (r)", m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle)
+                frontRightAlignmentDisplayRa = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
+                                .add("FR Test Offset (ra)", m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle)
                                 .withPosition(4, 0)
                                 .withWidget(BuiltOutWidgets.kRadiableGyro).getEntry();
-                // Back left
-                backLeftAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Back Left Angle", m_dDrivetrain.getBackLeftAngle()).withPosition(0, 2)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                backLeftRawAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("BL Raw Angle", m_dDrivetrain.getBackLeftAngle() - DriveConstants.kBackLeftOffset)
-                                .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-                backLeftOffsetDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Back Left Offset", DriveConstants.kBackLeftOffset).withPosition(2, 2)
-                                .withSize(1, 2)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                backLeftAlignmentDisplayDeg = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("BL Test Offset (d)",
-                                Math.toDegrees(m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle))
-                                .withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
-                backLeftAlignmentDisplayRad = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
-                                .add("BL Test Offset (r)", m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle)
-                                .withPosition(1, 2)
+                backLeftAlignmentDisplayRa = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
+                                .add("BL Test Offset (ra)", m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle)
+                                .withPosition(1, 3)
                                 .withWidget(BuiltOutWidgets.kRadiableGyro).getEntry();
-                // Back right
-                backRightAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Back Right Angle",
-                                m_dDrivetrain.getBackRightAngle() - DriveConstants.kBackRightOffset)
-                                .withPosition(3, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-                backRightRawAngleDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("BR Raw Angle",
-                                m_dDrivetrain.getBackRightAngle() - DriveConstants.kBackRightOffset)
-                                .withPosition(4, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-                backRightOffsetDisplay = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("Back Right Offset", DriveConstants.kBackRightOffset).withPosition(5, 2)
-                                .withSize(1, 2)
-                                .withWidget(BuiltInWidgets.kTextView).getEntry();
-                backRightAlignmentDisplayDeg = Shuffleboard.getTab(SWERVE_ALIGNMENT)
-                                .add("BR Test Offset (d)",
-                                Math.toDegrees(m_dDrivetrain.getBackRightAngle() - backRightInitialAngle))
-                                .withPosition(3, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
-                backRightAlignmentDisplayRad = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
-                                .add("BR Test Offset (r)", m_dDrivetrain.getBackRightAngle() - backRightInitialAngle)
-                                .withPosition(4, 2)
+                 backRightAlignmentDisplayRa = Shuffleboard.getTab(ALIGNMENT_SUGGESTION)
+                                .add("BR Test Offset (ra)", m_dDrivetrain.getBackRightAngle() - backRightInitialAngle)
+                                .withPosition(4, 3)
                                 .withWidget(BuiltOutWidgets.kRadiableGyro).getEntry();
 
         }
@@ -148,29 +60,12 @@ public class SwerveAlignment {
         public void updateSwerveAlignment() {
                 System.out.println(BuiltOutWidgets.kRadiableGyro.string);
                 // Front left
-                frontLeftAngleDisplay.setDouble(m_dDrivetrain.getFrontLeftAngle());
-                frontLeftRawAngleDisplay.setDouble(m_dDrivetrain.getFrontLeftAngle() - DriveConstants.kFrontLeftOffset);
-                frontLeftAlignmentDisplayDeg
-                                .setDouble(Math.toDegrees(m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle));
-                frontLeftAlignmentDisplayRad.setDouble(m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle);
+                frontLeftAlignmentDisplayRa.setDouble((DriveConstants.kFrontLeftOffset - ((m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle) - DriveConstants.kFrontLeftOffset)) % (2*Math.PI));
                 // Front right
-                frontRightAngleDisplay.setDouble(m_dDrivetrain.getFrontRightAngle());
-                frontRightRawAngleDisplay
-                                .setDouble(m_dDrivetrain.getFrontRightAngle() - DriveConstants.kFrontRightOffset);
-                frontRightAlignmentDisplayDeg
-                                .setDouble(Math.toDegrees(m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle));
-                frontRightAlignmentDisplayRad.setDouble(m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle);
+                frontRightAlignmentDisplayRa.setDouble((DriveConstants.kFrontRightOffset - ((m_dDrivetrain.getFrontRightAngle() - frontRightInitialAngle) - DriveConstants.kFrontRightOffset)) % (2*Math.PI));
                 // Back left
-                backLeftAngleDisplay.setDouble(m_dDrivetrain.getBackLeftAngle());
-                backLeftRawAngleDisplay.setDouble(m_dDrivetrain.getBackLeftAngle() - DriveConstants.kBackLeftOffset);
-                backLeftAlignmentDisplayDeg
-                                .setDouble(Math.toDegrees(m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle));
-                backLeftAlignmentDisplayRad.setDouble(m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle);
+                backLeftAlignmentDisplayRa.setDouble((DriveConstants.kBackLeftOffset - ((m_dDrivetrain.getBackLeftAngle() - backLeftInitialAngle) - DriveConstants.kBackLeftOffset)) % (2*Math.PI));
                 // Back right
-                backRightAngleDisplay.setDouble(m_dDrivetrain.getBackRightAngle());
-                backRightRawAngleDisplay.setDouble(m_dDrivetrain.getBackRightAngle() - DriveConstants.kBackRightOffset);
-                backRightAlignmentDisplayDeg
-                                .setDouble(Math.toDegrees(m_dDrivetrain.getBackRightAngle() - backRightInitialAngle));
-                backRightAlignmentDisplayRad.setDouble(m_dDrivetrain.getBackRightAngle() - backRightInitialAngle);
+                backRightAlignmentDisplayRa.setDouble((DriveConstants.kBackRightOffset - ((m_dDrivetrain.getBackRightAngle() - backRightInitialAngle) - DriveConstants.kBackRightOffset)) % (2*Math.PI));
         }
 }

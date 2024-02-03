@@ -14,10 +14,10 @@
     "backLeftTurningEncoderPort": 0,
     "backRightTurningEncoderPort": 2,
 
-    "frontLeftOffset": 2.5,
-    "frontRightOffset": 4.4,
-    "backLeftOffset": 3.05,
-    "backRightOffset": -0.75,
+    "frontLeftOffset": 2.4757,
+    "frontRightOffset": 4.4365,
+    "backLeftOffset": 3.025,
+    "backRightOffset": 5.5299,
     
 
     "extraShuffleBoardToggle": false,
