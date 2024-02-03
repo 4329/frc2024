@@ -108,7 +108,7 @@ public class ShootSubsystem extends SubsystemBase {
     public void stop(){
         m_rightShoot.setIdleMode(IdleMode.kCoast);
        // m_rightShoot.set(0.0);
-        System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
+        //System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
     }
 
     // Takes the setpoint for the motor and makes the motor race towards the

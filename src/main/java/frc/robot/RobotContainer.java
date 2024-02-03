@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
@@ -46,6 +48,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
+import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
@@ -75,6 +78,8 @@ public class RobotContainer {
   private final ArmAngleSubsystem armAngleSubsystem;
   private final PoseEstimationSubsystem poseEstimationSubsystem;  
   private final ElevatorSubsystem elevatorSubsystem;
+  private final LightsSusbsystem lightsSusbsystem;
+
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -84,6 +89,8 @@ public class RobotContainer {
   private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   private final AutoZero autoZero;
   
+  private final LightCommand lightCommandTwinkles;
+  private final LightCommand lightCommandBlack;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -113,6 +120,7 @@ public class RobotContainer {
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
+    lightsSusbsystem = new LightsSusbsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
 
     // Command Instantiations
@@ -128,6 +136,8 @@ public class RobotContainer {
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
     
 
+    lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
+    lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
@@ -234,9 +244,10 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(shootCommand);
-    driverController.b().onTrue(exampleCommand);
-    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));
-    driverController.y().onTrue(centerOnTargetCommand);
+    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));    
+    driverController.b().onTrue(lightCommandTwinkles);
+    driverController.b().onFalse(lightCommandBlack);
+    driverController.y().whileTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
     driverController.povRight().onTrue(exampleCommand);
