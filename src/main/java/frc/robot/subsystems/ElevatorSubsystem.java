@@ -48,7 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
     public ElevatorSubsystem() {
-        elevatorAutoLogged=new ElevatorAutoLogged();
+        elevatorAutoLogged = new ElevatorAutoLogged();
 
         elevatorMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.elevatorMotor1, false);
         elevatorMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.elevatorMotor2, false);
