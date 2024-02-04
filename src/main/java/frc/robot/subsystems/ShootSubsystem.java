@@ -59,8 +59,8 @@ public class ShootSubsystem extends SubsystemBase {
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
-        m_rightShoot = SparkFactory.createCANSparkMax(rightID, true);
-        m_leftShoot = SparkFactory.createCANSparkMax(12, true);
+        m_rightShoot = SparkFactory.createCANSparkMax(rightID, false);
+        m_leftShoot = SparkFactory.createCANSparkMax(12, false);
         m_aimBot = m_rightShoot.getPIDController();
         //m_aimBot = new PIDController(P, I, D);
         m_shootEncoderRight = m_rightShoot.getEncoder();
