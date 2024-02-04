@@ -92,7 +92,8 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / 1.22;
 
-        setPoint = radians * ticksPerRad;
+        setPoint = 15 - (radians * ticksPerRad);
+
 
     }
 

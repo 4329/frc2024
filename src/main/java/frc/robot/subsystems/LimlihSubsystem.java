@@ -102,7 +102,15 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     public Pose3d getTargetPoseInRobotSpace(int id) {
-        return getFiducial(id).getTargetPose_RobotSpace();
+
+        LimelightTarget_Fiducial limetarget = getFiducial(id);
+        if (limetarget != null) {
+
+            return limetarget.getTargetPose_RobotSpace();
+
+        }
+        return null;
+
     }
 
     public double getTargetId(int id) {

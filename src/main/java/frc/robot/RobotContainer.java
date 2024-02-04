@@ -37,6 +37,7 @@ import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
+import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -140,6 +141,7 @@ public class RobotContainer {
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
     
     m_chooser = new SendableChooser<>();
     initializeCamera();
@@ -237,7 +239,7 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(exampleCommand);
     
     driverController.rightBumper().whileTrue(exampleCommand);
-    driverController.leftBumper().whileTrue(exampleCommand);
+    driverController.leftBumper().whileTrue(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
 
     driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
