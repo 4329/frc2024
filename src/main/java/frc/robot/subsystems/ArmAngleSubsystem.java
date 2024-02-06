@@ -34,9 +34,10 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private final double tolerance = 0.1;
     private double setPoint = 0;
 
-    private final double goalConstant = 1.98 - Constants.LimlihConstants.limlihHeight;
+    private final double goalConstant = 2.13 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
+    private GenericEntry radiansRotatedGE;
     private ArmAngleLogAutoLogged armAngleLogAutoLogged;
     
     public ArmAngleSubsystem() {
@@ -58,9 +59,11 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armPID.setD(1.5);
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
+    
 
         setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
+        radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
 
         armMotor.burnFlash();
 
@@ -90,9 +93,11 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         radians = MathUtils.clamp(0, 1.22, radians);
 
-        double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / 1.22;
+        double ticksPerRad = 15.315;
 
-        setPoint = 15 - (radians * ticksPerRad);
+
+
+        setPoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
 
 
     }
@@ -105,6 +110,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private void updateInputs(ArmAngleLog armAngleLog) {
         armAngleLog.setpoint = setPoint;
         armAngleLog.position = armEncoder.getPosition();
+        armAngleLog.radians = armEncoder.getPosition() / 15.315;
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
 
     }
@@ -131,6 +137,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     public void periodic() {
         setpointGE.setDouble(setPoint);
         positionGE.setDouble(armEncoder.getPosition());
+        radiansRotatedGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setPoint, ControlType.kPosition);
         updateInputs(armAngleLogAutoLogged);
         System.out.println("arm encoder at" + armEncoder.getPosition());

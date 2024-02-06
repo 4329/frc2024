@@ -250,10 +250,10 @@ public class RobotContainer {
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().onTrue(exampleCommand);
+    driverController.povUp().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povRight().onTrue(exampleCommand);
     driverController.povLeft().onTrue(exampleCommand);
-    driverController.povDown().onTrue(exampleCommand);
+    driverController.povDown().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
@@ -276,7 +276,7 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
     operatorController.povLeft().onTrue(exampleCommand);
-    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.INTAKE));
+    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.HORIZONTAL));
   }
 
   // jonathan was here today 2/3/2023

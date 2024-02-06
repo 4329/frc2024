@@ -6,5 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 public class ArmAngleLog {
     public double setpoint;
     public double position;
+    public double radians;
     
 }

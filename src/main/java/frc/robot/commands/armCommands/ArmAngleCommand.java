@@ -16,10 +16,17 @@ public class ArmAngleCommand extends Command {
 
     }
 
-    @Override
-    public void initialize() {
+    // @Override
+    // public void initialize() {
 
-        armAngleSubsystem.setArmAngle(armAngle);
+
+    // }
+
+    
+
+    @Override
+    public void execute() {
+                armAngleSubsystem.setArmAngle(armAngle);
 
     }
 
