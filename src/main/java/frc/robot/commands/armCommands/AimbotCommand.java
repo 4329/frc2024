@@ -17,14 +17,14 @@ import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 
 public class AimbotCommand extends Command {
-    
-    public Command aimbotCommand(LimlihSubsystem limlihSubsystem, ArmAngleSubsystem armAngleSubsystem, PoseEstimationSubsystem poseEstimationSubsystem, 
-            ShootSubsystem shootSubsystem, DriveByController driveByController, CommandXboxController driverController, Drivetrain drivetrain) {
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                int targetId = alliance.isPresent() && alliance.get().equals(DriverStation.Alliance.Red) ? 4 : 7;
-                return new SequentialCommandGroup(
+
+    public Command aimbotCommand(LimlihSubsystem limlihSubsystem, ArmAngleSubsystem armAngleSubsystem,
+            ShootSubsystem shootSubsystem, Drivetrain drivetrain) {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        int targetId = alliance.isPresent() && alliance.get().equals(DriverStation.Alliance.Red) ? 4 : 7;
+        return new SequentialCommandGroup(
                 new DriveToTargetCommand(drivetrain, limlihSubsystem, targetId, -3),
-                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem).withTimeout(1), 
+                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem).withTimeout(1),
                 new ShootCommand(shootSubsystem)
         );
     }
