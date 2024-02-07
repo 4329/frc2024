@@ -139,7 +139,7 @@ public class RobotContainer {
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
-    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
     
@@ -250,7 +250,7 @@ public class RobotContainer {
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem));
     driverController.povRight().onTrue(exampleCommand);
     driverController.povLeft().onTrue(exampleCommand);
     driverController.povDown().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
