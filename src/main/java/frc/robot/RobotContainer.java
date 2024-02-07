@@ -37,6 +37,7 @@ import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
+import frc.robot.commands.armCommands.AimbotCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -97,6 +98,7 @@ public class RobotContainer {
   private final DriveToTargetCommand driveToTargetCommand;
 
 
+  private final AimbotCommand aimbotCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -137,6 +139,7 @@ public class RobotContainer {
 
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
+    aimbotCommand = new AimbotCommand();
     
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
@@ -243,9 +246,8 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(shootCommand);
-    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));    
-    driverController.b().onTrue(lightCommandTwinkles);
-    driverController.b().onFalse(lightCommandBlack);
+    driverController.b().onTrue(exampleCommand);
+    driverController.x().onTrue(aimbotCommand);
     driverController.y().whileTrue(centerOnTargetCommand);
 
     driverController.povUp().onTrue(exampleCommand);
