@@ -69,6 +69,7 @@ public class CommandGroups {
 
                                                 new SequentialCommandGroup(
 
+<<<<<<< HEAD
                                                                 new WaitCommand(2),
 
                                                                 new IndexCommand(indexSubsystem)
@@ -80,3 +81,8 @@ public class CommandGroups {
         }
 
 }
+=======
+
+}
+    
+>>>>>>> 12eb142 (Mounted line break sensors and created a command to automatically reverse index after intake for more consistant shots.)

@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IndexReverseForShotCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShootCommand;
@@ -51,6 +52,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
 import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
@@ -80,7 +82,7 @@ public class RobotContainer {
   private final PoseEstimationSubsystem poseEstimationSubsystem;  
   private final ElevatorSubsystem elevatorSubsystem;
   private final LightsSusbsystem lightsSusbsystem;
-
+  private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -123,6 +125,7 @@ public class RobotContainer {
     elevatorSubsystem = new ElevatorSubsystem();
     lightsSusbsystem = new LightsSusbsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
+    lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -139,8 +142,13 @@ public class RobotContainer {
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
+<<<<<<< HEAD
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+=======
+    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);    
+>>>>>>> 12eb142 (Mounted line break sensors and created a command to automatically reverse index after intake for more consistant shots.)
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
     
     m_chooser = new SendableChooser<>();
@@ -268,7 +276,7 @@ public class RobotContainer {
     operatorController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
     operatorController.back().onTrue(changeFieldOrientCommand);
 
-    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem)).toggleOnFalse(new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
     operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     operatorController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));
     operatorController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));//hi jonny was here
