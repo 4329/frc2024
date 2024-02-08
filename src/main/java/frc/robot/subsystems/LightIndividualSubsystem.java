@@ -25,42 +25,44 @@ public class LightIndividualSubsystem extends SubsystemBase {
         addressableLED.setData(addressableLEDBuffer);
         addressableLED.start();
 
-        
         Optional<Alliance> alliance = DriverStation.getAlliance();
-        if(alliance.isPresent()){
-            if(alliance.get().equals(DriverStation.Alliance.Red)){
+        if (alliance.isPresent()) {
+            if (alliance.get().equals(DriverStation.Alliance.Red)) {
                 hue = 0;
-            }
-            else{
+            } else {
                 hue = 120;
             }
-        } 
-        else{hue = 60;};
+        } else {
+            hue = 60;
+        }
     }
 
     public void beforeMatchColors() {
         for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             addressableLEDBuffer.setHSV(i, hue, 255, 150);
         }
-
-        addressableLED.setData(addressableLEDBuffer);
     }
 
     public void blank() {
         for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             addressableLEDBuffer.setHSV(i, 0, 0, 0);
         }
-
-        addressableLED.setData(addressableLEDBuffer);
     }
 
-    public void progressBar(double progress, int hue, int saturation, int brightness) {
+    public void lightsOn(){
+        addressableLEDBuffer.setHSV(addressableLEDBuffer.getLength(), 0, 0, 155);
+    }
+
+    public void progressBarColorrrr(double progress, int hue, int saturation) {
         int length = (int) (addressableLEDBuffer.getLength() * progress);
         for (int i = 0; i < length; i++) {
-            addressableLEDBuffer.setHSV(i, hue, saturation, brightness);
+            addressableLEDBuffer.setHSV(i, hue, saturation, 155);
         }
+    }
 
-        addressableLED.setData(addressableLEDBuffer);
+    public void setColor(int hue, int saturation) {
+
+        addressableLEDBuffer.setHSV(addressableLEDBuffer.getLength(), hue, saturation, 0);
     }
 
     public void rainbow() {
@@ -76,13 +78,12 @@ public class LightIndividualSubsystem extends SubsystemBase {
         hue += 1;
         // Check bounds
         hue %= 180;
-        addressableLED.setData(addressableLEDBuffer);
 
     }
 
     @Override
     public void periodic() {
-        // bufferColors(hue, saturation, lightness);
+        addressableLED.setData(addressableLEDBuffer);
     }
 
 }
