@@ -15,7 +15,7 @@ public class LightsSusbsystem extends SubsystemBase {
     public double lighte = 0.99;
 
     public LightsSusbsystem() {
-        Strand = new Spark(1);
+        Strand = new Spark(2);
         //System.out.println(Strand + "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
         Light = Shuffleboard.getTab("LED").add("Light", 0).getEntry();
 

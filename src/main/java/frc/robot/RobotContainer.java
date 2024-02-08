@@ -41,6 +41,15 @@ import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShootFireCommand;
 import frc.robot.commands.ShooterShotCommand;
 import frc.robot.commands.ShotReverseCommand;
+import frc.robot.commands.IDFlywheelCommand;
+import frc.robot.commands.IndexReverseForShotCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LightBlankCommand;
+import frc.robot.commands.LightCommand;
+import frc.robot.commands.LimDriveSetCommand;
+import frc.robot.commands.LightIndividualCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -71,6 +80,8 @@ import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightIndividualSubsystem;
+import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
 import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
@@ -113,6 +124,7 @@ public class RobotContainer {
   private final LightsSusbsystem lightsSusbsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private final LoggingSubsystem loggingSubsystem;
+  private final LightIndividualSubsystem lightIndividualSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -125,6 +137,8 @@ public class RobotContainer {
   
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
+  private final LightIndividualCommand lightIndividualCommand;
+  private final LightBlankCommand lightBlankCommand;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -172,6 +186,7 @@ public class RobotContainer {
     //NamedCommands.registerCommand("speakershoot", CommandGroups.aimAndShoot(shootSubsystem, drivetrain, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem).withTimeout(3));
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
 
+    lightIndividualSubsystem = new LightIndividualSubsystem();
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -202,6 +217,17 @@ public class RobotContainer {
 
     new CommandLoginator();
 
+    lightIndividualCommand = new LightIndividualCommand(lightIndividualSubsystem, 0.75, 125, 200);
+    lightBlankCommand = new LightBlankCommand(lightIndividualSubsystem);
+
+    
+    //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    lightIndividualSubsystem.setDefaultCommand(lightBlankCommand);
+    
+    // driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
+    
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();

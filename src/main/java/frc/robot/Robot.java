@@ -32,6 +32,8 @@ import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
+import frc.robot.commands.BeforeMatchCommand;
+import frc.robot.subsystems.LightIndividualSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
@@ -48,6 +50,9 @@ public class Robot extends LoggedRobot {
   public Robot() {
 
   }
+  private LightIndividualSubsystem lightIndividualSubsystem;
+  private BeforeMatchCommand beforeMatchCommand;
+  
 
   private File findThumbDir() {
      File f = new File("/media");
@@ -109,6 +114,7 @@ public class Robot extends LoggedRobot {
     checkLimelightCommand = new CheckLimelightCommand();
 
     m_robotContainer.robotInit();
+    
   }
 
   @Override
@@ -175,6 +181,10 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
+    lightIndividualSubsystem = new LightIndividualSubsystem();
+    beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
+    beforeMatchCommand.schedule();
   }
 
   @Override
