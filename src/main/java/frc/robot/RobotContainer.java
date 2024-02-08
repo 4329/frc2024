@@ -142,13 +142,8 @@ public class RobotContainer {
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
-<<<<<<< HEAD
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
-=======
-    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);    
->>>>>>> 12eb142 (Mounted line break sensors and created a command to automatically reverse index after intake for more consistant shots.)
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
     
     m_chooser = new SendableChooser<>();
