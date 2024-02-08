@@ -58,4 +58,9 @@ public class IndexSubsystem extends SubsystemBase {
         Logger.processInputs("index", indexLogAutoLogged);
     }
 
+    public void slowOut() {
+        topIndexMotor.set(-0.2);
+        bottomIndexMotor.set(-0.1);
+    }
+
 }
