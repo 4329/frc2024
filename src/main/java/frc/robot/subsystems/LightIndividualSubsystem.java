@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -18,10 +20,13 @@ public class LightIndividualSubsystem extends SubsystemBase {
     private int saturation = 255;
     private int brightness = 128;
 
+    private List<Color8Bit> savedColors;
+
     public LightIndividualSubsystem() {
         addressableLED = new AddressableLED(1);
         addressableLEDBuffer = new AddressableLEDBuffer(60);
         addressableLED.setLength(addressableLEDBuffer.getLength());
+        savedColors = new ArrayList<>(addressableLEDBuffer.getLength());
         addressableLED.setData(addressableLEDBuffer);
         addressableLED.start();
 
@@ -43,21 +48,27 @@ public class LightIndividualSubsystem extends SubsystemBase {
         }
     }
 
-    private void changeBrightness(int newBrightness) {
-        brightness = newBrightness;
+    public void blank() {
+        brightness = 0;
         for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             Color8Bit color = addressableLEDBuffer.getLED8Bit(i);
-            float[] hsvVals = Color.RGBtoHSB(color.red, color.green, color.blue, null);
-            addressableLEDBuffer.setHSV(i, (int)(hsvVals[0] * 180.0), (int)(hsvVals[1] * 255.0), brightness);
+            savedColors.add(i, color);
+            addressableLEDBuffer.setHSV(i, 0, 0, brightness);
         }
     }
 
-    public void blank() {
-        changeBrightness(0);
-    }
-
     public void lightsOn(){
-        changeBrightness(128);
+        brightness = 128;
+        for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
+            Color8Bit color = savedColors.get(i);
+            if (color != null) {
+                float[] hsvVals = Color.RGBtoHSB(color.red, color.green, color.blue, null);
+                addressableLEDBuffer.setHSV(i, (int)(hsvVals[0] * 180.0), (int)(hsvVals[1] * 255.0), brightness);
+            }
+            else {
+                addressableLEDBuffer.setHSV(i, 0, 0, brightness);
+            }
+        }
     }
 
     public void progressBarColorrrr(double progress, int hue, int saturation) {
