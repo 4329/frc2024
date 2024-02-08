@@ -48,19 +48,19 @@ public class ShootSubsystem extends SubsystemBase {
     GenericEntry iz;
     GenericEntry ff;
     GenericEntry rpmEntry;
-    private double kP = 0.000025;
-    private double kI = 0;
-    private double kD = 0.0000;
-    // private double kIz = 0;
-    private double kFF = 0.000169;
+    private double kP = 0.0004;
+    private double kI = 0.00001;
+    private double kD = 3;
+    private double kIz = 67;
+    private double kFF = 0.00015;
     private double kMaxOutput = 1;
     private double kMinOutput = -1;
     private ShootLogAutoLogged shootLogAutoLogged;
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
-        m_rightShoot = SparkFactory.createCANSparkMax(rightID, true);
-        m_leftShoot = SparkFactory.createCANSparkMax(12, true);
+        m_rightShoot = SparkFactory.createCANSparkMax(rightID, false);
+        m_leftShoot = SparkFactory.createCANSparkMax(12, false);
         m_aimBot = m_rightShoot.getPIDController();
         //m_aimBot = new PIDController(P, I, D);
         m_shootEncoderRight = m_rightShoot.getEncoder();
@@ -68,7 +68,7 @@ public class ShootSubsystem extends SubsystemBase {
         m_aimBot.setP(kP);
         m_aimBot.setI(kI);
         m_aimBot.setD(kD);
-        // m_aimBot.setIZone(kIz);
+        m_aimBot.setIZone(kIz);
         m_aimBot.setFF(kFF);
         m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
         m_leftShoot.follow(m_rightShoot, true);
@@ -105,9 +105,7 @@ public class ShootSubsystem extends SubsystemBase {
             
     }
 
-    public void shoot() {
-        m_rightShoot.set(0.5);
-    }
+
 
     public void stop(){
        m_rightShoot.stopMotor();
@@ -146,9 +144,21 @@ public class ShootSubsystem extends SubsystemBase {
         updateInputs(shootLogAutoLogged);
         
         //System.out.println("periodic: hhhhhhhhhhhhhhhhhhh" +m_rightShoot.get());
-        m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
 
 
+
+        if (setpoint == 0) {
+
+            m_rightShoot.stopMotor();
+            m_leftShoot.stopMotor();
+
+        }
+
+        else {
+            
+            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+
+        }
     }
 
     public void setRPM(double rpm) {

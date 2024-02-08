@@ -7,7 +7,7 @@ import frc.robot.subsystems.ShootSubsystem;
 public class ShootCommand extends Command{
     
     private ShootSubsystem shootSubsystem;
-    private double setPoint = 1500; 
+    private double setPoint = 4500; 
     
 
     public ShootCommand(ShootSubsystem shootSubsystem){
@@ -22,7 +22,8 @@ public class ShootCommand extends Command{
 
     @Override
     public void execute() {
-        shootSubsystem.shoot();
+
+        
     }
 
 
@@ -34,8 +35,8 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        shootSubsystem.stop();
         shootSubsystem.changeSetpoint(0);
+        shootSubsystem.stop();
     }
 
 

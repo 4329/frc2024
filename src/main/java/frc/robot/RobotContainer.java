@@ -37,6 +37,7 @@ import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
+import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -138,8 +139,9 @@ public class RobotContainer {
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
-    shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
     
     m_chooser = new SendableChooser<>();
     initializeCamera();
@@ -237,7 +239,7 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(exampleCommand);
     
     driverController.rightBumper().whileTrue(exampleCommand);
-    driverController.leftBumper().whileTrue(exampleCommand);
+    driverController.leftBumper().whileTrue(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
 
     driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
@@ -248,10 +250,10 @@ public class RobotContainer {
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().onTrue(exampleCommand);
-    driverController.povRight().onTrue(exampleCommand);
-    driverController.povLeft().onTrue(exampleCommand);
-    driverController.povDown().onTrue(exampleCommand);
+    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    driverController.povDown().whileTrue(exampleCommand);
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
@@ -274,7 +276,7 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
     operatorController.povLeft().onTrue(exampleCommand);
-    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.INTAKE));
+    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.HORIZONTAL));
   }
 
   // jonathan was here today 2/3/2023
