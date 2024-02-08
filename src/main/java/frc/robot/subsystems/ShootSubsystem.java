@@ -105,9 +105,7 @@ public class ShootSubsystem extends SubsystemBase {
             
     }
 
-    public void shoot() {
-        m_rightShoot.set(0.5);
-    }
+
 
     public void stop(){
        m_rightShoot.stopMotor();
@@ -146,9 +144,21 @@ public class ShootSubsystem extends SubsystemBase {
         updateInputs(shootLogAutoLogged);
         
         //System.out.println("periodic: hhhhhhhhhhhhhhhhhhh" +m_rightShoot.get());
-        m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
 
 
+
+        if (setpoint == 0) {
+
+            m_rightShoot.stopMotor();
+            m_leftShoot.stopMotor();
+
+        }
+
+        else {
+            
+            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+
+        }
     }
 
     public void setRPM(double rpm) {
