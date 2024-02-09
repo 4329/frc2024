@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 
 public enum BuiltOutWidgets implements WidgetType {
 
-    kRadiableGyro("RadiableGyro");
+    kRadiableGyro("RadiableGyro"),
+    kSometimesText("Sometimes Text"),
+    kLoadBar("Loading Bar");
 
     public String string;
 

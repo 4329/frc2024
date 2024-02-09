@@ -14,12 +14,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ArmAngleLog;
 import frc.robot.Model.ArmAngleLogAutoLogged;
 import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.BuiltOutWidgets;
 import frc.robot.utilities.MathUtils;
+import frc.robot.utilities.SometimesTextSendable;
 import frc.robot.utilities.SparkFactory;
 
 public class ArmAngleSubsystem extends SubsystemBase {
@@ -32,7 +35,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private boolean brake;
 
     private final double tolerance = 0.1;
-    private double setPoint = 0;
+    private double setpoint = 0;
 
     private final double goalConstant = 2.13 - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
@@ -66,87 +69,82 @@ public class ArmAngleSubsystem extends SubsystemBase {
         radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
 
         armMotor.burnFlash();
-
     }
 
     public void incrementSetpoint(double increment) {
-        System.out.println("Armanglesubsystem Incrementsetpoint ran");
-        setPoint += increment;
-
+        setpoint += increment;
     }
 
     public boolean endSensor() {
 
         return armMotor.getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
-
     }
 
     public void resetZero() {
 
-        setPoint = 0;
+        setpoint = 0;
         armEncoder.setPosition(0);
     }
 
     public void setArmAngle(Pose3d pose) {
 
         double radians = Math.atan2(goalConstant, pose.getZ());
-
         radians = MathUtils.clamp(0, 1.22, radians);
 
         double ticksPerRad = 15.315;
 
 
 
-        setPoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
+        setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
 
 
+        setpoint = radians * ticksPerRad;
     }
 
     public boolean atSetpoint() {
-        return Math.abs(armEncoder.getPosition() - setPoint) <= tolerance;
+        return Math.abs(armEncoder.getPosition() - setpoint) <= tolerance;
 
     }
 
     private void updateInputs(ArmAngleLog armAngleLog) {
-        armAngleLog.setpoint = setPoint;
+        armAngleLog.setpoint = setpoint;
         armAngleLog.position = armEncoder.getPosition();
         armAngleLog.radians = armEncoder.getPosition() / 15.315;
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
-
     }
 
     public void armPositonUp() {
-        if (setPoint < ArmAngle.FULL.getValue() - 0.1) {
+        if (setpoint < ArmAngle.FULL.getValue() - 0.1) {
 
-            setPoint += 0.1;
+            setpoint += 0.1;
         }
-
-       }
+    }
 
         
     public void armPositonDown() {
-       if (setPoint > ArmAngle.ZERO.getValue() + 0.1) {
+       if (setpoint > ArmAngle.ZERO.getValue() + 0.1) {
 
-            setPoint -= 0.1;
-       }
-        
-        }
+            setpoint -= 0.1;
+       }    
+    }
 
     
     @Override
     public void periodic() {
-        setpointGE.setDouble(setPoint);
+        setpointGE.setDouble(setpoint);
         positionGE.setDouble(armEncoder.getPosition());
         radiansRotatedGE.setDouble(armEncoder.getPosition());
-        armPID.setReference(setPoint, ControlType.kPosition);
+        armPID.setReference(setpoint, ControlType.kPosition);
         updateInputs(armAngleLogAutoLogged);
-        System.out.println("arm encoder at" + armEncoder.getPosition());
     }
 
     public void setArmAngle(ArmAngle armAngle) {
 
-        setPoint = armAngle.getValue();
+        setpoint = armAngle.getValue();
+    }
 
+    private void setArmAngle(double armAngle) {
+        setpoint = armAngle;
     }
     
 }
