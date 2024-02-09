@@ -92,13 +92,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
         radians = MathUtils.clamp(0, 1.22, radians);
 
         double ticksPerRad = 15.315;
-
-
-
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
-
-
-        setpoint = radians * ticksPerRad;
     }
 
     public boolean atSetpoint() {
