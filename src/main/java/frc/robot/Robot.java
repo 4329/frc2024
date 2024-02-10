@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -28,6 +31,7 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
+  private File logfolder;
 
   @Override
   public void robotInit() {
@@ -35,9 +39,20 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter("/media/sda/logs")); // Log to a USB stick ("/U/logs")
+      logfolder = new File("/media/sda/logable");
+      boolean pluggedIn = true;
+      try {
+        logfolder.createNewFile();
+      } catch (IOException e) {
+        e.printStackTrace();
+        pluggedIn = false;
+      }
+      if (pluggedIn) {
+        Logger.addDataReceiver(new WPILOGWriter("/media/sda/logs")); // Log to a USB stick ("/U/logs")
+      }
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+      // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution
+      // logging
     } else {
       setUseTiming(false); // Run as fast as possible
       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
@@ -47,8 +62,7 @@ public class Robot extends LoggedRobot {
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
     // the "Understanding Data Flow" page
-Logger.start();
-
+    Logger.start();
 
     HoorayConfig.gimmeConfig();
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -80,7 +94,6 @@ Logger.start();
 
   @Override
   public void disabledPeriodic() {
-
   }
 
   @Override
@@ -111,8 +124,8 @@ Logger.start();
 
   @Override
   public void teleopInit() {
-    
-                    // be added.
+
+    // be added.
     drivetrain.brakeMode();
     m_robotContainer.teleopInit();
     // This makes sure that the autonomous stops running when
