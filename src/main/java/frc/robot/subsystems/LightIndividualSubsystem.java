@@ -59,7 +59,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
 
     public void lightsOn(){
         brightness = 128;
-        for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
+        for (int i = 1; i < addressableLEDBuffer.getLength(); i++) {
             Color8Bit color = savedColors.get(i);
             if (color != null) {
                 float[] hsvVals = Color.RGBtoHSB(color.red, color.green, color.blue, null);
@@ -91,7 +91,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
             // shape is a circle so only one value needs to precess
             final int hues = (int) (hue + (i * 180 / addressableLEDBuffer.getLength())) % 180;
             // Set the value
-            addressableLEDBuffer.setHSV(i, hues, 255, brightness);
+            addressableLEDBuffer.setHSV(i, hues, 255, 128);
         }
         // Increase by to make the rainbow "move"
         hue += 1;
@@ -103,6 +103,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         addressableLED.setData(addressableLEDBuffer);
+        System.out.println("periodic is runing____________________________________");
     }
 
 }

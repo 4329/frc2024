@@ -48,6 +48,10 @@ import frc.robot.commands.LightBlankCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.LimDriveSetCommand;
 import frc.robot.commands.LightIndividualCommand;
+<<<<<<< HEAD
+=======
+import frc.robot.commands.LightsOnCommand;
+>>>>>>> c2d2498 (got the blank to work)
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
@@ -139,6 +143,7 @@ public class RobotContainer {
   private final LightCommand lightCommandBlack;
   private final LightIndividualCommand lightIndividualCommand;
   private final LightBlankCommand lightBlankCommand;
+  private final LightsOnCommand lightsOnCommand;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -219,11 +224,12 @@ public class RobotContainer {
 
     lightIndividualCommand = new LightIndividualCommand(lightIndividualSubsystem, 0.75, 125, 200);
     lightBlankCommand = new LightBlankCommand(lightIndividualSubsystem);
+    lightsOnCommand = new LightsOnCommand(lightIndividualSubsystem);
 
     
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    lightIndividualSubsystem.setDefaultCommand(lightBlankCommand);
+    //lightIndividualSubsystem.setDefaultCommand(lightBlankCommand);
     
     // driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));

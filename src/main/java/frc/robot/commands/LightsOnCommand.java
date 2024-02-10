@@ -13,6 +13,8 @@ public class LightsOnCommand extends Command{
 
     @Override
     public void initialize() {
+        lightIndividualSubsystem.blank();
+        
         lightIndividualSubsystem.lightsOn();
     }
 

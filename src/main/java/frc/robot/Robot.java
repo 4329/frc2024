@@ -182,9 +182,9 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     
-    lightIndividualSubsystem = new LightIndividualSubsystem();
-    beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
-    beforeMatchCommand.schedule();
+    //lightIndividualSubsystem = new LightIndividualSubsystem();
+    //beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
+    //beforeMatchCommand.schedule();
   }
 
   @Override
