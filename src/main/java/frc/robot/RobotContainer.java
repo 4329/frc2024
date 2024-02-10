@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -96,12 +97,12 @@ public class RobotContainer {
   
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
-
+  
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
   private final DriveToTargetCommand driveToTargetCommand;
-
-
+  
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -110,8 +111,8 @@ public class RobotContainer {
    */
 
   public RobotContainer(Drivetrain drivetrain) {
-
-
+    
+    
     m_robotDrive = drivetrain;
     
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -128,7 +129,9 @@ public class RobotContainer {
     lightsSusbsystem = new LightsSusbsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
-
+    
+    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    
     // Command Instantiations
     exampleCommand = new ExampleCommand();
     resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)),
@@ -140,20 +143,26 @@ public class RobotContainer {
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem); 
-
+    
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
+
+    
     
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
-  }
 
+
+    //commands for auto
+
+  }
+  
   /**
    * Creates and establishes camera streams for the shuffleboard ~Ben
    */
@@ -182,27 +191,29 @@ public class RobotContainer {
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("Example Command", new ExampleCommand());
+    //eventMap.put("shootyshootshoot", CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem).withTimeout(10));
+    //eventMap.put("knomknom", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem).withTimeout(5));
+    
     return eventMap;
   }
-
+  
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-        m_robotDrive::getPose,
-        m_robotDrive::resetOdometry,
-        m_robotDrive::getChassisSpeed,
-        m_robotDrive::setModuleStates,
+      m_robotDrive::getPose,
+      m_robotDrive::resetOdometry,
+      m_robotDrive::getChassisSpeed,
+      m_robotDrive::setModuleStates,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(Constants.AutoConstants.kPXController),
-            new PIDConstants(Constants.AutoConstants.kPThetaController),
-            Constants.AutoConstants.kMaxSpeed,
-            0.4,
-            new ReplanningConfig()
-        ),
-        () -> {
-          Optional<Alliance> alliance = DriverStation.getAlliance();
-          return alliance.isPresent() ? alliance.get().equals(DriverStation.Alliance.Red) : false;
-        },
-        m_robotDrive
+          new PIDConstants(Constants.AutoConstants.kPXController),
+          new PIDConstants(Constants.AutoConstants.kPThetaController),
+          Constants.AutoConstants.kMaxSpeed,
+          0.4,
+          new ReplanningConfig()
+          ),
+          () -> {
+            return false;
+          },
+          m_robotDrive
     );
   }
 
