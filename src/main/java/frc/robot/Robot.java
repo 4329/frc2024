@@ -50,8 +50,9 @@ public class Robot extends LoggedRobot {
   public Robot() {
 
   }
-  private LightIndividualSubsystem lightIndividualSubsystem;
-  private BeforeMatchCommand beforeMatchCommand;
+  
+  private LightIndividualSubsystem lightIndividualSubsystem = new LightIndividualSubsystem();
+  private BeforeMatchCommand beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
   
 
   private File findThumbDir() {
@@ -108,7 +109,7 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     drivetrain = new Drivetrain();
-    m_robotContainer = new RobotContainer(drivetrain);
+    m_robotContainer = new RobotContainer(drivetrain, lightIndividualSubsystem);
     drivetrain.resetOdometry(new Pose2d());
 
     checkLimelightCommand = new CheckLimelightCommand();
@@ -134,12 +135,12 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     timer.start();
+    beforeMatchCommand.schedule();
     drivetrain.brakeMode();
   }
   
   @Override
   public void disabledPeriodic() {
-
   }
 
   @Override
@@ -182,9 +183,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     
-    //lightIndividualSubsystem = new LightIndividualSubsystem();
-    //beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
-    //beforeMatchCommand.schedule();
+    
   }
 
   @Override

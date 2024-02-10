@@ -55,6 +55,9 @@ import frc.robot.commands.LightsOnCommand;
 >>>>>>> c2d2498 (got the blank to work)
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuffleBoardShootCommand;
+import frc.robot.commands.LightCommands.LightCommandGroup;
+import frc.robot.commands.LightCommands.LightProgressCommand;
+import frc.robot.commands.LightCommands.LightRambowCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -142,9 +145,10 @@ public class RobotContainer {
   
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
-  private final LightIndividualCommand lightIndividualCommand;
+  private final LightProgressCommand lightProgressCommand;
   private final LightBlankCommand lightBlankCommand;
   private final LightsOnCommand lightsOnCommand;
+  private final LightRambowCommand lightRambowCommand;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -159,11 +163,15 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
    * @param drivetrain
+   * @param lightIndividualSubsystem
    */
 
-  public RobotContainer(Drivetrain drivetrain) {
-    m_robotDrive = drivetrain;
+  public RobotContainer(Drivetrain drivetrain, LightIndividualSubsystem lightIndividualSubsystem) {
 
+
+    m_robotDrive = drivetrain;
+    this.lightIndividualSubsystem = lightIndividualSubsystem;
+    
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
@@ -193,6 +201,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
 
     lightIndividualSubsystem = new LightIndividualSubsystem();
+    
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -224,8 +233,10 @@ public class RobotContainer {
     new CommandLoginator();
 
     lightIndividualCommand = new LightIndividualCommand(lightIndividualSubsystem, 0.75, 125, 200);
+    lightProgressCommand = new LightProgressCommand(lightIndividualSubsystem, 0.75, 125, 200);
     lightBlankCommand = new LightBlankCommand(lightIndividualSubsystem);
     lightsOnCommand = new LightsOnCommand(lightIndividualSubsystem);
+    lightRambowCommand = new LightRambowCommand(lightIndividualSubsystem);
 
     
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);

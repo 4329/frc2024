@@ -34,11 +34,14 @@ public class LightIndividualSubsystem extends SubsystemBase {
         if (alliance.isPresent()) {
             if (alliance.get().equals(DriverStation.Alliance.Red)) {
                 hue = 0;
+                System.out.println("000000000000000000000000000000000000000000000000000000000000000000000000");
             } else {
                 hue = 120;
+                System.out.println("120........................................................");
             }
         } else {
             hue = 60;
+            System.out.println("60%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         }
     }
 
@@ -57,15 +60,14 @@ public class LightIndividualSubsystem extends SubsystemBase {
         }
     }
 
-    public void lightsOn(){
+    public void lightsOn() {
         brightness = 128;
         for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             Color8Bit color = savedColors.get(i);
             if (color != null) {
                 float[] hsvVals = Color.RGBtoHSB(color.red, color.green, color.blue, null);
-                addressableLEDBuffer.setHSV(i, (int)(hsvVals[0] * 180.0), (int)(hsvVals[1] * 255.0), brightness);
-            }
-            else {
+                addressableLEDBuffer.setHSV(i, (int) (hsvVals[0] * 180.0), (int) (hsvVals[1] * 255.0), brightness);
+            } else {
                 addressableLEDBuffer.setHSV(i, 0, 0, brightness);
             }
         }
@@ -73,14 +75,30 @@ public class LightIndividualSubsystem extends SubsystemBase {
 
     public void progressBarColorrrr(double progress, int hue, int saturation) {
         int length = (int) (addressableLEDBuffer.getLength() * progress);
-        for (int i = 0; i < length; i++) {
-            addressableLEDBuffer.setHSV(i, hue, saturation, brightness);
+        for (int i = 0; i <= length; i++) {
+            addressableLEDBuffer.setHSV(i, 60, saturation, 150);
+        }
+    }
+
+    public void loadingBarColor(int start, int stop, int hue, int saturation) {
+        for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
+            if (i > start && i < stop) {
+                addressableLEDBuffer.setHSV(i, hue, saturation, 150);
+            } else {
+                addressableLEDBuffer.setHSV(i, 0, 0, 0);
+            }
         }
     }
 
     public void setColor(int hue, int saturation) {
         for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             addressableLEDBuffer.setHSV(i, hue, saturation, brightness);
+        }
+    }
+
+    public void setBlack() {
+        for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
+            addressableLEDBuffer.setHSV(i, 0, 0, 0);
         }
     }
 
@@ -103,7 +121,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         addressableLED.setData(addressableLEDBuffer);
-        System.out.println("periodic is runing____________________________________");
+        // System.out.println("periodic is runing____________________________________");
     }
 
 }

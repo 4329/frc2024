@@ -17,4 +17,9 @@ public class BeforeMatchCommand extends Command{
         lightIndividualSubsystem.beforeMatchColors();
     }
 
+    @Override
+    public boolean runsWhenDisabled(){
+        return true;
+    }
+
 }
