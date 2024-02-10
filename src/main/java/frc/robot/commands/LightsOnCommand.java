@@ -18,7 +18,6 @@ public class LightsOnCommand extends Command{
 
     @Override
     public boolean isFinished() {
-
         return false;
     }
     
