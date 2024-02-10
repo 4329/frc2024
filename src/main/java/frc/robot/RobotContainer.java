@@ -47,6 +47,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LightBlankCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.LimDriveSetCommand;
+import frc.robot.commands.LightCommandGroup;
 import frc.robot.commands.LightIndividualCommand;
 <<<<<<< HEAD
 =======

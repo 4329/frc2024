@@ -59,7 +59,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
 
     public void lightsOn(){
         brightness = 128;
-        for (int i = 1; i < addressableLEDBuffer.getLength(); i++) {
+        for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
             Color8Bit color = savedColors.get(i);
             if (color != null) {
                 float[] hsvVals = Color.RGBtoHSB(color.red, color.green, color.blue, null);
