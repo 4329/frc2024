@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.Constants;
 
 public class HoorayConfig {
 
@@ -20,16 +21,18 @@ public class HoorayConfig {
     public static Config gimmeConfig() {
 
         if (config == null) {
-
             configEntry = Shuffleboard.getTab("Config").add("Current Config", "").getEntry();
-            File configFile = findConfig();
-            config = parseConfig(configFile);
+
+            if (Constants.robotMode == Constants.Mode.REAL) {
+                File configFile = findConfig();
+                config = parseConfig(configFile);
+            } else {
+                config = new Config();
+            }
         }
 
         return config;
     }
-
-
 
     private static Config parseConfig(File configFile) {
 
@@ -44,10 +47,8 @@ public class HoorayConfig {
             e.printStackTrace();
             throw new RuntimeException("Couldn't Read Config File " + configFile, e);
         }
-        
+
     }
-
-
 
     private static File findConfig() {
 
@@ -65,5 +66,5 @@ public class HoorayConfig {
             return new File("/home/lvuser/deploy/compConfig.json");
         }
     }
-    
+
 }
