@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CheckLimelightCommand extends Command {
 
     private URL limelihURL;
-    private boolean connected;
+    private boolean connected = true;
     private boolean setConnected;
     private boolean end;
 
-    public boolean getConnected() {
+    public boolean isConnected() {
         return connected;
     }
 
@@ -21,14 +21,13 @@ public class CheckLimelightCommand extends Command {
         try {
             limelihURL = new URL("http://10.43.29.11:5807/results");
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+        
         }
     }
 
 
     @Override
     public void initialize() {
-        System.out.println("sdfafads_____________________________________________________________________________________________________________________________________________________fdsa");
         end = false;
         new Thread(() -> {
             try {
@@ -38,7 +37,6 @@ public class CheckLimelightCommand extends Command {
                 con.setRequestMethod("GET");
                 con.getResponseCode();
             } catch (IOException e) {
-                e.printStackTrace();
                 setConnected = false;
             }
             connected = setConnected;
@@ -53,8 +51,7 @@ public class CheckLimelightCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println(connected);
+    
     }
 
     @Override

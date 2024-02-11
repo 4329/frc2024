@@ -39,6 +39,7 @@ public class Robot extends LoggedRobot {
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
   private CheckLimelightCommand checkLimelightCommand;
+  Timer timer = new Timer();
 
   public Robot() {
 
@@ -89,7 +90,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-
+    Logger.recordOutput("noPose", new Pose2d());
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -107,13 +108,9 @@ public class Robot extends LoggedRobot {
     drivetrain.brakeMode();
   }
   
-  Timer timer = new Timer();
   @Override
   public void disabledPeriodic() {
-    if (timer.hasElapsed(4) && !checkLimelightCommand.isScheduled()) {
-      checkLimelightCommand.schedule();
-      timer.reset();
-    }
+
   }
 
   @Override

@@ -14,8 +14,10 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.CheckLimelightCommand;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -28,13 +30,18 @@ public class LimlihSubsystem extends SubsystemBase {
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
-    GenericEntry x = Shuffleboard.getTab("limPose").add("x", 0).getEntry();
-    GenericEntry y = Shuffleboard.getTab("limPose").add("y", 0).getEntry();
-    GenericEntry rot = Shuffleboard.getTab("limPose").add("rot", 0).getEntry();
-    GenericEntry z = Shuffleboard.getTab("limPose").add("z", 0).getEntry();
+
+    private Timer timer;
+    private CheckLimelightCommand checkLimelightCommand;
 
     public LimlihSubsystem() {
+        timer = new Timer();
+        timer.start();
+        checkLimelightCommand = new CheckLimelightCommand();
+    }
 
+    public boolean limlighConnected() {
+        return checkLimelightCommand.isConnected();
     }
 
     public boolean getTargetVisible(int id) {
@@ -80,7 +87,7 @@ public class LimlihSubsystem extends SubsystemBase {
 
         return getFiducial(id).ta;
     }
-    
+
     /**
      * Pose calculated with a single marker
      * 
@@ -91,7 +98,7 @@ public class LimlihSubsystem extends SubsystemBase {
 
         return getFiducial(id).getRobotPose_FieldSpace2D();
     }
-    
+
     /**
      * Pose calculated with all markers
      * 
@@ -166,7 +173,7 @@ public class LimlihSubsystem extends SubsystemBase {
     }
 
     private void updateInputs() {
-       
+
         boolean[] seeingThings = new boolean[16];
         for (int i = 0; i < 16; i++) {
             seeingThings[i] = getFiducial(i) != null;
@@ -187,20 +194,20 @@ public class LimlihSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        limelightResults = LimelightHelpers
-                .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+        if (checkLimelightCommand.isConnected()) {
+            limelightResults = LimelightHelpers
+                    .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+        }
 
         updateInputs();
-        limelightResults = LimelightHelpers
-                .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
-        if (getTargetVisible(4)) {
-            Pose3d fixEverything = getTargetSpacePose(4);
-            if (fixEverything != null) {
-                x.setDouble(fixEverything.getX());
-                y.setDouble(fixEverything.getY());
-                rot.setDouble(fixEverything.getRotation().getY());
-                z.setDouble(fixEverything.getZ());        
-            }
+
+        occasionalCheck();
+    }
+
+    private void occasionalCheck() {
+        if (timer.hasElapsed(4) && !checkLimelightCommand.isScheduled()) {
+            checkLimelightCommand.schedule();
+            timer.reset();
         }
     }
 

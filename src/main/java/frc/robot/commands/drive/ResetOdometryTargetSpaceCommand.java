@@ -25,8 +25,8 @@ public class ResetOdometryTargetSpaceCommand extends Command {
 
 
         
-        if (limlihSubsystem.getTargetVisible(targetID))
-        drivetrain.resetOdometry(limlihSubsystem.getFiducial(targetID).getRobotPose_TargetSpace().toPose2d());
+        if (limlihSubsystem.limlighConnected() && limlihSubsystem.getTargetVisible(targetID))
+            drivetrain.resetOdometry(limlihSubsystem.getFiducial(targetID).getRobotPose_TargetSpace().toPose2d());
         
     }
 

@@ -56,7 +56,7 @@ public class DriveToTargetCommand extends Command {
 
     @Override
     public void execute() {
-        if (limlihSubsystem.getTargetVisible(targetId)) {
+        if (limlihSubsystem.limlighConnected() && limlihSubsystem.getTargetVisible(targetId)) {
                 System.out.println("DriveToTarget Execute Called");
 
             double rotOutput = rotationPID.calculate(-limlihSubsystem.getCalculatedPoseRot(targetId));
@@ -67,7 +67,7 @@ public class DriveToTargetCommand extends Command {
         } else {
             drivetrain.drive(0, 0, 0, false);
         }
-        IsTargetVis.setBoolean(limlihSubsystem.getTargetVisible(targetId));
+        // IsTargetVis.setBoolean(limlihSubsystem.getTargetVisible(targetId));
     }
 
     @Override
