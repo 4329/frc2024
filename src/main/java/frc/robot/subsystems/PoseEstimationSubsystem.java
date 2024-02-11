@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -65,5 +66,15 @@ public class PoseEstimationSubsystem extends SubsystemBase {
             pose.getY() + Constants.FieldConstants.fieldLength / 2,
             pose.getRotation()
         );
+    }
+    private Pose2d transformFieldToPathPlanner(Pose2d pose){
+        return new Pose2d(
+        pose.getX() + (Constants.FieldConstants.fieldWidth + 0.21)/2,
+        pose.getY() + (Constants.FieldConstants.fieldLength + 0.54)/2,
+        pose.getRotation()
+        );
+    }
+    public Pose2d getPathPlannerStuff () {
+        return transformFieldToPathPlanner(getPose());
     }
 }

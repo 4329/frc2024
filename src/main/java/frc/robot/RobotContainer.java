@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -130,7 +131,9 @@ public class RobotContainer {
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     
+    //commands for auto
     NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    NamedCommands.registerCommand("stop",new InstantCommand(()->drivetrain.stop()));
     
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -152,14 +155,10 @@ public class RobotContainer {
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
 
     
-    
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
-
-
-    //commands for auto
 
   }
   
@@ -199,7 +198,7 @@ public class RobotContainer {
   
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-      m_robotDrive::getPose,
+      poseEstimationSubsystem::getPathPlannerStuff,
       m_robotDrive::resetOdometry,
       m_robotDrive::getChassisSpeed,
       m_robotDrive::setModuleStates,
@@ -270,9 +269,9 @@ public class RobotContainer {
     driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.povDown().whileTrue(exampleCommand);
+    // driverController.povDown().whileTrue(exampleCommand);
 
-    driverController.rightStick().whileTrue(exampleCommand);
+    // driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
     
     // Operator Controller
