@@ -7,6 +7,8 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -30,6 +32,9 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
     private Pose2d jfdsajfks = new Pose2d();
+
+    private final double shootDexerZ = 0.484;
+    private final double shootDexerX = -0.115;
 
     public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem) {
         this.drivetrain = drivetrain;
@@ -89,6 +94,14 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
         poseEstimationLog.pathPlannerPosy = jfdsajfks;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
+        Logger.recordOutput("zero", new Pose2d());
+        Logger.recordOutput("zeroes", new Pose3d[] {
+            new Pose3d(), // Bumper
+            new Pose3d(), // Intake
+            new Pose3d(), // Gearbox
+            new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d()), // Shootdexer
+            new Pose3d(), // Elevator
+        });
     }
 
     private Pose2d transformFieldToAdvantageKit(Pose2d pose) {
