@@ -39,10 +39,11 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
-      logfolder = new File("/media/sda/logable");
+      logfolder = new File("/media/sda/loggable");
       boolean pluggedIn = true;
       try {
         logfolder.createNewFile();
+        logfolder.delete();
       } catch (IOException e) {
         e.printStackTrace();
         pluggedIn = false;
