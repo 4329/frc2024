@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -25,11 +26,11 @@ import frc.robot.utilities.SparkFactory;
 
 public class ShootSubsystem extends SubsystemBase {
 
-    public final CANSparkMax m_rightShoot;
-    public final CANSparkMax m_leftShoot;
-    public final RelativeEncoder m_shootEncoderRight;
-    public final RelativeEncoder m_shootEncoderLeft;
-    public final SparkPIDController m_aimBot;
+    private final CANSparkMax m_rightShoot;
+    private final CANSparkMax m_leftShoot;
+    private final RelativeEncoder m_shootEncoderRight;
+    private final RelativeEncoder m_shootEncoderLeft;
+    private final BangBangController shootBangBangController;
     //public final PIDController m_aimBot;
     private static final int rightID = 13;
     private double P = 0.5;
@@ -64,18 +65,17 @@ public class ShootSubsystem extends SubsystemBase {
     public ShootSubsystem() {
         m_rightShoot = SparkFactory.createCANSparkMax(rightID, false);
         m_leftShoot = SparkFactory.createCANSparkMax(12, false);
-        m_aimBot = m_rightShoot.getPIDController();
-
+        // m_aimBot = m_rightShoot.getPIDController();
+        //m_aimBot = new PIDController(P, I, D);
+        shootBangBangController = new BangBangController();
         m_shootEncoderRight = m_rightShoot.getEncoder();
         m_shootEncoderLeft = m_leftShoot.getEncoder();
-
-        m_aimBot.setP(kP);
-        m_aimBot.setI(kI);
-        m_aimBot.setD(kD);
-        m_aimBot.setIZone(kIz);
-        m_aimBot.setFF(kFF);
-        m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
-
+        // m_aimBot.setP(kP);
+        // m_aimBot.setI(kI);
+        // m_aimBot.setD(kD);
+        // m_aimBot.setIZone(kIz);
+        // m_aimBot.setFF(kFF);
+        // m_aimBot.setOutputRange(kMinOutput, kMaxOutput);
         m_leftShoot.follow(m_rightShoot, true);
         m_rightShoot.enableVoltageCompensation(Constants.voltageCompensation);
         m_leftShoot.enableVoltageCompensation(Constants.voltageCompensation);
@@ -124,7 +124,8 @@ public class ShootSubsystem extends SubsystemBase {
             m_leftShoot.stopMotor();
         }  else {
             
-            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+            m_rightShoot.set(shootBangBangController.calculate(m_shootEncoderRight.getVelocity(), setpoint));
+
         }
     }
 
