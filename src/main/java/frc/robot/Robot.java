@@ -31,7 +31,6 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
-  private File logfolder;
 
   @Override
   public void robotInit() {
@@ -39,7 +38,7 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
-      logfolder = new File("/media/sda/loggable");
+      File logfolder = new File("/media/sda/loggable");
       boolean pluggedIn = true;
       try {
         logfolder.createNewFile();
