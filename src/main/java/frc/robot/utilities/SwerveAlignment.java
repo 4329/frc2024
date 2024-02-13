@@ -58,7 +58,6 @@ public class SwerveAlignment {
 
         // This section constantly updates the values displayed in the widgets
         public void updateSwerveAlignment() {
-                System.out.println(BuiltOutWidgets.kRadiableGyro.string);
                 // Front left
                 frontLeftAlignmentDisplayRa.setDouble((DriveConstants.kFrontLeftOffset - ((m_dDrivetrain.getFrontLeftAngle() - frontLeftInitialAngle) - DriveConstants.kFrontLeftOffset)) % (2*Math.PI));
                 // Front right

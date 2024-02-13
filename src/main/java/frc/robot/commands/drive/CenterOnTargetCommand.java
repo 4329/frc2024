@@ -47,7 +47,7 @@ public class CenterOnTargetCommand extends Command {
     @Override
     public void execute() {
         double rotationCalc = 0;
-        if (limlihSubsystem.getTargetVisible(targetId)) {
+        if (limlihSubsystem.limlighConnected() && limlihSubsystem.getTargetVisible(targetId)) {
             System.out.println("sdajfjdsalfjsdakflkdsfds");
             rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX(targetId));
 

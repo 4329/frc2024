@@ -17,11 +17,18 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commands.CheckLimelightCommand;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
@@ -31,6 +38,12 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
+  private CheckLimelightCommand checkLimelightCommand;
+  Timer timer = new Timer();
+
+  public Robot() {
+
+  }
 
   @Override
   public void robotInit() {
@@ -71,11 +84,13 @@ public class Robot extends LoggedRobot {
     drivetrain = new Drivetrain();
     m_robotContainer = new RobotContainer(drivetrain);
     drivetrain.resetOdometry(new Pose2d());
+
+    checkLimelightCommand = new CheckLimelightCommand();
   }
 
   @Override
   public void robotPeriodic() {
-
+    Logger.recordOutput("noPose", new Pose2d());
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -84,16 +99,18 @@ public class Robot extends LoggedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+//    runsWhenDisabledCommand.schedule();
   }
 
   @Override
   public void disabledInit() {
-
+    timer.start();
     drivetrain.brakeMode();
   }
-
+  
   @Override
   public void disabledPeriodic() {
+
   }
 
   @Override

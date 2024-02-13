@@ -13,12 +13,14 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -155,11 +157,13 @@ public class RobotContainer {
   /**
    * Creates and establishes camera streams for the shuffleboard ~Ben
    */
+  HttpCamera limelight;
   private void initializeCamera() {
 
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
+    // // System.out.println(CameraServer.getVideo());
     // VideoSource[] enumerateSources = VideoSource.enumerateSources();
-
+    // System.out.println(enumerateSources[0].getName());
     // if (enumerateSources.length > 0 &&
     // enumerateSources[0].getName().contains("USB")) {
     // Shuffleboard.getTab("RobotData").add("Camera",
@@ -167,10 +171,9 @@ public class RobotContainer {
     // .withWidget(BuiltInWidgets.kCameraStream);
     // }
 
-    HttpCamera limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
+    limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
     System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
     CameraServer.startAutomaticCapture(limelight);
-
     // Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
     //     .withWidget(BuiltInWidgets.kCameraStream);
   }
@@ -320,7 +323,7 @@ public class RobotContainer {
       
 
   public void autonomousInit() {
-
+  
   }
 
   public void teleopInit() {
@@ -333,7 +336,7 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-
+  
   }
 
   /**
