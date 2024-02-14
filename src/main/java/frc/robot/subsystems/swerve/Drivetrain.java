@@ -98,6 +98,8 @@ public class Drivetrain extends SubsystemBase {
 
     pitchOffset = ahrs.getPitch();
     rollOffset = ahrs.getRoll();
+    ahrs.setAngleAdjustment(-180);
+
   }
 
 
@@ -217,7 +219,7 @@ public class Drivetrain extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
 
     ahrs.reset();
-    ahrs.setAngleAdjustment(pose.getRotation().getDegrees());
+    ahrs.setAngleAdjustment(-pose.getRotation().getDegrees());
     keepAngle = getGyro().getRadians();
     m_odometry.resetPosition(ahrs.getRotation2d(), getModulePositions(), pose);
   }

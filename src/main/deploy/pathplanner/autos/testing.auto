@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4311279977766789,
-      "y": 5.609490705429342
+      "x": 2.3402239112170546,
+      "y": 5.782028487133897
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -15,18 +15,6 @@
           "type": "path",
           "data": {
             "pathName": "moveBack"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
           }
         }
       ]

@@ -198,7 +198,7 @@ public class RobotContainer {
   
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-      poseEstimationSubsystem::getPathPlannerStuff,
+      m_robotDrive::getPose,
       m_robotDrive::resetOdometry,
       m_robotDrive::getChassisSpeed,
       m_robotDrive::setModuleStates,
