@@ -142,8 +142,8 @@ public class RobotContainer {
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
     lightsSusbsystem = new LightsSusbsystem();
-    poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem);
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
+    poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
 
     // commands for auto
     NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));

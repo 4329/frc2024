@@ -32,13 +32,16 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
     private Pose2d jfdsajfks = new Pose2d();
+    private final ArmAngleSubsystem armAngleSubsystem;
 
     private final double shootDexerZ = 0.484;
     private final double shootDexerX = -0.115;
 
-    public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem) {
-        this.drivetrain = drivetrain;
+    public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem) {
         this.visionSubsystem = visionSubsystem;
+        this.drivetrain = drivetrain;
+        this.armAngleSubsystem = armAngleSubsystem;
+
         poseEstimationLogAutoLogged = new PoseEstimationLogAutoLogged();
         estimator = new SwerveDrivePoseEstimator(
                 Constants.DriveConstants.kDriveKinematics,
@@ -62,7 +65,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
             // Do whatever you want with the poses here
             field.getObject("path").setPoses(poses);
         });
-        Shuffleboard.getTab("field").add("field",field);
+        Shuffleboard.getTab("field").add("field", field);
     }
 
     public Pose2d getPose() {
@@ -82,10 +85,9 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
         updateInputs(poseEstimationLogAutoLogged);
 
+        System.out.println("drive pose is" + getPose());
 
-         System.out.println("drive pose is" + getPose());
-
-         System.out.println("lime pose is" + visionSubsystem.getRobotPose());
+        System.out.println("lime pose is" + visionSubsystem.getRobotPose());
     }
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
@@ -96,11 +98,12 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
         Logger.recordOutput("zero", new Pose2d());
         Logger.recordOutput("zeroes", new Pose3d[] {
-            new Pose3d(), // Bumper
-            new Pose3d(), // Intake
-            new Pose3d(), // Gearbox
-            new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d()), // Shootdexer
-            new Pose3d(), // Elevator
+                new Pose3d(), // Bumper
+                new Pose3d(), // Intake
+                new Pose3d(), // Gearbox
+                new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d(0, armAngleSubsystem.getAngleRadians(), 0)), // Shootdexer
+                new Pose3d(), // Elevator
+                new Pose3d(0, 0, 0, new Rotation3d())
         });
     }
 
@@ -112,7 +115,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     }
 
     private Pose2d transformFieldToPathPlanner(Pose2d pose) {
-        return new Pose2d(            
+        return new Pose2d(
                 pose.getX() + (pathPlannerFieldLength / 2),
                 pose.getY() + (pathPlannerFieldWidth / 2),
 
@@ -123,5 +126,4 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         return transformFieldToPathPlanner(getPose());
     }
 
-    
 }
