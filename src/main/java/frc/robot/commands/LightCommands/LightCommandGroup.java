@@ -26,18 +26,10 @@ public class LightCommandGroup {
         // new WaitCommand(5)
         for (int i = 1; i <= 60; i ++) {
             sequentialCommandGroup.addCommands(
-                    new LightBlackCommand(lightIndividualSubsystem).withTimeout(0.1),
-
-                    new WaitCommand(0.1),
-                    //start, int stop, int hue, int saturation
-                    new LoadingBarCommand(lightIndividualSubsystem, i, i+3, 60, 60).withTimeout(0.1),
-                    new WaitCommand(0.5));
-            // if (i > 0.1) {
-            //     sequentialCommandGroup.addCommands(
-            //             new LightProgressCommand(lightIndividualSubsystem, i-0.1, 0, 0).withTimeout(0.1));
-            // }
-
+                    new LoadingBarCommand(lightIndividualSubsystem, i, i+3, 60, 60).withTimeout(0.01),
+                    new WaitCommand(0.05));
         }
         return sequentialCommandGroup;
     }
+
 }
