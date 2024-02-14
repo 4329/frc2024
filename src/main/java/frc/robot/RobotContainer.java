@@ -78,6 +78,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
 
 /* (including subsystems, commands, and button mappings) should be declared here
@@ -160,7 +161,7 @@ public class RobotContainer {
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
-    
+
     // commands for auto
     NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
@@ -194,6 +195,8 @@ public class RobotContainer {
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
+
+    new CommandLoginator();
 
     m_chooser = new SendableChooser<>();
     initializeCamera();
@@ -257,7 +260,7 @@ public class RobotContainer {
           return false;
         },
         m_robotDrive);
-    
+
   }
 
   // private SwerveAutoBuilder createAutoBuilder() {
@@ -314,7 +317,7 @@ public class RobotContainer {
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     driverController.x().onTrue(CommandGroups.shoot(shootSubsystem, indexSubsystem, visionSubsystem, m_robotDrive, driverController, armAngleSubsystem));
     driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
-    
+
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povLeft().onTrue(new ArmHorizontalCommand(armAngleSubsystem));
@@ -377,7 +380,7 @@ public class RobotContainer {
         // constraints);
 
         Command pathCommand = new PathPlannerAuto(name);
-        pathCommand = new SequentialCommandGroup(new ParallelCommandGroup(pathCommand, 
+        pathCommand = new SequentialCommandGroup(new ParallelCommandGroup(pathCommand,
             new SequentialCommandGroup(
               new InstantCommand(() -> {
                 Pose2d posee = PathPlannerAuto.getStaringPoseFromAutoFile(name);
@@ -430,7 +433,7 @@ public class RobotContainer {
 
   public void autonomousPeriodic() {
 
-    
+
   }
 
   public void teleopPeriodic() {
