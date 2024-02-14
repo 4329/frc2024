@@ -26,18 +26,22 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IDFlywheelCommand;
 import frc.robot.commands.IndexReverseForShotCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LightCommand;
@@ -356,6 +360,15 @@ public class RobotContainer {
           m_chooser.addOption(name, pathCommand);
         }
       }
+
+      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, this::getData, shootSubsystem));
+      m_chooser.addOption("yes", new SequentialCommandGroup(
+        sysIdRoutine.dynamic(Direction.kForward),
+        sysIdRoutine.dynamic(Direction.kReverse),
+        sysIdRoutine.quasistatic(Direction.kForward),
+        sysIdRoutine.quasistatic(Direction.kReverse)
+
+      ));
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
@@ -367,6 +380,10 @@ public class RobotContainer {
     limDriveSetCommand.schedule();
 
   }
+  private void getData(SysIdRoutineLog sysIdRoutineLog) {
+    sysIdRoutineLog.motor("Shoot");
+}
+      
 
   public void autonomousInit() {
 
