@@ -43,4 +43,8 @@ public class SometimesTextSendable implements Sendable {
     public String sometimesGet(String in) {
         return sometimes ? text : in;
     }
+
+    public double sometimesGet(double in) {
+        return sometimes ? Double.parseDouble(text) : in;
+    }
 }

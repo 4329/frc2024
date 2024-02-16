@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -361,13 +363,15 @@ public class RobotContainer {
         }
       }
 
-      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, this::getData, shootSubsystem));
+      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, shootSubsystem::getData, shootSubsystem));
       m_chooser.addOption("yes", new SequentialCommandGroup(
         sysIdRoutine.dynamic(Direction.kForward),
+        new WaitCommand(5),
         sysIdRoutine.dynamic(Direction.kReverse),
+        new WaitCommand(5),
         sysIdRoutine.quasistatic(Direction.kForward),
+        new WaitCommand(5),
         sysIdRoutine.quasistatic(Direction.kReverse)
-
       ));
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
@@ -382,8 +386,7 @@ public class RobotContainer {
   }
   private void getData(SysIdRoutineLog sysIdRoutineLog) {
     sysIdRoutineLog.motor("Shoot");
-}
-      
+  }
 
   public void autonomousInit() {
 
