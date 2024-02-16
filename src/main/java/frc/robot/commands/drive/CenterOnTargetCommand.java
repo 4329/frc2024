@@ -5,33 +5,35 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
 public class CenterOnTargetCommand extends Command {
 
-    private final LimlihSubsystem limlihSubsystem;
+    private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
     private final int targetId;
 
     private final PIDController rotationPID;
-    private CommandXboxController xboxController;
+    private final CommandXboxController xboxController;
     private Timer timer = new Timer();
 
 
-    public CenterOnTargetCommand(LimlihSubsystem limlihSubsystem, Drivetrain m_drivetrain, int targetId,
+    public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
-
-        this.limlihSubsystem = limlihSubsystem;
+        this.visionSubsystem = visionSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
         this.xboxController = xboxController;
 
         rotationPID = new PIDController(0.00002, 0, 0);
-        addRequirements(limlihSubsystem, m_drivetrain);
+        
+        addRequirements((SubsystemBase)visionSubsystem, m_drivetrain);
     }
 
     @Override
@@ -43,14 +45,12 @@ public class CenterOnTargetCommand extends Command {
         rotationPID.setTolerance(0.2);
         rotationPID.setSetpoint(0);
     }
-
     @Override
     public void execute() {
         double rotationCalc = 0;
-        if (limlihSubsystem.limlighConnected() && limlihSubsystem.getTargetVisible(targetId)) {
-            System.out.println("sdajfjdsalfjsdakflkdsfds");
-            rotationCalc = rotationPID.calculate(limlihSubsystem.getTargetX(targetId));
-
+        if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
+            rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
+            System.out.println(rotationCalc);
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
             else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)

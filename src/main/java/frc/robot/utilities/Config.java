@@ -31,6 +31,16 @@ public class Config {
 
     private String limelighturl = "http://10.43.29.11:5800";
 
+    private boolean usesPhotonVision = false;
+
+    public boolean getUsesPhotonVision() {
+        return usesPhotonVision;
+    }
+
+    public void setUsesPhotonVision(boolean usesPhotonVision) {
+        this.usesPhotonVision = usesPhotonVision;
+    }
+
     public String getLimelighturl() {
         return limelighturl;
     }

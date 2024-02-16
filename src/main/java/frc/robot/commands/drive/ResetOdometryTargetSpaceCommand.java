@@ -1,39 +1,32 @@
 package frc.robot.commands.drive;
 
-import java.lang.annotation.Target;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 
 public class ResetOdometryTargetSpaceCommand extends Command {
 
-    LimlihSubsystem limlihSubsystem;
+    VisionSubsystem visionSubsystem;
     Drivetrain drivetrain;
     int targetID;
 
-    public ResetOdometryTargetSpaceCommand(LimlihSubsystem limlihSubsystem, Drivetrain drivetrain, int targetID) {
+    public ResetOdometryTargetSpaceCommand(VisionSubsystem visionSubsystem, Drivetrain drivetrain, int targetID) {
 
-        this.limlihSubsystem = limlihSubsystem;
+        this.visionSubsystem = visionSubsystem;
         this.drivetrain = drivetrain;
         this.targetID = targetID;
     }
 
     @Override
     public void initialize() {
-
-
-        
-        if (limlihSubsystem.limlighConnected() && limlihSubsystem.getTargetVisible(targetID))
-            drivetrain.resetOdometry(limlihSubsystem.getFiducial(targetID).getRobotPose_TargetSpace().toPose2d());
-        
+        if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetID))
+            drivetrain.resetOdometry(visionSubsystem.getTargetSpacePose(targetID).toPose2d());
     }
 
     @Override
     public boolean isFinished() {
 
         return true;
-
     }
 }

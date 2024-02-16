@@ -23,7 +23,7 @@ import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.utilities.LimelightHelpers.Results;
 
-public class LimlihSubsystem extends SubsystemBase {
+public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     // GenericEntry
     // george=Shuffleboard.getTab("ikfsdal").add("george",0).getEntry();
@@ -40,7 +40,7 @@ public class LimlihSubsystem extends SubsystemBase {
         checkLimelightCommand = new CheckLimelightCommand();
     }
 
-    public boolean limlighConnected() {
+    public boolean CameraConnected() {
         return checkLimelightCommand.isConnected();
     }
 
@@ -51,41 +51,6 @@ public class LimlihSubsystem extends SubsystemBase {
             }
         }
         return false;
-    }
-
-    /**
-     * Pulls target x (the difference as an angle with respect to x value of our
-     * robot and the target)
-     * from our limligh via networkTableEntries
-     * 
-     * @return the target x angle
-     */
-    public double getTargetX(int id) {
-
-        return getFiducial(id).tx;
-
-    }
-
-    /**
-     * Pulls target y (the difference as an angle with respect to y value of our
-     * robot and the target)
-     * from our limligh via networkTableEntries
-     * 
-     * @return the target y angle
-     */
-    public double getTargetY(int id) {
-
-        return getFiducial(id).ty;
-    }
-
-    /**
-     * gives how much of the camera a target covers
-     * 
-     * @return target area
-     */
-    public double getTargetA(int id) {
-
-        return getFiducial(id).ta;
     }
 
     /**
@@ -117,32 +82,11 @@ public class LimlihSubsystem extends SubsystemBase {
 
         }
         return null;
-
-    }
-
-    public double getTargetId(int id) {
-
-        return LimelightHelpers.getFiducialID(limelightHelpNetworkTableName);
     }
 
     public Pose3d getTargetSpacePose(int id) {
 
         return getFiducial(id).getRobotPose_TargetSpace();
-    }
-
-    public double getCalculatedPoseX(int id) {
-
-        return getTargetSpacePose(id).getX();
-    }
-
-    public double getCalculatedPoseY(int id) {
-
-        return getTargetSpacePose(id).getY();
-    }
-
-    public double getCalculatedPoseRot(int id) {
-
-        return getTargetSpacePose(id).getRotation().getY();
     }
 
     public void switchPipeline(int pipeline) {
@@ -155,7 +99,7 @@ public class LimlihSubsystem extends SubsystemBase {
         return LimelightHelpers.getCurrentPipelineIndex(limelightHelpNetworkTableName);
     }
 
-    public LimelightTarget_Fiducial getFiducial(int id) {
+    private LimelightTarget_Fiducial getFiducial(int id) {
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return LIMGHT;
@@ -178,12 +122,10 @@ public class LimlihSubsystem extends SubsystemBase {
         for (int i = 0; i < 16; i++) {
             seeingThings[i] = getFiducial(i) != null;
         }
-        Logger.recordOutput("kdsmfkl", seeingThings);
+        Logger.recordOutput("Tags Seen", seeingThings);
     }
 
     public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
-
-        LimelightTarget_Fiducial limelightTarget_Fiducial = new LimelightTarget_Fiducial();
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return LIMGHT;
@@ -209,6 +151,12 @@ public class LimlihSubsystem extends SubsystemBase {
             checkLimelightCommand.schedule();
             timer.reset();
         }
+    }
+
+    @Override
+    public double getTargetX(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTargetX'");
     }
 
 }

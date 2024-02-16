@@ -58,8 +58,10 @@ import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
 import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.HoorayConfig;
@@ -79,7 +81,10 @@ public class RobotContainer {
   private final DriveByController m_drive;
 
   // Subsystem Declarations
-  private final LimlihSubsystem limlihSubsystem;
+  // private final VisionSubsystem visionSubsystem;
+  // private final VisionSubsystem photonVisionSubsystem;
+  private final VisionSubsystem visionSubsystem;
+  
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
@@ -103,9 +108,9 @@ public class RobotContainer {
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
   private final DriveToTargetCommand driveToTargetCommand;
-
+  
   private final LimDriveSetCommand limDriveSetCommand;
-
+ 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -120,14 +125,18 @@ public class RobotContainer {
     m_drive = new DriveByController(m_robotDrive, driverController);
 
     // Subsystem Instantiations
-    limlihSubsystem = new LimlihSubsystem();
+    if (HoorayConfig.gimmeConfig().getUsesPhotonVision()) {
+      visionSubsystem = new PhotonVisionSubsystem();
+    } else {
+      visionSubsystem = new LimlihSubsystem();
+    }
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
     lightsSusbsystem = new LightsSusbsystem();
-    poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
+    poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem);
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
 
     // commands for auto
@@ -141,17 +150,17 @@ public class RobotContainer {
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
-    centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
+    centerOnTargetCommand = new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 7, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
 
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
-    limDriveSetCommand = new LimDriveSetCommand(limlihSubsystem, drivetrain, poseEstimationSubsystem);
+    limDriveSetCommand = new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
 
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
 
@@ -267,21 +276,18 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(exampleCommand);
 
     driverController.rightBumper().whileTrue(exampleCommand);
-    driverController.leftBumper().whileTrue(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
+    driverController.leftBumper().whileTrue(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
     driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(shootCommand);
-    driverController.x().onTrue(new SequentialCommandGroup(
-        new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));
+    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(visionSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));    
     driverController.b().onTrue(lightCommandTwinkles);
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem,
-        limlihSubsystem, driverController, armAngleSubsystem))
-        .toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     // driverController.povDown().whileTrue(exampleCommand);
