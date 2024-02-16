@@ -329,11 +329,11 @@ public class RobotContainer {
   }
 
   public void autonomousPeriodic() {
-
+    limlihSubsystem.getFromLimeLightHTTP();
   }
 
   public void teleopPeriodic() {
-
+    limlihSubsystem.getFromLimeLightHTTP();
   }
 
   /**

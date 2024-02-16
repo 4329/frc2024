@@ -14,8 +14,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.drive.LimlihCommand;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -32,9 +36,11 @@ public class LimlihSubsystem extends SubsystemBase {
     GenericEntry y = Shuffleboard.getTab("limPose").add("y", 0).getEntry();
     GenericEntry rot = Shuffleboard.getTab("limPose").add("rot", 0).getEntry();
     GenericEntry z = Shuffleboard.getTab("limPose").add("z", 0).getEntry();
+    private LimlihCommand limlihCommand;
 
     public LimlihSubsystem() {
 
+        limlihCommand = new LimlihCommand();
     }
 
     public boolean getTargetVisible(int id) {
@@ -187,21 +193,19 @@ public class LimlihSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        
         limelightResults = LimelightHelpers
                 .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
-
+        System.out.println(limlihCommand.connected);
         updateInputs();
-        limelightResults = LimelightHelpers
-                .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
-        if (getTargetVisible(4)) {
-            Pose3d fixEverything = getTargetSpacePose(4);
-            if (fixEverything != null) {
-                x.setDouble(fixEverything.getX());
-                y.setDouble(fixEverything.getY());
-                rot.setDouble(fixEverything.getRotation().getY());
-                z.setDouble(fixEverything.getZ());        
-            }
-        }
     }
+    
+    public void getFromLimeLightHTTP() {
+        if (!CommandScheduler.getInstance().isScheduled((Command)limlihCommand)) {
+            limlihCommand.withTimeout(4).schedule();
+        } 
+    }
+
+    
 
 }
