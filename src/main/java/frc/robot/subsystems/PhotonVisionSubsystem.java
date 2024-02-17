@@ -36,12 +36,13 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator photonPoseEstimator;
     private Pose3d robotPose = new Pose3d();
+    private final Transform3d cameraToRobot = new Transform3d(0, -0.4064, 0, new Rotation3d());
 
     public PhotonVisionSubsystem() {
         photonCamera = new PhotonCamera("USB_Camera");
         aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                photonCamera, new Transform3d());
+                photonCamera, cameraToRobot);
     }
 
     @Override
@@ -60,8 +61,11 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
 
     @Override
     public Pose2d getRobotFieldPoseByTag(int id) {
-        Transform3d tagToCamera = getFiducial(id).getBestCameraToTarget();
-        return aprilTagFieldLayout.getTagPose(id).get().transformBy(tagToCamera.inverse()).toPose2d();
+        Transform3d cameraToTag = getFiducial(id).getBestCameraToTarget();
+        Pose3d initialEstimate = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTag, aprilTagFieldLayout.getTagPose(id).get(), cameraToRobot);
+        return transformPhotonVisionToField(initialEstimate.toPose2d());
+        // Transform3d tagToCamera = getFiducial(id).getBestCameraToTarget();
+        // return aprilTagFieldLayout.getTagPose(id).get().transformBy(tagToCamera.inverse()).toPose2d();
     }
 
     @Override
