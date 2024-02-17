@@ -1,9 +1,14 @@
 package frc.robot.utilities;
 
+import javax.swing.TransferHandler.TransferSupport;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 
@@ -80,25 +85,20 @@ public class MathUtils {
   }
 
   public static double clamp(double min, double max, double value) {
+    return Math.min(max, Math.max(min, value));
 
-    if (value < min) {
+  }
 
-      return min;
+  public static Pose2d transform2dToPose2d(Transform2d transform) {
+    return new Pose2d(transform.getX(), transform.getY(), transform.getRotation());
+  }
 
-    }
-
-    else if (value > max) {
-
-      return max;
-
-    }
-
-    else {
-
-      return value;
-
-    }
-
+  public static Transform2d transform3dToTransform2d(Transform3d transform) {
+      return new Transform2d(
+        transform.getX(),
+        transform.getZ(),
+        transform.getRotation().toRotation2d()
+      );
   }
 
 }

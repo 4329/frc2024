@@ -24,16 +24,16 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     PoseEstimationLogAutoLogged poseEstimationLogAutoLogged;
 
     private final Drivetrain drivetrain;
-    private final LimlihSubsystem limlihSubsystem;
+    private final VisionSubsystem visionSubsystem;
     private final SwerveDrivePoseEstimator estimator;
     private final double pathPlannerFieldWidth = 8.21;
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
     private Pose2d jfdsajfks = new Pose2d();
 
-    public PoseEstimationSubsystem(Drivetrain drivetrain, LimlihSubsystem limlihSubsystem) {
+    public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem) {
         this.drivetrain = drivetrain;
-        this.limlihSubsystem = limlihSubsystem;
+        this.visionSubsystem = visionSubsystem;
         poseEstimationLogAutoLogged = new PoseEstimationLogAutoLogged();
         estimator = new SwerveDrivePoseEstimator(
                 Constants.DriveConstants.kDriveKinematics,
@@ -66,8 +66,8 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
-        if (limlihSubsystem.seeingAnything()) {
-            estimator.addVisionMeasurement(limlihSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+        if (visionSubsystem.seeingAnything()) {
+            estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 
@@ -80,12 +80,12 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
          System.out.println("drive pose is" + getPose());
 
-         System.out.println("lime pose is" + limlihSubsystem.getRobotPose());
+         System.out.println("lime pose is" + visionSubsystem.getRobotPose());
     }
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
-        poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getRobotPose());
+        poseEstimationLog.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
         poseEstimationLog.pathPlannerPosy = jfdsajfks;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);

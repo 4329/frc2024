@@ -11,8 +11,8 @@ import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.ArmAngle;
 
@@ -51,16 +51,16 @@ public class CommandGroups {
         }
 
         public static Command aimAndShoot(ShootSubsystem shootSubsystem, Drivetrain m_robotDrive,
-                        IndexSubsystem indexSubsystem, LimlihSubsystem limlihSubsystem,
+                        IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem,
                         CommandXboxController driverController,
                         ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4,
+                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 4,
                                                                 driverController).withTimeout(1.5),
-                                                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem)
+                                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
                                                                 .withTimeout(1.5)
 
                                 ),
