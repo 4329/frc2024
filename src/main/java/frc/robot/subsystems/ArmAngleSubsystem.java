@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.SparkLimitSwitch.Type;
 
@@ -52,6 +53,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.setIdleMode(IdleMode.kBrake);
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
         armMotor.enableVoltageCompensation(Constants.voltageCompensation);

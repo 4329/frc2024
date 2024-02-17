@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -34,6 +36,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IndexReverseForShotCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LightCommand;
+import frc.robot.commands.LimDriveSetCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
@@ -64,12 +67,12 @@ import frc.robot.utilities.HoorayConfig;
 /* (including subsystems, commands, and button mappings) should be declared here
 */
 public class RobotContainer {
-  
+
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
 
   final SendableChooser<Command> m_chooser;
-  
+
   // The driver's controllers
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
@@ -81,7 +84,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
   private final ArmAngleSubsystem armAngleSubsystem;
-  private final PoseEstimationSubsystem poseEstimationSubsystem;  
+  private final PoseEstimationSubsystem poseEstimationSubsystem;
   private final ElevatorSubsystem elevatorSubsystem;
   private final LightsSusbsystem lightsSusbsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
@@ -93,7 +96,7 @@ public class RobotContainer {
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   private final AutoZero autoZero;
-  
+
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
 
@@ -101,7 +104,7 @@ public class RobotContainer {
   private final ShootCommand shootCommand;
   private final DriveToTargetCommand driveToTargetCommand;
 
-
+  private final LimDriveSetCommand limDriveSetCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -110,14 +113,12 @@ public class RobotContainer {
    */
 
   public RobotContainer(Drivetrain drivetrain) {
-
-
     m_robotDrive = drivetrain;
-    
+
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
-    
+
     // Subsystem Instantiations
     limlihSubsystem = new LimlihSubsystem();
     shootSubsystem = new ShootSubsystem();
@@ -129,35 +130,46 @@ public class RobotContainer {
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, limlihSubsystem);
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
 
+    // commands for auto
+    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+
     // Command Instantiations
     exampleCommand = new ExampleCommand();
     resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)),
-    drivetrain);
+        drivetrain);
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
-    drivetrain);
+        drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
-    autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem); 
+    autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
 
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
-    
-    //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    limDriveSetCommand = new LimDriveSetCommand(limlihSubsystem, drivetrain, poseEstimationSubsystem);
+
+    // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
-    
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
+    // armAngleSubsystem));
+
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
+    // armAngleSubsystem));
+
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
+
   }
 
   /**
    * Creates and establishes camera streams for the shuffleboard ~Ben
    */
   HttpCamera limelight;
+
   private void initializeCamera() {
 
     // CameraServer.startAutomaticCapture();
@@ -174,20 +186,27 @@ public class RobotContainer {
     limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
     System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
     CameraServer.startAutomaticCapture(limelight);
-    // Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
-    //     .withWidget(BuiltInWidgets.kCameraStream);
+    // Shuffleboard.getTab("RobotData").add("Limelight Camera",
+    // limelight).withPosition(2, 0).withSize(2, 2)
+    // .withWidget(BuiltInWidgets.kCameraStream);
   }
 
   /* Autonomous :D */
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("Example Command", new ExampleCommand());
+    // eventMap.put("shootyshootshoot", CommandGroups.aimAndShoot(shootSubsystem,
+    // m_robotDrive, indexSubsystem, limlihSubsystem, driverController,
+    // armAngleSubsystem).withTimeout(10));
+    // eventMap.put("knomknom", CommandGroups.intakeFull(intakeSubsystem,
+    // indexSubsystem).withTimeout(5));
+
     return eventMap;
   }
 
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-        m_robotDrive::getPose,
+        poseEstimationSubsystem::getPathPlannerStuff,
         m_robotDrive::resetOdometry,
         m_robotDrive::getChassisSpeed,
         m_robotDrive::setModuleStates,
@@ -196,39 +215,42 @@ public class RobotContainer {
             new PIDConstants(Constants.AutoConstants.kPThetaController),
             Constants.AutoConstants.kMaxSpeed,
             0.4,
-            new ReplanningConfig()
-        ),
+            new ReplanningConfig()),
         () -> {
-          Optional<Alliance> alliance = DriverStation.getAlliance();
-          return alliance.isPresent() ? alliance.get().equals(DriverStation.Alliance.Red) : false;
+          return false;
         },
-        m_robotDrive
-    );
+        m_robotDrive);
   }
 
-//  private SwerveAutoBuilder createAutoBuilder() {
-//
-//    SwerveAutoBuilder autoBuilder = new GimmeSwerve(
-//
-//      m_robotDrive::getPose, // Pose2d supplier
-//      m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-//      Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-//      new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
-//                                                                         // error (used to create the X and Y PID
-//                                                                         // controllers)
-//      new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
-//    // error (used to create the rotation
-//
-//      m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
-//      createEventMap(),
-//      true, // Should the path be automatically mirrored depending on alliance color.
-//             // Optional, defaults to true
-//      m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
-//                    // commands
-//    );
-//
-//    return autoBuilder;
-//  }
+  // private SwerveAutoBuilder createAutoBuilder() {
+  //
+  // SwerveAutoBuilder autoBuilder = new GimmeSwerve(
+  //
+  // m_robotDrive::getPose, // Pose2d supplier
+  // m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at
+  // the beginning of auto
+  // Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+  // new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID
+  // constants to correct for translation
+  // // error (used to create the X and Y PID
+  // // controllers)
+  // new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID
+  // constants to correct for rotation
+  // // error (used to create the rotation
+  //
+  // m_robotDrive::setModuleStates, // Module states consumer used to output to
+  // the drive subsystem
+  // createEventMap(),
+  // true, // Should the path be automatically mirrored depending on alliance
+  // color.
+  // // Optional, defaults to true
+  // m_robotDrive // The drive subsystem. Used to properly set the requirements of
+  // path following
+  // // commands
+  // );
+  //
+  // return autoBuilder;
+  // }
 
   /**
    * 
@@ -243,7 +265,7 @@ public class RobotContainer {
     // Driver Controller
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
-    
+
     driverController.rightBumper().whileTrue(exampleCommand);
     driverController.leftBumper().whileTrue(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
 
@@ -251,79 +273,93 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(shootCommand);
-    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));    
+    driverController.x().onTrue(new SequentialCommandGroup(
+        new ResetOdometryTargetSpaceCommand(limlihSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));
     driverController.b().onTrue(lightCommandTwinkles);
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem,
+        limlihSubsystem, driverController, armAngleSubsystem))
+        .toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.povDown().whileTrue(exampleCommand);
+    // driverController.povDown().whileTrue(exampleCommand);
 
     driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
-    
+    driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
+
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
-  
-    operatorController.rightBumper().whileTrue(shootCommand).toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); //arm up
-    operatorController.leftBumper().whileTrue(exampleCommand); //arm down
 
-    operatorController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
+    operatorController.rightBumper().whileTrue(shootCommand)
+        .toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); // arm up
+    operatorController.leftBumper().whileTrue(exampleCommand); // arm down
+
+    operatorController.start().whileTrue(exampleCommand); // to april tag or conecubetoggle
     operatorController.back().onTrue(changeFieldOrientCommand);
 
-    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem)).toggleOnFalse(new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
+    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem))
+        .toggleOnFalse(new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
     operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     operatorController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));
-    operatorController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));//hi jonny was here
+    operatorController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));// hi jonny was here
 
     operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
     operatorController.povLeft().onTrue(exampleCommand);
-    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem,ArmAngle.HORIZONTAL));
+    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.HORIZONTAL));
   }
 
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
-  //SwerveAutoBuilder swerveAutoBuilder;
+  // SwerveAutoBuilder swerveAutoBuilder;
 
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
 
-    //swerveAutoBuilder = createAutoBuilder();
+    // swerveAutoBuilder = createAutoBuilder();
     File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
     pathPlannerDirectory = new File(pathPlannerDirectory, "autos");
 
     for (File pathFile : pathPlannerDirectory.listFiles()) {
 
-//      System.out.println(pathFile);
+      // System.out.println(pathFile);
 
       if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
 
         String name = pathFile.getName().replace(".auto", "");
 
-//        List<PathConstraints> constraints = getPathConstraints(name);
+        // List<PathConstraints> constraints = getPathConstraints(name);
 
-//        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name, constraints);
+        // List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
+        // constraints);
 
-        Command pathCommand =  new PathPlannerAuto(name);
+        Command pathCommand = new PathPlannerAuto(name);
         if (name.endsWith("BalanceAuto")) {
-//          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
+          // m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new
+          // BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
         } else {
           m_chooser.addOption(name, pathCommand);
         }
       }
     }
-//    m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
+    // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
-      
+
+  public void robotInit() {
+
+    limDriveSetCommand.schedule();
+
+  }
 
   public void autonomousInit() {
-  
+
+    limDriveSetCommand.schedule();
+
   }
 
   public void teleopInit() {
@@ -333,10 +369,16 @@ public class RobotContainer {
 
   public void autonomousPeriodic() {
 
+    if (!limDriveSetCommand.isScheduled())
+      limDriveSetCommand.schedule();
+
   }
 
   public void teleopPeriodic() {
-  
+
+    if (!limDriveSetCommand.isScheduled())
+      limDriveSetCommand.schedule();
+
   }
 
   /**

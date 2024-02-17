@@ -20,6 +20,8 @@ public class CommandGroups {
 
         public static Command intakeFull(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem) {
 
+
+                
                 return new ParallelCommandGroup(
 
                                 new IntakeCommand(intakeSubsystem),

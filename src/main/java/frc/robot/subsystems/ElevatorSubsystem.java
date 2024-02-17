@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.SparkAnalogSensor.Mode;
 
@@ -57,6 +58,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorEncoder = elevatorMotor1.getEncoder();
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        elevatorMotor1.setIdleMode(IdleMode.kBrake);
+        elevatorMotor2.setIdleMode(IdleMode.kBrake);
         elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.ONEHUNDRED.getValue());
         elevatorMotor1.setSoftLimit(SoftLimitDirection.kReverse, ElevatorSetpoints.ZERO.getValue());
         elevatorMotor1.enableVoltageCompensation(Constants.voltageCompensation);
@@ -73,20 +76,20 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         
         // elevatorEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
-        elevatorMotor1.burnFlash();
-        elevatorMotor2.burnFlash();
-
+        
         /*digitalInput = new DigitalInput(0);
         digiput = Shuffleboard
         .getTab("MagenetSensor")
         .add("MagnetSensor", 1)
         .withWidget(BuiltInWidgets.kGraph)
         .getEntry();*/
-
+        
         m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         m_reverseLimit.enableLimitSwitch(true);
         //digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-
+        
+        elevatorMotor1.burnFlash();
+        elevatorMotor2.burnFlash();
     }
 
     public void setElevatorPose(ElevatorSetpoints elevatorSetpoints) {

@@ -9,4 +9,5 @@ public class PoseEstimationLog {
     public Pose2d combined;
     public Pose2d limOnly;
     public Pose2d driveOnly;
+    public Pose2d pathPlannerPosy;
 }
