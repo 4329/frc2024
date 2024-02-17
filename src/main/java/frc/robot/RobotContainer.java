@@ -288,19 +288,18 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
 
-    driverController.rightBumper().whileTrue(exampleCommand);
+    driverController.rightBumper().whileTrue(shootCommand);
     driverController.leftBumper().whileTrue(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
     driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(shootCommand);
-    driverController.x().onTrue(new SequentialCommandGroup(new ResetOdometryTargetSpaceCommand(visionSubsystem, m_robotDrive, 4), driveToTargetCommand.withTimeout(7)));    
-    driverController.b().onTrue(lightCommandTwinkles);
-    driverController.b().onFalse(lightCommandBlack);
-    driverController.y().whileTrue(centerOnTargetCommand);
+    driverController.a().whileTrue(new ElevatorUpCommand(elevatorSubsystem));
+    driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
+    driverController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));    
+    driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     // driverController.povDown().whileTrue(exampleCommand);
