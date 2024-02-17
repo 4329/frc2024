@@ -36,6 +36,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
     private final double shootDexerZ = 0.484;
     private final double shootDexerX = -0.115;
+    private final double shooterYawOffset = -0.1;
 
     public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem) {
         this.visionSubsystem = visionSubsystem;
@@ -98,12 +99,12 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
         Logger.recordOutput("zero", new Pose2d());
         Logger.recordOutput("zeroes", new Pose3d[] {
-                new Pose3d(), // Bumper
-                new Pose3d(), // Intake
-                new Pose3d(), // Gearbox
-                new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d(0, armAngleSubsystem.getAngleRadians(), 0)), // Shootdexer
-                new Pose3d(), // Elevator
-                new Pose3d(0, 0, 0, new Rotation3d())
+            new Pose3d(), // Bumper
+            new Pose3d(), // Intake
+            new Pose3d(), // Gearbox
+            new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d(0, (2 * Math.PI) - armAngleSubsystem.getAngleRadians() + shooterYawOffset, 0)), // Shootdexer
+            new Pose3d(), // Elevator
+            new Pose3d(0, 0, 0, new Rotation3d())
         });
     }
 
