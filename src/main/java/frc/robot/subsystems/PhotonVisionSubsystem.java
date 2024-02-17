@@ -66,17 +66,7 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
 
     @Override
     public Pose2d getRobotPose() {
-        PhotonTrackedTarget target = result.getBestTarget();
-        if (target != null) {
-            Transform3d pose = target.getBestCameraToTarget();
-            Optional<Pose3d> a = aprilTagFieldLayout.getTagPose(target.getFiducialId());
-            if (a.isPresent()) {
-                Pose2d initialEstimation = PhotonUtils.estimateFieldToRobot(MathUtils.transform3dToTransform2d(pose),
-                        a.get().toPose2d(), new Transform2d());
-                return transformPhotonVisionToField(initialEstimation);
-            }
-        }
-        return new Pose2d();
+        return transformPhotonVisionToField(robotPose.toPose2d());
     }
 
     @Override
