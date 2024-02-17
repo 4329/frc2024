@@ -82,7 +82,7 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     @Override
     public Pose3d getTargetPoseInRobotSpace(int id) {
         Transform3d pose = getFiducial(id).getBestCameraToTarget();
-        return new Pose3d(pose.getX(), pose.getY(), pose.getZ(), pose.getRotation());
+        return new Pose3d(pose.getY(), pose.getZ(), -pose.getX(), pose.getRotation());
     }
 
     @Override
