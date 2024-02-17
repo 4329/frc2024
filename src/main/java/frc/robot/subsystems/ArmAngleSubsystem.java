@@ -144,11 +144,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setpoint = armAngle;
     }
 
-    GenericEntry asdfj = Shuffleboard.getTab("asdff").add("asdsdf", 0).getEntry();
-
     public double getAngleRadians() {
-        // setpoint = asdfj.getDouble(0);
-        System.out.println(Math.toDegrees(setpoint / ticksPerRad));
         return setpoint / ticksPerRad;
     }
     

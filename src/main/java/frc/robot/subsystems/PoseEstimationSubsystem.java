@@ -31,7 +31,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private final double pathPlannerFieldWidth = 8.21;
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
-    private Pose2d jfdsajfks = new Pose2d();
+    private Pose2d pathPlannerPose = new Pose2d();
     private final ArmAngleSubsystem armAngleSubsystem;
 
     private final double shootDexerZ = 0.484;
@@ -49,21 +49,17 @@ public class PoseEstimationSubsystem extends SubsystemBase {
                 drivetrain.getGyro(),
                 drivetrain.getModulePositions(),
                 drivetrain.getPose());
+
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-            // Do whatever you want with the pose here
             field.setRobotPose(new Pose2d(0, 5, new Rotation2d()));
-            jfdsajfks = pose != null ? pose : new Pose2d();
+            pathPlannerPose = pose != null ? pose : new Pose2d();
         });
 
-        // Logging callback for target robot pose
         PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-            // Do whatever you want with the pose here
             field.getObject("target pose").setPose(pose);
         });
 
-        // Logging callback for the active path, this is sent as a list of poses
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
-            // Do whatever you want with the poses here
             field.getObject("path").setPoses(poses);
         });
         Shuffleboard.getTab("field").add("field", field);
@@ -85,17 +81,13 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         updateEstimation();
 
         updateInputs(poseEstimationLogAutoLogged);
-
-        System.out.println("drive pose is" + getPose());
-
-        System.out.println("lime pose is" + visionSubsystem.getRobotPose());
     }
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
         poseEstimationLog.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
-        poseEstimationLog.pathPlannerPosy = jfdsajfks;
+        poseEstimationLog.pathPlannerPosy = pathPlannerPose;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
         Logger.recordOutput("zero", new Pose2d());
         Logger.recordOutput("zeroes", new Pose3d[] {
@@ -103,8 +95,8 @@ public class PoseEstimationSubsystem extends SubsystemBase {
             new Pose3d(), // Intake
             new Pose3d(), // Gearbox
             new Pose3d(shootDexerX, 0, shootDexerZ, new Rotation3d(0, (2 * Math.PI) - armAngleSubsystem.getAngleRadians() + shooterYawOffset, 0)), // Shootdexer
-            new Pose3d(), // Elevator
-            new Pose3d(0, 0, 0, new Rotation3d())
+            new Pose3d(), // Elevator Base
+            new Pose3d(0, 0, 0, new Rotation3d()) // Elevator left
         });
     }
 
