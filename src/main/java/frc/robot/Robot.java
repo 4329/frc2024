@@ -29,6 +29,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.commands.CheckLimelightCommand;
+import frc.robot.commands.LimDriveSetCommand;
+import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
@@ -86,6 +89,8 @@ public class Robot extends LoggedRobot {
     drivetrain.resetOdometry(new Pose2d());
 
     checkLimelightCommand = new CheckLimelightCommand();
+
+    m_robotContainer.robotInit();
   }
 
   @Override

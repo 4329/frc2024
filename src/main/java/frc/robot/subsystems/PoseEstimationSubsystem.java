@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.PoseEstimationLog;
@@ -29,6 +29,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private final double pathPlannerFieldWidth = 8.21;
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
+    private Pose2d jfdsajfks = new Pose2d();
 
     public PoseEstimationSubsystem(Drivetrain drivetrain, LimlihSubsystem limlihSubsystem) {
         this.drivetrain = drivetrain;
@@ -42,6 +43,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
             // Do whatever you want with the pose here
             field.setRobotPose(pose);
+            jfdsajfks = pose != null ? pose : new Pose2d();
         });
 
         // Logging callback for target robot pose
@@ -74,12 +76,18 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         updateEstimation();
 
         updateInputs(poseEstimationLogAutoLogged);
+
+
+         System.out.println("drive pose is" + getPose());
+
+         System.out.println("lime pose is" + limlihSubsystem.getRobotPose());
     }
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
         poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getRobotPose());
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
+        poseEstimationLog.pathPlannerPosy = transformFieldToPathPlanner(jfdsajfks);
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
     }
 
@@ -92,12 +100,14 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
     private Pose2d transformFieldToPathPlanner(Pose2d pose) {
         return new Pose2d(
-                pose.getX() + (pathPlannerFieldWidth / 2),
-                pose.getY() + (pathPlannerFieldLength / 2),
+                pose.getX() - (pathPlannerFieldWidth / 2),
+                pose.getY() - (pathPlannerFieldLength / 2),
                 pose.getRotation());
     }
 
     public Pose2d getPathPlannerStuff() {
         return transformFieldToPathPlanner(getPose());
     }
+
+    
 }
