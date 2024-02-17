@@ -67,7 +67,7 @@ public class ShootSubsystem extends SubsystemBase {
     }
 
     public void stop(){
-       m_rightShoot.stopMotor();
+       rightMotor.stopMotor();
     }
 
     private void updateInputs(ShootLog shootLog) {
