@@ -11,6 +11,15 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public final class Constants {
 
+  public static Mode robotMode;
+
+  public static enum Mode {
+    REAL,
+    SIM,
+    REPLAY
+  }
+
+
   public static final double voltageCompensation = 12.0;
 
   /**

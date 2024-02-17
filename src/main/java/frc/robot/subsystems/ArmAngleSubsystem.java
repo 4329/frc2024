@@ -43,6 +43,8 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private GenericEntry positionGE;
     private GenericEntry radiansRotatedGE;
     private ArmAngleLogAutoLogged armAngleLogAutoLogged;
+
+    private final double ticksPerRad = 15.315;
     
     public ArmAngleSubsystem() {
         
@@ -93,7 +95,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
         double radians = Math.atan2(goalConstant, pose.getZ());
         radians = MathUtils.clamp(0, 1.22, radians);
 
-        double ticksPerRad = 15.315;
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
     }
 
@@ -141,6 +142,10 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
     private void setArmAngle(double armAngle) {
         setpoint = armAngle;
+    }
+
+    public double getAngleRadians() {
+        return setpoint / ticksPerRad;
     }
     
 }

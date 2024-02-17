@@ -35,6 +35,7 @@ import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
+import frc.robot.Constants.Mode;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -52,7 +53,6 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
 
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-
     if (isReal()) {
       File logfolder = new File("/media/sda/loggable");
       boolean pluggedIn = true;
@@ -69,11 +69,16 @@ public class Robot extends LoggedRobot {
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution
       // logging
+      Constants.robotMode = Mode.REAL;
+    } else if (isSimulation()) {
+      Logger.addDataReceiver(new NT4Publisher());
+      Constants.robotMode = Mode.SIM;
     } else {
       setUseTiming(false); // Run as fast as possible
       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
       Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      Constants.robotMode = Mode.REPLAY;
     }
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
