@@ -42,7 +42,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
                 drivetrain.getPose());
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
             // Do whatever you want with the pose here
-            field.setRobotPose(pose);
+            field.setRobotPose(new Pose2d(0, 5, new Rotation2d()));
             jfdsajfks = pose != null ? pose : new Pose2d();
         });
 
@@ -86,8 +86,8 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
         poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getRobotPose());
-        poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
-        poseEstimationLog.pathPlannerPosy = transformFieldToPathPlanner(jfdsajfks);
+        poseEstimationLog.driveOnly = transformAdvantageKitToPathPlanner(drivetrain.getPose());
+        poseEstimationLog.pathPlannerPosy = transformPathPlannerToField(jfdsajfks);
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
     }
 
@@ -98,15 +98,23 @@ public class PoseEstimationSubsystem extends SubsystemBase {
                 pose.getRotation());
     }
 
-    private Pose2d transformFieldToPathPlanner(Pose2d pose) {
+    private Pose2d transformAdvantageKitToPathPlanner(Pose2d pose) {
         return new Pose2d(
-                pose.getX() - (pathPlannerFieldWidth / 2),
-                pose.getY() - (pathPlannerFieldLength / 2),
+                pose.getX() - (Constants.FieldConstants.fieldWidth / 2),
+                pose.getY() - (Constants.FieldConstants.fieldLength / 2),
+                pose.getRotation());
+    }
+
+    private Pose2d transformPathPlannerToField(Pose2d pose) {
+        return new Pose2d(
+                pose.getX() + (pathPlannerFieldLength / 2),
+                pose.getY() + (pathPlannerFieldWidth / 2),
+
                 pose.getRotation());
     }
 
     public Pose2d getPathPlannerStuff() {
-        return transformFieldToPathPlanner(getPose());
+        return transformPathPlannerToField(getPose());
     }
 
     
