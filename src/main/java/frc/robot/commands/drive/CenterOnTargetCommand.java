@@ -51,7 +51,7 @@ public class CenterOnTargetCommand extends Command {
         double rotationCalc = 0;
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
             rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
-            System.out.println(rotationCalc);
+            System.out.println(visionSubsystem.getTargetX(targetId));
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
             else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
@@ -69,15 +69,12 @@ public class CenterOnTargetCommand extends Command {
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
-        } else {
-            System.out.println(visionSubsystem.getTargetVisible(targetId));
-            drivetrain.drive(0, 0, 0, false);
         }
     }
 
     @Override
     public boolean isFinished() {
-        return rotationPID.atSetpoint();
+        return false;
     }
 
     private double inputTransform(double input) {
