@@ -86,8 +86,8 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
         poseEstimationLog.limOnly = transformFieldToAdvantageKit(limlihSubsystem.getRobotPose());
-        poseEstimationLog.driveOnly = transformAdvantageKitToPathPlanner(drivetrain.getPose());
-        poseEstimationLog.pathPlannerPosy = transformPathPlannerToField(jfdsajfks);
+        poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
+        poseEstimationLog.pathPlannerPosy = jfdsajfks;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
     }
 
@@ -98,15 +98,8 @@ public class PoseEstimationSubsystem extends SubsystemBase {
                 pose.getRotation());
     }
 
-    private Pose2d transformAdvantageKitToPathPlanner(Pose2d pose) {
-        return new Pose2d(
-                pose.getX() - (Constants.FieldConstants.fieldWidth / 2),
-                pose.getY() - (Constants.FieldConstants.fieldLength / 2),
-                pose.getRotation());
-    }
-
-    private Pose2d transformPathPlannerToField(Pose2d pose) {
-        return new Pose2d(
+    private Pose2d transformFieldToPathPlanner(Pose2d pose) {
+        return new Pose2d(            
                 pose.getX() + (pathPlannerFieldLength / 2),
                 pose.getY() + (pathPlannerFieldWidth / 2),
 
@@ -114,7 +107,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPathPlannerStuff() {
-        return transformPathPlannerToField(getPose());
+        return transformFieldToPathPlanner(getPose());
     }
 
     
