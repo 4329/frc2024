@@ -169,9 +169,14 @@ public final class Constants {
   public static final class CANIDConstants {
 
     public static final int armRotation1 = 11;
+
+    public static final int shoot1 = 13;
+    public static final int shoot2 = 12; 
+
     public static final int elevatorMotor1 = 16;
     public static final int elevatorMotor2 = 17;
   }
+  
   public static final class LimlihConstants {
     public static final double limlihHeight = 0.36;
   }

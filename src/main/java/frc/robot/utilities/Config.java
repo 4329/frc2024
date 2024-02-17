@@ -33,12 +33,19 @@ public class Config {
 
     private boolean usesPhotonVision = false;
 
+    private double shooterkS = 0;
+    private double shooterkV = 0;
+
     public boolean getUsesPhotonVision() {
         return usesPhotonVision;
     }
 
-    public void setUsesPhotonVision(boolean usesPhotonVision) {
-        this.usesPhotonVision = usesPhotonVision;
+    public double getShooterkV() {
+        return shooterkV;
+    }
+
+    public double getShooterkS() {
+        return shooterkS;
     }
 
     public String getLimelighturl() {

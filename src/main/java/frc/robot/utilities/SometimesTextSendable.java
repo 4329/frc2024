@@ -9,7 +9,8 @@ public class SometimesTextSendable implements Sendable {
     private String text;
 
     public SometimesTextSendable() {
-
+        this.sometimes = false;
+        this.text = "";
     }
 
     public SometimesTextSendable(boolean sometimes, String text) {
@@ -42,5 +43,9 @@ public class SometimesTextSendable implements Sendable {
 
     public String sometimesGet(String in) {
         return sometimes ? text : in;
+    }
+
+    public double sometimesGet(double in) {
+        return sometimes ? Double.parseDouble(text) : in;
     }
 }
