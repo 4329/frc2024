@@ -11,6 +11,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.EncoderType;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
@@ -32,6 +33,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IndexReverseForShotCommand;
 import frc.robot.commands.IntakeCommand;
@@ -300,19 +304,18 @@ public class RobotContainer {
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
+  
+    operatorController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
+          operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem)); 
 
-    operatorController.rightBumper().whileTrue(shootCommand)
-        .toggleOnFalse(CommandGroups.releaseToShoot(shootSubsystem, indexSubsystem)); // arm up
-    operatorController.leftBumper().whileTrue(exampleCommand); // arm down
 
-    operatorController.start().whileTrue(exampleCommand); // to april tag or conecubetoggle
+    operatorController.start().whileTrue(exampleCommand); 
     operatorController.back().onTrue(changeFieldOrientCommand);
 
-    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem))
-        .toggleOnFalse(new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
+    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    operatorController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));
-    operatorController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));// hi jonny was here
+    operatorController.x().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
+    operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));//hi jonny was here
 
     operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
