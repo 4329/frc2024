@@ -59,11 +59,13 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
         armMotor.enableVoltageCompensation(Constants.voltageCompensation);
-
+    
         armEncoder.setPosition(0);
-        armPID.setP(0.15);
+        armPID.setP(0.13);
         armPID.setI(0);
-        armPID.setD(1.5);
+        armPID.setD(1.75);
+        armPID.setFF(0.004);
+        armPID.setOutputRange(-0.1, 0.1); 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
     
@@ -106,22 +108,22 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private void updateInputs(ArmAngleLog armAngleLog) {
         armAngleLog.setpoint = setpoint;
         armAngleLog.position = armEncoder.getPosition();
-        armAngleLog.radians = armEncoder.getPosition() / 15.315;
+        armAngleLog.radians = armEncoder.getPosition() / 15.315; //subject to change
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
     }
 
     public void armPositonUp() {
-        if (setpoint < ArmAngle.FULL.getValue() - 0.1) {
+        if (setpoint < ArmAngle.FULL.getValue() - 0.05) {
 
-            setpoint += 0.1;
+            setpoint += 0.05;
         }
     }
 
         
     public void armPositonDown() {
-       if (setpoint > ArmAngle.ZERO.getValue() + 0.1) {
+       if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
 
-            setpoint -= 0.1;
+            setpoint -= 0.05;
        }    
     }
 

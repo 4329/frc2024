@@ -26,6 +26,9 @@ public class IndexSubsystem extends SubsystemBase {
         bottomIndexMotor.setIdleMode(IdleMode.kBrake);
         indexLogAutoLogged = new IndexLogAutoLogged();
 
+        topIndexMotor.setInverted(true);
+        bottomIndexMotor.setInverted(true);
+
         topIndexMotor.burnFlash();
         bottomIndexMotor.burnFlash();
 

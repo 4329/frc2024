@@ -65,12 +65,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorPositioGenericEntry = Shuffleboard.getTab("Arm Angle").add("Elevator position", 0).getEntry();
    
 
-
         elevatorMotor2.follow(elevatorMotor1, false);
 
         elevatorEncoder.setPosition(0);
 
-        elevatorPID.setP(0);
+        elevatorPID.setP(0.01);
         elevatorPID.setI(0);
         elevatorPID.setD(0);
         elevatorPID.setFF(0);
