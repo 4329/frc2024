@@ -155,8 +155,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     @Override
     public double getTargetX(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTargetX'");
+        return getFiducial(id).tx;
     }
 
 }

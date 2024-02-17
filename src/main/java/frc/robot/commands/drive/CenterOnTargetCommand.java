@@ -45,6 +45,7 @@ public class CenterOnTargetCommand extends Command {
         rotationPID.setTolerance(0.2);
         rotationPID.setSetpoint(0);
     }
+    
     @Override
     public void execute() {
         double rotationCalc = 0;
@@ -68,6 +69,9 @@ public class CenterOnTargetCommand extends Command {
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
+        } else {
+            System.out.println(visionSubsystem.getTargetVisible(targetId));
+            drivetrain.drive(0, 0, 0, false);
         }
     }
 

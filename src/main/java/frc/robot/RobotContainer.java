@@ -127,8 +127,10 @@ public class RobotContainer {
     // Subsystem Instantiations
     if (HoorayConfig.gimmeConfig().getUsesPhotonVision()) {
       visionSubsystem = new PhotonVisionSubsystem();
+      System.out.println("Photony");
     } else {
       visionSubsystem = new LimlihSubsystem();
+      System.out.println("Limlihy");
     }
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();

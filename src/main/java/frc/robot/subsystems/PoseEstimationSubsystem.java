@@ -85,7 +85,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
 
     private void updateInputs(PoseEstimationLog poseEstimationLog) {
         poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
-        poseEstimationLog.limOnly = visionSubsystem.getRobotPose();
+        poseEstimationLog.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
         poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
         poseEstimationLog.pathPlannerPosy = jfdsajfks;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
