@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.swing.TransferHandler.TransferSupport;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -23,6 +24,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -38,7 +40,8 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     public PhotonVisionSubsystem() {
         photonCamera = new PhotonCamera("USB_Camera");
         aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, new Transform3d());
+        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                photonCamera, new Transform3d());
     }
 
     @Override
@@ -68,7 +71,8 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
             Transform3d pose = target.getBestCameraToTarget();
             Optional<Pose3d> a = aprilTagFieldLayout.getTagPose(target.getFiducialId());
             if (a.isPresent()) {
-                Pose2d initialEstimation = PhotonUtils.estimateFieldToRobot(MathUtils.transform3dToTransform2d(pose), a.get().toPose2d(), new Transform2d());
+                Pose2d initialEstimation = PhotonUtils.estimateFieldToRobot(MathUtils.transform3dToTransform2d(pose),
+                        a.get().toPose2d(), new Transform2d());
                 return transformPhotonVisionToField(initialEstimation);
             }
         }
@@ -84,12 +88,11 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     @Override
     public Pose3d getTargetSpacePose(int id) {
         Transform3d pose = getFiducial(id).getBestCameraToTarget().inverse();
-        return new Pose3d(pose.getX(), pose.getY(), pose.getZ(), pose.getRotation());
+        return new Pose3d(pose.getY(), pose.getZ(), -pose.getX(), pose.getRotation());
     }
 
     @Override
     public void switchPipeline(int pipeline) {
-        
         photonCamera.setPipelineIndex(pipeline);
     }
 
@@ -110,18 +113,17 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
         throw new UnsupportedOperationException("Unimplemented method 'limelightTarget_Fiducial'");
     }
-    
+
     @Override
     public double getTargetX(int id) {
         return getFiducial(id).getYaw();
     }
-    
+
     private Pose2d transformPhotonVisionToField(Pose2d in) {
         return new Pose2d(
-            in.getX() - (Constants.FieldConstants.fieldWidth / 2),
-            in.getY() - (Constants.FieldConstants.fieldLength / 2),
-            in.getRotation()
-        );
+                in.getX() - (Constants.FieldConstants.fieldWidth / 2),
+                in.getY() - (Constants.FieldConstants.fieldLength / 2),
+                in.getRotation());
     }
 
     @Override

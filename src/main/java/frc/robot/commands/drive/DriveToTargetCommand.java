@@ -25,9 +25,10 @@ public class DriveToTargetCommand extends Command {
             double targetDistance) {
         this.drivetrain = drivetrain;
         this.visionSubsystem = visionSubsystem;
-
-        this.rotationPID = new PIDController(1.25 / 2, 0, 0);// (1.25, 0, 0)
+        
+        rotationPID = new PIDController(0.035, 0, 0);
         rotationPID.setTolerance(0.2);
+        rotationPID.setSetpoint(0);
 
         this.forwardsbackwardsPidController = new PIDController(0.7 / 2, 0, 0.);// (0.7, 0, 0)
         forwardsbackwardsPidController.setTolerance(0.5);
@@ -51,8 +52,7 @@ public class DriveToTargetCommand extends Command {
     @Override
     public void execute() {
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
-            double rotOutput = rotationPID
-                    .calculate(-visionSubsystem.getRobotFieldPoseByTag(targetId).getRotation().getRadians());
+            double rotOutput = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
             double forwardsbackwardsOutput = forwardsbackwardsPidController
                     .calculate(visionSubsystem.getTargetSpacePose(targetId).getZ());
             double leftrightOutput = leftrightPidController

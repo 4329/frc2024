@@ -129,8 +129,8 @@ public class RobotContainer {
       visionSubsystem = new PhotonVisionSubsystem();
       Shuffleboard.getTab("Config").add("Camera", "Photon");
     } else {
-      Shuffleboard.getTab("Config").add("Camera", "Limlih");
       visionSubsystem = new LimlihSubsystem();
+      Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
     shootSubsystem = new ShootSubsystem();
     intakeSubsystem = new IntakeSubsystem();
