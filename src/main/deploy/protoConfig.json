@@ -22,5 +22,8 @@
     "extraShuffleBoardToggle": true,
     "limelighturl": "http://10.43.29.11:5800",
     "usesPhotonVision": true,
-    "rollDirection": -1
+    "rollDirection": -1,
+
+    "shooterkS": 0.52273,
+    "shooterkV": 0.12816
 }

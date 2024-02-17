@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
+import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SparkFactory;
 
 public class ShootSubsystem extends SubsystemBase {
@@ -54,7 +55,7 @@ public class ShootSubsystem extends SubsystemBase {
         rightMotor.burnFlash();
         leftMotor.burnFlash();
         
-        aimFeed = new SimpleMotorFeedforward(0.52273, 0.12816);
+        aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(), HoorayConfig.gimmeConfig().getShooterkV());
         shooterBangBang = new BangBangController();
 
         shootLogAutoLogged = new ShootLogAutoLogged();
