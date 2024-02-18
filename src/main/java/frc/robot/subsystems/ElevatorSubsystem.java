@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
         elevatorMotor1.setIdleMode(IdleMode.kBrake);
         elevatorMotor2.setIdleMode(IdleMode.kBrake);
-        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.ONEHUNDRED.getValue());
+        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.FULL.getValue());
         elevatorMotor1.setSoftLimit(SoftLimitDirection.kReverse, ElevatorSetpoints.ZERO.getValue());
         elevatorMotor1.enableVoltageCompensation(Constants.voltageCompensation);
         elevatorMotor2.enableVoltageCompensation(Constants.voltageCompensation);
@@ -69,10 +69,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         elevatorEncoder.setPosition(0);
 
-        elevatorPID.setP(0.01);
+        elevatorPID.setP(0.5);
         elevatorPID.setI(0);
         elevatorPID.setD(0);
-        elevatorPID.setFF(0);
+        elevatorPID.setFF(0.008);
+        elevatorPID.setOutputRange(-0.15, 0.15);
 
         // elevatorEncoder.setPositionConversionFactor(1 /
         // Constants.ArmAngleSubsystemConstants.armGearRatio);
@@ -109,17 +110,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void elevatorUp() {
 
-        if (setPoint < ElevatorSetpoints.ONEHUNDRED.getValue() - 0.1) {
+        if (setPoint < ElevatorSetpoints.FULL.getValue() - 0.5) {
 
-            setPoint += 0.1;
+            setPoint += 0.5;
         }
     }
 
     public void elevatorDown() {
 
-        if (setPoint > ElevatorSetpoints.ZERO.getValue() - 0.1) {
+        if (setPoint > ElevatorSetpoints.ZERO.getValue() - 0.5) {
 
-            setPoint -= 0.1;
+            setPoint -= 0.5;
         }
     }
 

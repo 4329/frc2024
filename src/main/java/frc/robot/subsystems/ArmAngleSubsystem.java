@@ -95,8 +95,9 @@ public class ArmAngleSubsystem extends SubsystemBase {
     public void setArmAngle(Pose3d pose) {
 
         double radians = Math.atan2(goalConstant, pose.getZ());
-        radians = MathUtils.clamp(0, 1.22, radians);
+        radians = MathUtils.clamp(0, .88, radians); //was 1.22
 
+        double ticksPerRad = 3.43; //was 15.315
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
     }
 
