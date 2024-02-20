@@ -22,8 +22,6 @@ public class CenterOnTargetCommand extends Command {
 
     private final PIDController rotationPID;
     private final CommandXboxController xboxController;
-    private Timer timer = new Timer();
-
 
     public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
@@ -32,19 +30,18 @@ public class CenterOnTargetCommand extends Command {
         this.targetId = targetId;
         this.xboxController = xboxController;
 
-        rotationPID = new PIDController(0.00002, 0, 0);
+        rotationPID = new PIDController(0.75, 0, 0);
+        rotationPID.setTolerance(0.5);
+        rotationPID.setSetpoint(0);
+
+        rotationPID.enableContinuousInput(Math.PI, 2 * Math.PI);
         
         addRequirements(visionSubsystem, m_drivetrain);
     }
 
     @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
-
-        rotationPID.setP(0.035);
-        rotationPID.setTolerance(0.2);
-        rotationPID.setSetpoint(0);
+    
     }
 
     
@@ -52,8 +49,9 @@ public class CenterOnTargetCommand extends Command {
     public void execute() {
         double rotationCalc = 0;
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
-            rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
-            System.out.println(visionSubsystem.getTargetX(targetId));
+            double currentRot = -visionSubsystem.getTargetSpacePose(targetId).getRotation().toRotation2d().getRadians();
+            double hopefulRot = Math.atan2(visionSubsystem.getTargetSpacePose(targetId).getX(), visionSubsystem.getTargetSpacePose(targetId).getY());
+            rotationCalc = rotationPID.calculate(hopefulRot - currentRot);
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
             else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
