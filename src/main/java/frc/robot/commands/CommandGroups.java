@@ -11,6 +11,8 @@ import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimlihSubsystem;
+import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
@@ -20,14 +22,25 @@ public class CommandGroups {
 
         public static Command intakeFull(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem) {
 
-
-                
                 return new ParallelCommandGroup(
 
                                 new IntakeCommand(intakeSubsystem),
                                 new IndexCommand(indexSubsystem)
 
                 );
+
+        }
+
+        public static Command intakeWithLineBreakSensor(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem,
+                        LineBreakSensorSubsystem lineBreakSensorSubsystem) {
+
+                return new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                                new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
+                                                new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem)
+
+                                ),
+                                new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
 
         }
 
@@ -51,16 +64,16 @@ public class CommandGroups {
         }
 
         public static Command aimAndShoot(ShootSubsystem shootSubsystem, Drivetrain m_robotDrive,
-                        IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem,
+                        IndexSubsystem indexSubsystem, LimlihSubsystem limlihSubsystem,
                         CommandXboxController driverController,
                         ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 4,
+                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4,
                                                                 driverController).withTimeout(1.5),
-                                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
+                                                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem)
                                                                 .withTimeout(1.5)
 
                                 ),

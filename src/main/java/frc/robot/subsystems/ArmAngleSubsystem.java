@@ -56,20 +56,22 @@ public class ArmAngleSubsystem extends SubsystemBase {
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.setIdleMode(IdleMode.kBrake);
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmAngle.FULL.getValue());
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, ArmAngle.ZERO.getValue());
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, (float) ArmAngle.FULL.getValue());
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) ArmAngle.ZERO.getValue());
         armMotor.enableVoltageCompensation(Constants.voltageCompensation);
-
+    
         armEncoder.setPosition(0);
-        armPID.setP(0.15);
+        armPID.setP(0.5);
         armPID.setI(0);
-        armPID.setD(1.5);
+        armPID.setD(1.75);
+        armPID.setFF(0);
+        armPID.setOutputRange(-0.1, 0.1); 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
     
 
-        setpointGE = Shuffleboard.getTab("Arm Angle").add("setpoint", 0).getEntry();
-        positionGE = Shuffleboard.getTab("Arm Angle").add("position", 0).getEntry();
+        setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
+        positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
         radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
 
         armMotor.burnFlash();
@@ -93,8 +95,9 @@ public class ArmAngleSubsystem extends SubsystemBase {
     public void setArmAngle(Pose3d pose) {
 
         double radians = Math.atan2(goalConstant, pose.getZ());
-        radians = MathUtils.clamp(0, 1.22, radians);
+        radians = MathUtils.clamp(0, .88, radians); //was 1.22
 
+        double ticksPerRad = 4.1284; //was 15.315 // was 3.43
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
     }
 
@@ -106,23 +109,33 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private void updateInputs(ArmAngleLog armAngleLog) {
         armAngleLog.setpoint = setpoint;
         armAngleLog.position = armEncoder.getPosition();
-        armAngleLog.radians = armEncoder.getPosition() / 15.315;
+        armAngleLog.radians = armEncoder.getPosition() / 15.315; //subject to change
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
     }
 
     public void armPositonUp() {
-        if (setpoint < ArmAngle.FULL.getValue() - 0.1) {
+        if (setpoint < ArmAngle.ARMAMP.getValue() - 0.05) {
 
-            setpoint += 0.1;
+            setpoint = Math.min(setpoint + 0.05, ArmAngle.ARMAMP.getValue());
+        }
+
+        else {
+            setpoint = ArmAngle.FULL.getValue();
+
         }
     }
 
         
     public void armPositonDown() {
-       if (setpoint > ArmAngle.ZERO.getValue() + 0.1) {
+       if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
 
-            setpoint -= 0.1;
-       }    
+            setpoint = Math.max(setpoint - 0.05, ArmAngle.ZERO.getValue());
+       }   
+       
+       else {
+            setpoint = ArmAngle.ZERO.getValue();
+
+       }
     }
 
     

@@ -2,17 +2,17 @@ package frc.robot.utilities;
 
 public enum ArmAngle {
 
-    ZERO(0), HORIZONTAL(13), INTAKE(7), FULL(23);
+    ZERO(0), HORIZONTAL(3.6), INTAKE(0), ARMAMP(5.6), FULL(6);
 
-    private float value;
+    private double value;
 
-    private ArmAngle(float bob) {
+    private ArmAngle(double bob) {
 
         this.value = bob;
 
     }
 
-    public float getValue() {
+    public double getValue() {
 
         return value;
 

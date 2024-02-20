@@ -34,7 +34,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private CANSparkMax elevatorMotor2;
     private RelativeEncoder elevatorEncoder;
     private SparkPIDController elevatorPID;
-    private GenericEntry elevatorPositioGenericEntry;
+    private GenericEntry elevatorPositionGenericEntry;
+    private GenericEntry elevatorActualPositionGenericEntry;
 
     ElevatorAutoLogged elevatorAutoLogged;
     private final double tolerance = 0.1;
@@ -58,22 +59,22 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
         elevatorMotor1.setIdleMode(IdleMode.kBrake);
         elevatorMotor2.setIdleMode(IdleMode.kBrake);
-        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.ONEHUNDRED.getValue());
+        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.HIGHLIMIT.getValue());
         elevatorMotor1.setSoftLimit(SoftLimitDirection.kReverse, ElevatorSetpoints.ZERO.getValue());
         elevatorMotor1.enableVoltageCompensation(Constants.voltageCompensation);
         elevatorMotor2.enableVoltageCompensation(Constants.voltageCompensation);
-        elevatorPositioGenericEntry = Shuffleboard.getTab("Arm Angle").add("Elevator position", 0).getEntry();
-   
-
+        elevatorPositionGenericEntry = Shuffleboard.getTab("Arm Angle").add("Elevator desired pos", 0).getEntry();
+        elevatorActualPositionGenericEntry = Shuffleboard.getTab("Arm Angle").add("Elevator Actual pos", 0).getEntry();
 
         elevatorMotor2.follow(elevatorMotor1, false);
 
         elevatorEncoder.setPosition(0);
 
-        elevatorPID.setP(0);
+        elevatorPID.setP(0.5);
         elevatorPID.setI(0);
         elevatorPID.setD(0);
         elevatorPID.setFF(0);
+        elevatorPID.setOutputRange(-1, 1);
 
         // elevatorEncoder.setPositionConversionFactor(1 /
         // Constants.ArmAngleSubsystemConstants.armGearRatio);
@@ -110,17 +111,26 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void elevatorUp() {
 
-        if (setPoint < ElevatorSetpoints.ONEHUNDRED.getValue() - 0.1) {
+        if (setPoint < ElevatorSetpoints.FULL.getValue() - 2) {
 
-            setPoint += 0.1;
+            setPoint = Math.min(setPoint + 2, ElevatorSetpoints.FULL.getValue());
+        }
+
+        else {
+            setPoint = ElevatorSetpoints.FULL.getValue();
+
         }
     }
 
     public void elevatorDown() {
 
-        if (setPoint > ElevatorSetpoints.ZERO.getValue() - 0.1) {
+        if (setPoint > ElevatorSetpoints.ZERO.getValue() + 2) {
 
-            setPoint -= 0.1;
+            setPoint = Math.max(setPoint - 2, ElevatorSetpoints.ZERO.getValue());
+        }
+
+        else {
+            setPoint = ElevatorSetpoints.ZERO.getValue();
         }
     }
 
@@ -133,7 +143,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         updateInputs(elevatorAutoLogged);
-        elevatorPositioGenericEntry.setDouble(setPoint);
+        elevatorPositionGenericEntry.setDouble(setPoint);
+        elevatorActualPositionGenericEntry.setDouble(elevatorEncoder.getPosition());
+
+        System.out.println("elvator actual position is ->>  " + elevatorEncoder.getPosition());
         elevatorPID.setReference(setPoint, ControlType.kPosition);
         /*
          * digiput.setDouble(digitalInput.get()?1:0);
