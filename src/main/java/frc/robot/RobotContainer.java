@@ -253,10 +253,10 @@ public class RobotContainer {
     driverController.b().onFalse(lightCommandBlack);
     driverController.y().whileTrue(centerOnTargetCommand);
 
-    driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    driverController.povUp().whileTrue(CommandGroups.ampCommand(elevatorSubsystem, armAngleSubsystem, shootSubsystem));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.povDown().whileTrue(exampleCommand);
+    driverController.povDown().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, limlihSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient

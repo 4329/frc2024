@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorEncoder = elevatorMotor1.getEncoder();
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
         elevatorMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.ONEHUNDRED.getValue());
+        elevatorMotor1.setSoftLimit(SoftLimitDirection.kForward, ElevatorSetpoints.AMP.getValue());
         elevatorMotor1.setSoftLimit(SoftLimitDirection.kReverse, ElevatorSetpoints.ZERO.getValue());
         elevatorMotor1.enableVoltageCompensation(Constants.voltageCompensation);
         elevatorMotor2.enableVoltageCompensation(Constants.voltageCompensation);
