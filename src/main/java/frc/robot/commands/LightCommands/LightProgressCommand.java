@@ -24,10 +24,15 @@ public class LightProgressCommand extends Command {
         System.out.println("rainbow+++++++++++++++++++");
     }
 
-    // @Override
-    // public boolean isFinished() {
-    //     return true;
-    // }
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        lightIndividualSubsystem.beforeMatchColors();
+    }
 
 
 }

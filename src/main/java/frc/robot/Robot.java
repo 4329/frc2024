@@ -34,6 +34,7 @@ import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.commands.BeforeMatchCommand;
 import frc.robot.subsystems.LightIndividualSubsystem;
+import frc.robot.subsystems.LightUnderGlowSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
@@ -52,6 +53,7 @@ public class Robot extends LoggedRobot {
   }
   
   private LightIndividualSubsystem lightIndividualSubsystem = new LightIndividualSubsystem();
+  private LightUnderGlowSubsystem lightUnderGlowSubsystem = new LightUnderGlowSubsystem();
   private BeforeMatchCommand beforeMatchCommand = new BeforeMatchCommand(lightIndividualSubsystem);
   
 
@@ -109,7 +111,7 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     drivetrain = new Drivetrain();
-    m_robotContainer = new RobotContainer(drivetrain, lightIndividualSubsystem);
+    m_robotContainer = new RobotContainer(drivetrain, lightIndividualSubsystem, lightUnderGlowSubsystem);
     drivetrain.resetOdometry(new Pose2d());
 
     checkLimelightCommand = new CheckLimelightCommand();

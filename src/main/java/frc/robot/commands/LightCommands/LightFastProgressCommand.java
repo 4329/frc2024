@@ -11,6 +11,7 @@ public class LightFastProgressCommand extends Command{
     public LightFastProgressCommand(LightIndividualSubsystem lightIndividualSubsystem){
         this.lightIndividualSubsystem = lightIndividualSubsystem;
         count = 0;
+        addRequirements(lightIndividualSubsystem);
     }
 
     @Override
@@ -24,5 +25,13 @@ public class LightFastProgressCommand extends Command{
         }
         lightIndividualSubsystem.loadingBarColor(count, count+6, 60, 60);
     }
-    
+
+    // @Override
+    // public boolean isFinished() {
+    //     return true;
+    // }
+    @Override
+    public void end(boolean interrupted) {
+        lightIndividualSubsystem.beforeMatchColors();
+    }
 }
