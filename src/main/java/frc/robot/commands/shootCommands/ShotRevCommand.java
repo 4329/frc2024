@@ -10,8 +10,8 @@ public class ShotRevCommand extends Command {
 
     private ShootSubsystem shootSubsystem;
     private VisionSubsystem visionSubsystem;
-    private double setPoint = 2500;
     private int checks = 0;
+    private double setpoint = 2800;
 
     public ShotRevCommand(ShootSubsystem shootSubsystem, VisionSubsystem visionSubsystem) {
         this.shootSubsystem = shootSubsystem;
@@ -32,8 +32,10 @@ public class ShotRevCommand extends Command {
                 shootSubsystem.shooterDistance(pose3d);
             }
 
-        }
+        } else{
+        shootSubsystem.changeSetpoint(setpoint);
     }
+}
 
     @Override
     public void execute() {

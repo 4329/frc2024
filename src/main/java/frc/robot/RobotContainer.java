@@ -3,6 +3,7 @@ package frc.robot;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -16,9 +17,11 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
@@ -26,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,13 +38,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.ElevatorToAmpCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.IndexFireCommand;
+import frc.robot.commands.indexCommands.IndexFireCommand;
 import frc.robot.commands.LightCommand;
-import frc.robot.commands.ShootFireCommand;
-import frc.robot.commands.ShooterShotCommand;
-import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -58,6 +58,7 @@ import frc.robot.commands.driveCommands.DriveToTargetCommand;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
+import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
@@ -65,6 +66,8 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
+import frc.robot.commands.shootCommands.ShooterShotCommand;
+import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -84,6 +87,7 @@ import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
+import frc.robot.utilities.UnInstantCommand;
 
 /* (including subsystems, commands, and button mappings) should be declared here
 */
@@ -134,6 +138,7 @@ public class RobotContainer {
   private final DriveToTargetCommand driveToTargetCommand;
 
   private final LimDriveSetCommand limDriveSetCommand;
+  private final GenericEntry alliance;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -167,11 +172,11 @@ public class RobotContainer {
     loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
 
     // commands for auto
-    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
-    //NamedCommands.registerCommand("speakershoot", CommandGroups.aimAndShoot(shootSubsystem, drivetrain, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem).withTimeout(3));
+    NamedCommands.registerCommand("speakershoot", CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem,driverController, armAngleSubsystem));
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
-
+    alliance = Shuffleboard.getTab("Config").add("Alliance", "aaaanoalliance").getEntry();
+    
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -260,7 +265,11 @@ public class RobotContainer {
             Math.sqrt(Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2) + Math.pow(Constants.DriveConstants.kWheelBaseLength, 2)) / 2,
             new ReplanningConfig(false, false)),
         () -> {
-          return false;
+          var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    throw new RuntimeException();
         },
         m_robotDrive);
 
@@ -313,12 +322,12 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().onTrue(toggleIntakeCommand);
+    driverController.start().onTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
+    driverController.a().onTrue(toggleIntakeCommand);
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().whileTrue(CommandGroups.shoot(shootSubsystem, indexSubsystem, visionSubsystem, m_robotDrive, driverController, armAngleSubsystem));
+    driverController.x().onTrue(CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
     driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
@@ -383,19 +392,11 @@ public class RobotContainer {
         // constraints);
 
         Command pathCommand = new PathPlannerAuto(name);
-        pathCommand = new SequentialCommandGroup(new ParallelCommandGroup(pathCommand,
-            new SequentialCommandGroup(
-              new InstantCommand(() -> {
-                Pose2d posee = PathPlannerAuto.getStaringPoseFromAutoFile(name);
-                Constants.StupidNonConstants.idioticness = new Pose2d(posee.getX(), posee.getY(), new Rotation2d(posee.getRotation().getRadians()));}),
-              new InstantCommand(poseEstimationSubsystem::add))),
+        Command autoCommand = new SequentialCommandGroup(
+        CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+        pathCommand,
             new InstantCommand(drivetrain::stop));
-        if (name.endsWith("BalanceAuto")) {
-          // m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new
-          // BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
-        } else {
-          m_chooser.addOption(name, pathCommand);
-        }
+          m_chooser.addOption(name, autoCommand);
       }
 
       SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
@@ -435,8 +436,7 @@ public class RobotContainer {
   }
 
   public void autonomousPeriodic() {
-
-
+    
   }
 
   public void teleopPeriodic() {
