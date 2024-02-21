@@ -30,11 +30,11 @@ public class CenterOnTargetCommand extends Command {
         this.targetId = targetId;
         this.xboxController = xboxController;
 
-        rotationPID = new PIDController(0.75, 0, 0);
-        rotationPID.setTolerance(0.5);
+        rotationPID = new PIDController(0.25, 0, 0);// 0.75, 0, 0
+        rotationPID.setTolerance(0);
         rotationPID.setSetpoint(0);
 
-        rotationPID.enableContinuousInput(Math.PI, 2 * Math.PI);
+        rotationPID.enableContinuousInput(0, 2 * Math.PI);
         
         addRequirements(visionSubsystem, m_drivetrain);
     }
@@ -51,6 +51,7 @@ public class CenterOnTargetCommand extends Command {
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
             double currentRot = -visionSubsystem.getTargetSpacePose(targetId).getRotation().toRotation2d().getRadians();
             double hopefulRot = Math.atan2(visionSubsystem.getTargetSpacePose(targetId).getX(), visionSubsystem.getTargetSpacePose(targetId).getY());
+            System.out.println(currentRot + "," + hopefulRot);
             rotationCalc = rotationPID.calculate(hopefulRot - currentRot);
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
@@ -63,12 +64,14 @@ public class CenterOnTargetCommand extends Command {
                     / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
 
             drivetrain.drive(
-                    -inputTransform(xboxController.getLeftY())
-                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     -inputTransform(xboxController.getLeftX())
+                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+                    -inputTransform(xboxController.getLeftY())
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
+                    System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    System.out.println("rotation output is --> " + rotationCalc);
         }
     }
 
