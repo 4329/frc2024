@@ -96,8 +96,10 @@ public class ArmAngleSubsystem extends SubsystemBase {
 
         double radians = Math.atan2(goalConstant, pose.getZ());
         radians = MathUtils.clamp(0, .88, radians); //was 1.22
+        radiansRotatedGE.setDouble(radians);
 
-        double ticksPerRad = 4.1284; //was 15.315 // was 3.43
+        double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((50.0 * Math.PI) / (180.0));
+
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
     }
 
@@ -109,7 +111,7 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private void updateInputs(ArmAngleLog armAngleLog) {
         armAngleLog.setpoint = setpoint;
         armAngleLog.position = armEncoder.getPosition();
-        armAngleLog.radians = armEncoder.getPosition() / 15.315; //subject to change
+        armAngleLog.radians = armEncoder.getPosition() / 4.1284; //subject to change
         Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
     }
 
@@ -143,7 +145,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
     public void periodic() {
         setpointGE.setDouble(setpoint);
         positionGE.setDouble(armEncoder.getPosition());
-        radiansRotatedGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setpoint, ControlType.kPosition);
         updateInputs(armAngleLogAutoLogged);
     }
