@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.BaseUnits;
@@ -16,13 +17,19 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
 import frc.robot.utilities.HoorayConfig;
+import frc.robot.utilities.LinearInterpolationTable;
 import frc.robot.utilities.SparkFactory;
+
+import java.awt.Point;
+import java.awt.geom.Point2D;
 
 public class ShootSubsystem extends SubsystemBase {
 
@@ -36,6 +43,14 @@ public class ShootSubsystem extends SubsystemBase {
     
     private final SimpleMotorFeedforward aimFeed;
     private final BangBangController shooterBangBang;
+
+    private GenericEntry sadf = Shuffleboard.getTab("Asdfsdaf").add("saldjfk", 0).getEntry();
+    private GenericEntry vel = Shuffleboard.getTab("Asdfsdaf").add("vel", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+
+    LinearInterpolationTable shootTable = new LinearInterpolationTable(
+        new Point(0, 0)
+    );
+    
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
@@ -81,12 +96,16 @@ public class ShootSubsystem extends SubsystemBase {
     public void periodic() {
         updateInputs(shootLogAutoLogged);
         
+
+        // setpoint = sadf.getDouble(0);
+        vel.setDouble(rightEncoder.getVelocity() / 60);
+
         if (setpoint == 0) {
 
             rightMotor.stopMotor();
             leftMotor.stopMotor();
         } else {
-            rightMotor.setVoltage(shooterBangBang.calculate(rightEncoder.getVelocity(), setpoint) * 12.0 + (aimFeed.calculate(setpoint) * 0.9));
+            rightMotor.setVoltage(shooterBangBang.calculate(rightEncoder.getVelocity(), setpoint) * 12.0 + (aimFeed.calculate(setpoint / 60) * 0.9));
         }
     }
 
@@ -108,4 +127,9 @@ public class ShootSubsystem extends SubsystemBase {
                 .angularPosition(Units.Rotations.of(rightEncoder.getPosition()))
                 .angularVelocity(Units.RotationsPerSecond.of(rightEncoder.getVelocity() / 60));
     }
+
+    public double getVelocity() {
+        return rightEncoder.getVelocity();
+    }
 }
+

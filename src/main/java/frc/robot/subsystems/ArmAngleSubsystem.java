@@ -38,13 +38,16 @@ public class ArmAngleSubsystem extends SubsystemBase {
     private final double tolerance = 0.1;
     private double setpoint = 0;
 
-    private final double goalConstant = 2.13 - Constants.LimlihConstants.limlihHeight;
+    double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((50.0 * Math.PI) / (180.0));
+
+    private final double speakerHeight = 2;
+    private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
     private GenericEntry radiansRotatedGE;
     private ArmAngleLogAutoLogged armAngleLogAutoLogged;
 
-    private final double ticksPerRad = 15.315;
+
     
     public ArmAngleSubsystem() {
         
@@ -98,7 +101,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
         radians = MathUtils.clamp(0, .88, radians); //was 1.22
         radiansRotatedGE.setDouble(radians);
 
-        double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((50.0 * Math.PI) / (180.0));
 
         setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
     }

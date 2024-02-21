@@ -146,7 +146,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorPositionGenericEntry.setDouble(setPoint);
         elevatorActualPositionGenericEntry.setDouble(elevatorEncoder.getPosition());
 
-        System.out.println("elvator actual position is ->>  " + elevatorEncoder.getPosition());
+        // System.out.println("elvator actual position is ->>  " + elevatorEncoder.getPosition());
         elevatorPID.setReference(setPoint, ControlType.kPosition);
         /*
          * digiput.setDouble(digitalInput.get()?1:0);
