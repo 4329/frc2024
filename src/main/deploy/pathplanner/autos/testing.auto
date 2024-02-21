@@ -16,6 +16,12 @@
           "data": {
             "pathName": "moveBack"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
         }
       ]
     }
