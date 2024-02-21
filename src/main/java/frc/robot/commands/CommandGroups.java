@@ -72,16 +72,16 @@ public class CommandGroups {
         }
 
         public static Command aimAndShoot(ShootSubsystem shootSubsystem, Drivetrain m_robotDrive,
-                        IndexSubsystem indexSubsystem, LimlihSubsystem limlihSubsystem,
+                        IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem,
                         CommandXboxController driverController,
                         ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4,
+                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 4,
                                                                 driverController).withTimeout(1.5),
-                                                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem)
+                                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
                                                                 .withTimeout(1.5)
 
                                 ),
