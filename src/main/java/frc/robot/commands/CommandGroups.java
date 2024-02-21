@@ -15,7 +15,14 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.OutakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
+import frc.robot.commands.armCommands.ArmAngleCommand;
+import frc.robot.commands.armCommands.ArmCommand;
+import frc.robot.commands.armCommands.ArmUpCommand;
+import frc.robot.commands.armCommands.ShootAmpCommand;
+import frc.robot.commands.armCommands.ShooterAimCommand;
+import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
@@ -103,6 +110,22 @@ public class CommandGroups {
                                 new ShootFireCommand(shootSubsystem));
 
         };
+    
+
+        public static Command elevatorAndAngleToAmp(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem,
+                        ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+                return new SequentialCommandGroup(
+                                new SequentialCommandGroup(new ElevatorToAmpCommand(elevatorSubsystem),
+                                new WaitCommand(2.5),
+                                new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)),
+                                new ParallelCommandGroup(
+                                                new ShootAmpCommand(shootSubsystem),
+                                                new SequentialCommandGroup(
+                                                                new WaitCommand(2),
+                                                                new IndexCommand(indexSubsystem)
+                                                )
+                                ));
+        }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,
                         IndexSubsystem indexSubsystem, ShootSubsystem shootSubsystem,

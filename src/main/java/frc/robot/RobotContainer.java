@@ -31,10 +31,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorToAmpCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
+import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
@@ -50,6 +55,8 @@ import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
+import frc.robot.commands.armCommands.ShootAmpCommand;
+import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -109,6 +116,8 @@ public class RobotContainer {
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
   private final ShotReverseCommand shotReverseCommand;
+  private final ShootAmpCommand shootAmpCommand;
+  private final ElevatorToAmpCommand elevatorToAmpCommand;
   private final DriveToTargetCommand driveToTargetCommand;
   
   private final LimDriveSetCommand limDriveSetCommand;
@@ -157,6 +166,8 @@ public class RobotContainer {
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 7, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
+    shootAmpCommand = new ShootAmpCommand(shootSubsystem);
+    elevatorToAmpCommand = new ElevatorToAmpCommand(elevatorSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
     shotReverseCommand = new ShotReverseCommand(shootSubsystem);
@@ -285,13 +296,15 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
     driverController.leftBumper().whileTrue(shotReverseCommand);
 
+    driverController.rightBumper().whileTrue(shootAmpCommand);
+    driverController.leftBumper().whileTrue(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(exampleCommand);
-    driverController.b().whileTrue(exampleCommand);
-    driverController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));    
+    driverController.a().whileTrue(new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP));
+    driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
+    driverController.x().whileTrue(elevatorToAmpCommand);    
     driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
     // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));

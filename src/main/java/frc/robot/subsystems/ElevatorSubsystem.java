@@ -101,7 +101,6 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem{
     public void setElevatorPose(ElevatorSetpoints elevatorSetpoints) {
 
         setPoint = elevatorSetpoints.getValue();
-
     }
 
     public boolean atSetpoint() {
@@ -126,7 +125,6 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem{
     public void elevatorDown() {
 
         if (setPoint > ElevatorSetpoints.ZERO.getValue() + 2) {
-
             setPoint = Math.max(setPoint - 2, ElevatorSetpoints.ZERO.getValue());
         }
 
