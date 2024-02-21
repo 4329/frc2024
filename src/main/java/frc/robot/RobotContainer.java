@@ -153,8 +153,9 @@ public class RobotContainer {
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
 
     // commands for auto
-    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem).withTimeout(3));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+    NamedCommands.registerCommand("speakershoot", CommandGroups.aimAndShoot(shootSubsystem, drivetrain, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -239,7 +240,11 @@ public class RobotContainer {
             0.4,
             new ReplanningConfig()),
         () -> {
-          return false;
+          var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
         },
         m_robotDrive);
   }
