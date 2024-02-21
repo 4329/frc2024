@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "intake"
           }
         },
@@ -32,6 +38,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "NotActualAutos",
   "choreoAuto": false
 }
