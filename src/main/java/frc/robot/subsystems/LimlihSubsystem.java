@@ -139,6 +139,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         if (checkLimelightCommand.isConnected()) {
             limelightResults = LimelightHelpers
                     .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+                    System.out.println("limelight is limeing");
         }
 
         updateInputs();

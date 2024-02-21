@@ -174,8 +174,8 @@ public class RobotContainer {
 
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
-    // armAngleSubsystem));
+    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
+    armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
