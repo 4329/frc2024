@@ -294,7 +294,7 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
 
-    driverController.rightBumper().whileTrue(shuffleBoardShootCommand);
+    driverController.rightBumper().whileTrue(centerOnTargetCommand);
     driverController.leftBumper().whileTrue(shootCommand);
 
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
