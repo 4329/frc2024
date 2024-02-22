@@ -166,7 +166,7 @@ public class RobotContainer {
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     centerOnTargetCommand = new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 7, driverController);
     shootCommand = new ShootCommand(shootSubsystem);
-    shootAmpCommand = new ShootAmpCommand(shootSubsystem);
+    shootAmpCommand = new ShootAmpCommand(shootSubsystem, indexSubsystem);
     elevatorToAmpCommand = new ElevatorToAmpCommand(elevatorSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
@@ -296,15 +296,15 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
     driverController.leftBumper().whileTrue(shotReverseCommand);
 
-    driverController.rightBumper().whileTrue(shootAmpCommand);
-    driverController.leftBumper().whileTrue(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
+    driverController.rightBumper().onTrue(CommandGroups.AmpShootCommand(shootSubsystem, elevatorSubsystem, armAngleSubsystem, indexSubsystem));
+    driverController.leftBumper().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
 
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP));
+    driverController.a().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP));
     driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
-    driverController.x().whileTrue(elevatorToAmpCommand);    
+    driverController.x().onTrue(elevatorToAmpCommand);    
     driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
     // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
