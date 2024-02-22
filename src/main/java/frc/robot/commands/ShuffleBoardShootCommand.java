@@ -11,12 +11,15 @@ import frc.robot.subsystems.ShootSubsystem;
 public class ShuffleBoardShootCommand extends Command {
 
     private GenericEntry rpm;
+    private GenericEntry velocity;
 
     private ShootSubsystem shootSubsystem;
 
     public ShuffleBoardShootCommand(ShootSubsystem shootSubsystem) {
-        this.rpm = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
         this.shootSubsystem = shootSubsystem;
+
+        rpm = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
+        velocity = Shuffleboard.getTab("shoot").add("velocity out", 0).getEntry();
 
         addRequirements(shootSubsystem);
     }
@@ -24,9 +27,8 @@ public class ShuffleBoardShootCommand extends Command {
     
     @Override
     public void execute() {
-        
         shootSubsystem.setRPM(rpm.getDouble(0));
-                
+        velocity.setDouble(shootSubsystem.getVelocity());
     }
     
     @Override

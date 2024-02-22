@@ -178,7 +178,7 @@ public final class Constants {
   }
   
   public static final class LimlihConstants {
-    public static final double limlihHeight = 0.36;
+    public static final double limlihHeight = 0.6;
   }
   public static final class ArmAngleSubsystemConstants {
     public static final double armGearRatio = 1;
