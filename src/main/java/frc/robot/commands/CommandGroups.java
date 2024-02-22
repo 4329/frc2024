@@ -71,7 +71,7 @@ public class CommandGroups {
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 4,
+                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 7,
                                                                 driverController).withTimeout(1.5),
                                                 new ShooterAimCommand(limlihSubsystem, armAngleSubsystem)
                                                                 .withTimeout(1.5)

@@ -288,7 +288,7 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
 
-    driverController.rightBumper().whileTrue(shuffleBoardShootCommand);
+    driverController.rightBumper().whileTrue(centerOnTargetCommand);
     driverController.leftBumper().whileTrue(shootCommand);
 
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
