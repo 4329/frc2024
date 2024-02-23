@@ -370,6 +370,7 @@ public class RobotContainer {
         // List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
         // constraints);
 
+        System.out.println("name is " + name);
         Command pathCommand = new PathPlannerAuto(name);
         if (name.endsWith("BalanceAuto")) {
           // m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new
