@@ -291,12 +291,15 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
+
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
     driverController.leftBumper().whileTrue(shotReverseCommand);
 
 
+    driverController.rightBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
+    driverController.leftBumper().whileTrue(new ShotReverseCommand(shootSubsystem));
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
