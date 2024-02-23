@@ -26,14 +26,14 @@ public class ShootAmpCommand extends Command{
 
     @Override
     public void execute() {
-        if(timer.hasElapsed(1)){
+        if(timer.hasElapsed(0.5)){
             indexSubsystem.in();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(3);
+        return timer.hasElapsed(1);
     }
 
     @Override

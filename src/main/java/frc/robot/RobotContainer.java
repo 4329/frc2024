@@ -91,6 +91,7 @@ public class RobotContainer {
   // private final VisionSubsystem visionSubsystem;
   // private final VisionSubsystem photonVisionSubsystem;
   private final VisionSubsystem visionSubsystem;
+
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
@@ -119,9 +120,9 @@ public class RobotContainer {
   private final ShootAmpCommand shootAmpCommand;
   private final ElevatorToAmpCommand elevatorToAmpCommand;
   private final DriveToTargetCommand driveToTargetCommand;
-  
+
   private final LimDriveSetCommand limDriveSetCommand;
- 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -296,18 +297,24 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
     driverController.leftBumper().whileTrue(shotReverseCommand);
 
-    driverController.rightBumper().onTrue(CommandGroups.AmpShootCommand(shootSubsystem, elevatorSubsystem, armAngleSubsystem, indexSubsystem));
-    driverController.leftBumper().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
+    driverController.rightBumper()
+        .onTrue(CommandGroups.AmpShootCommand(shootSubsystem, elevatorSubsystem, armAngleSubsystem, indexSubsystem));
+    driverController.leftBumper().onTrue(
+        CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
 
-    driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
+    driverController.start()
+        .whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP));
     driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
-    driverController.x().onTrue(elevatorToAmpCommand);    
+    driverController.x().onTrue(elevatorToAmpCommand);
     driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem,
+    // m_robotDrive, indexSubsystem, visionSubsystem, driverController,
+    // armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem,
+    // ArmAngle.ZERO));
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     // driverController.povDown().whileTrue(exampleCommand);
@@ -318,18 +325,17 @@ public class RobotContainer {
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
-  
+
     operatorController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
-          operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem)); 
+    operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-
-    operatorController.start().whileTrue(exampleCommand); 
+    operatorController.start().whileTrue(exampleCommand);
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     operatorController.x().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
-    operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));//hi jonny was here
+    operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was here
 
     operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
     operatorController.povRight().onTrue(exampleCommand);
@@ -370,16 +376,16 @@ public class RobotContainer {
         }
       }
 
-      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, shootSubsystem::getData, shootSubsystem));
+      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
+          new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, shootSubsystem::getData, shootSubsystem));
       m_chooser.addOption("yes", new SequentialCommandGroup(
-        sysIdRoutine.dynamic(Direction.kForward),
-        new WaitCommand(5),
-        sysIdRoutine.dynamic(Direction.kReverse),
-        new WaitCommand(5),
-        sysIdRoutine.quasistatic(Direction.kForward),
-        new WaitCommand(5),
-        sysIdRoutine.quasistatic(Direction.kReverse)
-      ));
+          sysIdRoutine.dynamic(Direction.kForward),
+          new WaitCommand(5),
+          sysIdRoutine.dynamic(Direction.kReverse),
+          new WaitCommand(5),
+          sysIdRoutine.quasistatic(Direction.kForward),
+          new WaitCommand(5),
+          sysIdRoutine.quasistatic(Direction.kReverse)));
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
@@ -387,10 +393,10 @@ public class RobotContainer {
   }
 
   public void robotInit() {
-
+    new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
     limDriveSetCommand.schedule();
-
   }
+
   private void getData(SysIdRoutineLog sysIdRoutineLog) {
     sysIdRoutineLog.motor("Shoot");
   }
