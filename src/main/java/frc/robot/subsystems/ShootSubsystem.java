@@ -82,6 +82,7 @@ public class ShootSubsystem extends SubsystemBase {
     }
 
     public void stop(){
+       setpoint = 0;
        rightMotor.stopMotor();
     }
 

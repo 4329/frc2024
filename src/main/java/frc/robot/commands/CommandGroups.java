@@ -64,33 +64,25 @@ public class CommandGroups {
         }
 
         public static Command aimAndShoot(ShootSubsystem shootSubsystem, Drivetrain m_robotDrive,
-                        IndexSubsystem indexSubsystem, LimlihSubsystem limlihSubsystem,
+                        IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem,
                         CommandXboxController driverController,
                         ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(limlihSubsystem, m_robotDrive, 7,
-                                                                driverController).withTimeout(1.5),
-                                                new ShooterAimCommand(limlihSubsystem, armAngleSubsystem)
-                                                                .withTimeout(1.5)
+                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 7,
+                                                                driverController).withTimeout(1.25),
+                                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
+                                                                .withTimeout(1.25)
 
                                 ),
 
-                                new ParallelCommandGroup(
+                                new WaitCommand(1),
 
-                                                new ShootCommand(shootSubsystem),
+                                new ShooterShotCommand(shootSubsystem, indexSubsystem));
 
-                                                new SequentialCommandGroup(
 
-                                                                new WaitCommand(2),
-
-                                                                new IndexCommand(indexSubsystem)
-
-                                                )
-
-                                ));
 
         }
 

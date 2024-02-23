@@ -174,8 +174,9 @@ public class RobotContainer {
 
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
-    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
-    armAngleSubsystem));
+
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
+    // armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
@@ -288,9 +289,8 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
 
+    driverController.leftBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
     driverController.rightBumper().whileTrue(centerOnTargetCommand);
-    driverController.leftBumper().whileTrue(shootCommand);
-
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 

@@ -33,7 +33,7 @@ public class CenterOnTargetCommand extends Command {
 
         rotationPID = new PIDController(0.00002, 0, 0);
         
-        addRequirements((SubsystemBase)visionSubsystem, m_drivetrain);
+        addRequirements(visionSubsystem, m_drivetrain);
     }
 
     @Override

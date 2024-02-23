@@ -47,7 +47,6 @@ public class ShooterAimCommand extends Command {
     @Override
     public boolean isFinished() {
 
-        // return armAngleSubsystem.atSetpoint()
-        return false;
+        return armAngleSubsystem.atSetpoint();
     }
 }
