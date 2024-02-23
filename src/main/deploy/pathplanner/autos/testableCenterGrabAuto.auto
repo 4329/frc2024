@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.441414260288271,
-      "y": 6.814156597901747
+      "x": 1.44,
+      "y": 6.81
     },
     "rotation": 180.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "centergrabpath"
+            "pathName": "testableCenterGrab"
           }
         }
       ]
