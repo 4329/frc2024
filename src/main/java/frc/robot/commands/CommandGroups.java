@@ -82,6 +82,7 @@ public class CommandGroups {
 
                                 new ShooterShotCommand(shootSubsystem, indexSubsystem));
 
+
         }
 
         public static Command holdShot(ShootSubsystem shootSubsystem, Drivetrain drivetrain,
