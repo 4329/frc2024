@@ -49,6 +49,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.LimDriveSetCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.ShuffleBoardShootCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -286,11 +287,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
+    
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
 
-    driverController.leftBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
-    driverController.rightBumper().whileTrue(centerOnTargetCommand);
+    driverController.rightBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
+    driverController.leftBumper().whileTrue(new ShotReverseCommand(shootSubsystem));
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
@@ -299,13 +301,16 @@ public class RobotContainer {
     driverController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));    
     driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    driverController.povUp().whileTrue(exampleCommand);
     driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    // driverController.povDown().whileTrue(exampleCommand);
+    driverController.povDown().whileTrue(exampleCommand);
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
+
+
+// -------------------------------------------------------------------------------
 
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);

@@ -88,7 +88,7 @@ public class ShootSubsystem extends SubsystemBase {
 
     private void updateInputs(ShootLog shootLog) {
         shootLog.setpoint = setpoint;
-        shootLog.PIDOutput = rightMotor.get();
+        shootLog.PIDOutput = rightEncoder.getVelocity();
         Logger.processInputs("Shooter", shootLogAutoLogged);
 
     }
