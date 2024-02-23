@@ -1,5 +1,7 @@
 package frc.robot.commands.elevatorCommands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -7,9 +9,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class ElevatorManualCommand extends Command {
 
     private ElevatorSubsystem elevatorSubsystem;
-    private CommandXboxController controller;
+    private Supplier<Double> rightTriggerSupplier;
+    private Supplier<Double> leftTriggerSupplier;
 
-    public ElevatorManualCommand(ElevatorSubsystem elevatorSubsystem, CommandXboxController controller) {
+    public ElevatorManualCommand(ElevatorSubsystem elevatorSubsystem, Supplier <Double> leftTriggerSupplier, Supplier <Double> rightTriggerSupplier) {
 
     }
 
@@ -20,11 +23,11 @@ public class ElevatorManualCommand extends Command {
 
     @Override
     public void execute() {
-        if (controller.getRightTriggerAxis() > 0.1) {
-            elevatorSubsystem.goUp();
+        if (rightTriggerSupplier.get() > 0.1) {
+            elevatorSubsystem.elevatorMove(rightTriggerSupplier.get());
 
-        } else if (controller.getLeftTriggerAxis() < 0.1) {
-            elevatorSubsystem.goDown();
+        } else if (leftTriggerSupplier.get() > 0.1) {
+            elevatorSubsystem.elevatorMove(-leftTriggerSupplier.get());
         } else {
 
             elevatorSubsystem.stop();

@@ -134,6 +134,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
+    public void elevatorMove(double lkajfds) {
+
+        if (setPoint > ElevatorSetpoints.ZERO.getValue() + 2 && setPoint < ElevatorSetpoints.AMPPOINT.getValue() - 2) {
+
+            setPoint = lkajfds;
+        }
+    }
+
     public void updateInputs(Elevator elevator) {
         elevator.position = elevatorEncoder.getPosition();
         elevator.setpoint = setPoint;

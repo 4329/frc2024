@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.ejml.dense.row.CommonOps_MT_CDRM;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -39,7 +41,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.elevatorCommands.ElevatorCommand;
+import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
@@ -112,6 +115,7 @@ public class RobotContainer {
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   private final AutoZero autoZero;
+  private final ElevatorManualCommand elevatorManualCommand;
 
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
@@ -168,10 +172,10 @@ public class RobotContainer {
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
 
+    elevatorManualCommand = new ElevatorManualCommand(elevatorSubsystem, () -> driverController.getLeftTriggerAxis(), () -> driverController.getRightTriggerAxis());
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     limDriveSetCommand = new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
-
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
     armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
@@ -285,8 +289,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(exampleCommand);
-    driverController.leftTrigger().whileTrue(exampleCommand);
+    driverController.rightTrigger().whileTrue(elevatorManualCommand);
+    driverController.leftTrigger().whileTrue(elevatorManualCommand);
 
     driverController.rightBumper().whileTrue(shuffleBoardShootCommand);
     driverController.leftBumper().whileTrue(shootCommand);
@@ -294,8 +298,8 @@ public class RobotContainer {
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(new ElevatorUpCommand(elevatorSubsystem));
-    driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
+    driverController.a().whileTrue(exampleCommand);
+    driverController.b().whileTrue(exampleCommand);
     driverController.x().whileTrue(new ArmUpCommand(armAngleSubsystem));    
     driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
