@@ -86,19 +86,11 @@ public class CommandGroups {
 
                                 ),
 
-                                new ParallelCommandGroup(
+                                new WaitCommand(1),
 
-                                                new ShootCommand(shootSubsystem),
+                                new ShooterShotCommand(shootSubsystem, indexSubsystem));
 
-                                                new SequentialCommandGroup(
 
-                                                                new WaitCommand(2),
-
-                                                                new IndexCommand(indexSubsystem)
-
-                                                )
-
-                                ));
 
         }
 

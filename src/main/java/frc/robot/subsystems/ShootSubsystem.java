@@ -94,6 +94,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     public void stop(){
+       setpoint = 0;
        rightMotor.stopMotor();
     }
     @Override

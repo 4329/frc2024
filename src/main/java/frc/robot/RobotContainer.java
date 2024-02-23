@@ -33,6 +33,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LightCommand;
+import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
@@ -47,7 +48,6 @@ import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
-import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -167,8 +167,9 @@ public class RobotContainer {
     limDriveSetCommand = new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
-    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
-    armAngleSubsystem));
+
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
+    // armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));

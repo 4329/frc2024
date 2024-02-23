@@ -2,9 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 
-public interface VisionSubsystem {
+public interface VisionSubsystem extends Subsystem {
 
     boolean CameraConnected();
 
