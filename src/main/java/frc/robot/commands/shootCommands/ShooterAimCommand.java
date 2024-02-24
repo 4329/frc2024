@@ -18,6 +18,7 @@ public class ShooterAimCommand extends Command {
     }
 
     private int getAprilTagSpeakerIDAprilTagIDSpeaker() {
+
         if (DriverStation.Alliance.Red.equals(DriverStation.getAlliance().get()))
             return 4;
         return 7;
