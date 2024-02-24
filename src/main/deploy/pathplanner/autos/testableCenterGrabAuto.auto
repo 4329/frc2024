@@ -16,6 +16,24 @@
           "data": {
             "pathName": "testableCenterGrab"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TCG#2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TCG#3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TCG#4"
+          }
         }
       ]
     }
