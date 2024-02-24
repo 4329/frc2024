@@ -46,13 +46,5 @@ public class ShooterAimCommand extends Command {
     public boolean isFinished() {
 
         return armAngleSubsystem.atSetpoint();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        //return false;
->>>>>>> 18a5f52 (autos started)
-=======
-        //return false;
->>>>>>> 18a5f52d10ff17e72d9e62147775570300ba34d5
     }
 }
