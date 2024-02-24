@@ -49,22 +49,35 @@ public class Robot extends LoggedRobot {
 
   }
 
+  private File findThumbDir() {
+     File f = new File("/media");
+     for (File kid : f.listFiles()) {
+        File logs = new File(kid, "logs");
+        if (logs.exists() && logs.canWrite()) {
+          return logs;
+        }
+        else if (logs.mkdir()) {
+          return logs;
+        }
+     }
+
+     File homeDir = new File("/home/lvuser/logs");
+     if (homeDir.exists() || homeDir.mkdir()) {
+       return homeDir;
+     }
+     else {
+      return null;
+    }
+  }
+
   @Override
   public void robotInit() {
 
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
     if (isReal()) {
-      File logfolder = new File("/media/sda/loggable");
-      boolean pluggedIn = true;
-      try {
-        logfolder.createNewFile();
-        logfolder.delete();
-      } catch (IOException e) {
-        e.printStackTrace();
-        pluggedIn = false;
-      }
-      if (pluggedIn) {
-        Logger.addDataReceiver(new WPILOGWriter("/media/sda/logs")); // Log to a USB stick ("/U/logs")
+      File logFolder = findThumbDir();
+      if (logFolder != null) {
+        Logger.addDataReceiver(new WPILOGWriter(logFolder.getAbsolutePath()));// Log to a USB stick ("/U/logs")
       }
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution
