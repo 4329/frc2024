@@ -22,16 +22,12 @@ public class IndexFireCommand extends Command {
 
     @Override
     public void initialize() {
-
+        
+                indexSubsystem.in();
+                timer.start();
+        
     }
 
-    @Override
-    public void execute() {
-
-        indexSubsystem.in();
-        timer.start();
-
-    }
 
     @Override
     public void end(boolean interrupted) {

@@ -41,7 +41,7 @@ import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmHorizontalCommand;
-import frc.robot.commands.armCommands.ArmIntakeCommand;
+import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.ShootAmpCommand;
@@ -310,7 +310,7 @@ public class RobotContainer {
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povLeft().onTrue(new ArmHorizontalCommand(armAngleSubsystem));
-    driverController.povDown().onTrue(new ArmIntakeCommand(armAngleSubsystem));
+    driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
