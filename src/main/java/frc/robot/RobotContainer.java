@@ -395,7 +395,7 @@ public class RobotContainer {
     operatorController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    operatorController.start().whileTrue(exampleCommand);
+    operatorController.start().whileTrue(lightRambowCommand); 
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));

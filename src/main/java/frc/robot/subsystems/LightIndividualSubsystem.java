@@ -24,7 +24,7 @@ public class LightIndividualSubsystem extends SubsystemBase {
 
     public LightIndividualSubsystem() {
         addressableLED = new AddressableLED(1);
-        addressableLEDBuffer = new AddressableLEDBuffer(60);
+        addressableLEDBuffer = new AddressableLEDBuffer(120);
         addressableLED.setLength(addressableLEDBuffer.getLength());
         savedColors = new ArrayList<>(addressableLEDBuffer.getLength());
         addressableLED.setData(addressableLEDBuffer);
