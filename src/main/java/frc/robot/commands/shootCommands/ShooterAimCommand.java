@@ -18,10 +18,6 @@ public class ShooterAimCommand extends Command {
     }
 
     private int getAprilTagSpeakerIDAprilTagIDSpeaker() {
-<<<<<<< HEAD
-
-=======
->>>>>>> 18a5f52 (autos started)
         if (DriverStation.Alliance.Red.equals(DriverStation.getAlliance().get()))
             return 4;
         return 7;
@@ -51,8 +47,12 @@ public class ShooterAimCommand extends Command {
 
         return armAngleSubsystem.atSetpoint();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         //return false;
 >>>>>>> 18a5f52 (autos started)
+=======
+        //return false;
+>>>>>>> 18a5f52d10ff17e72d9e62147775570300ba34d5
     }
 }
