@@ -22,8 +22,8 @@ public class LoggingSubsystem extends SubsystemBase {
         if (timer.hasElapsed(1)) {
 
             for (LoggedSubsystem subsystemLog : subsystems) {
-
-                Logger.processInputs(subsystemLog.getClass().getName(), subsystemLog.log());
+                String name = subsystemLog.getClass().getSimpleName();
+                Logger.processInputs(name, subsystemLog.log());
             }
             timer.restart();
         }
