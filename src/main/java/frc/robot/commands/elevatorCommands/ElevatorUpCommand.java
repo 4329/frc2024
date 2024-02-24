@@ -1,13 +1,13 @@
-package frc.robot.commands;
+package frc.robot.commands.elevatorCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorDownCommand extends Command {
+public class ElevatorUpCommand extends Command {
 
       public ElevatorSubsystem elevatorSubsystem;
 
-    public ElevatorDownCommand(ElevatorSubsystem elevatorSubsystem) {
+    public ElevatorUpCommand(ElevatorSubsystem elevatorSubsystem) {
         this.elevatorSubsystem = elevatorSubsystem;
         
         addRequirements(elevatorSubsystem);
@@ -17,7 +17,7 @@ public class ElevatorDownCommand extends Command {
     @Override
     public void execute() {
       
-        elevatorSubsystem.elevatorDown();
+        elevatorSubsystem.elevatorUp();
     }
 
     @Override

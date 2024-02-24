@@ -1,16 +1,16 @@
-package frc.robot.commands;
+package frc.robot.commands.indexCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 
-public class IndexSensorCommand extends Command {
+public class IndexReverseForShotCommand extends Command {
 
     private LineBreakSensorSubsystem lineBreakSensorSubsystem;
     private IndexSubsystem indexSubsystem;
     private boolean isBroken;
 
-    public IndexSensorCommand(LineBreakSensorSubsystem lineBreakSensorSubsystem,
+    public IndexReverseForShotCommand(LineBreakSensorSubsystem lineBreakSensorSubsystem,
             IndexSubsystem indexSubsystem) {
         this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
         this.indexSubsystem = indexSubsystem;
@@ -27,18 +27,17 @@ public class IndexSensorCommand extends Command {
     public void execute() {
 
         if (lineBreakSensorSubsystem.isNotBroken()){
-            indexSubsystem.in();
+            indexSubsystem.stop();
         }
 
         else {
-            indexSubsystem.stop();
-            
+            indexSubsystem.slowOut();
         }
     }
 
      @Override
     public boolean isFinished() {
-        return !lineBreakSensorSubsystem.isNotBroken();
+        return lineBreakSensorSubsystem.isNotBroken();
     }
 
     @Override

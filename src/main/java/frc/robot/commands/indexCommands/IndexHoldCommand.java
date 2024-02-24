@@ -1,16 +1,16 @@
-package frc.robot.commands;
+package frc.robot.commands.indexCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IndexCommand extends Command {
+public class IndexHoldCommand extends Command {
 
     private IndexSubsystem indexSubsystem;
     
     
     
-    public IndexCommand(IndexSubsystem indexSubsystem) {
+    public IndexHoldCommand(IndexSubsystem indexSubsystem) {
       
         this.indexSubsystem = indexSubsystem;
         addRequirements(indexSubsystem);
@@ -20,27 +20,11 @@ public class IndexCommand extends Command {
 
 
 
- 
-    @Override
-    public void initialize() {
-      
-    }
-
-
-    @Override
-    public void execute() {
-
-        System.out.println("index in");
-        indexSubsystem.in();
-
-    }
-
-
     @Override
     public void end(boolean interrupted) {
-        indexSubsystem.stop();
+        
+        indexSubsystem.in();
 
-        System.out.println("index in stop");
      
     }
 

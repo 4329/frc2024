@@ -1,18 +1,17 @@
-package frc.robot.commands;
+package frc.robot.commands.intakeOuttakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LineBreakSensorSubsystem;
 
-public class IntakeSensorCommand extends Command {
+public class IntakeCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
-    private LineBreakSensorSubsystem lineBreakSensorSubsystem;
     
     
-    public IntakeSensorCommand(IntakeSubsystem intakeSubsystem, LineBreakSensorSubsystem lineBreakSensorSubsystem) {
+    
+    public IntakeCommand(IntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
-        this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
         addRequirements(intakeSubsystem);
 
 
@@ -46,7 +45,7 @@ public class IntakeSensorCommand extends Command {
 
     @Override
     public boolean isFinished() {
-         return !lineBreakSensorSubsystem.isNotBroken();
+       return false;
     }
 
 

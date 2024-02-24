@@ -1,4 +1,4 @@
-package frc.robot.commands.armCommands;
+package frc.robot.commands.shootCommands;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;

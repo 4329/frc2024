@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.visionCommands;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
