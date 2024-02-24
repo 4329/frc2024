@@ -89,6 +89,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
         poseEstimationLogAutoLogged.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
         poseEstimationLogAutoLogged.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
         poseEstimationLogAutoLogged.pathPlannerPosy = pathPlannerPose;
+        Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
         Logger.recordOutput("zero", new Pose2d());
         Logger.recordOutput("zeroes", new Pose3d[] {
             new Pose3d(), // Bumper
