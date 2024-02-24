@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.visionCommands;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
