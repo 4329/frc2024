@@ -42,7 +42,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private double setpoint = 0;
 
     private ShootLogAutoLogged shootLogAutoLogged;
-    
+
     private final SimpleMotorFeedforward aimFeed;
     private final BangBangController shooterBangBang;
 
@@ -68,11 +68,12 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
-        
+
         rightMotor.burnFlash();
         leftMotor.burnFlash();
-        
-        aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(), HoorayConfig.gimmeConfig().getShooterkV());
+
+        aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(),
+            HoorayConfig.gimmeConfig().getShooterkV());
         shooterBangBang = new BangBangController();
 
         shootLogAutoLogged = new ShootLogAutoLogged();

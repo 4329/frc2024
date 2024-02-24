@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.armCommands.ArmCommand;
+import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
+import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
@@ -16,14 +19,16 @@ import frc.robot.commands.intakeOuttakeCommands.OutakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
+import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.ElevatorSetpoints;
 
 public class CommandGroups {
 
@@ -103,6 +108,25 @@ public class CommandGroups {
                                 new ShootFireCommand(shootSubsystem));
 
         };
+    
+
+        public static Command elevatorAndAngleToAmp(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem,
+                ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+                        return new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new ElevatorToAmpCommand(elevatorSubsystem).withTimeout(5),
+                                        new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP))
+                                        );
+        }
+
+        public static Command AmpShootCommand(ShootSubsystem shootSubsystem, ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem, IndexSubsystem indexSubsystem){
+                return new SequentialCommandGroup(
+                        new ShootAmpCommand(shootSubsystem, indexSubsystem),
+                        new WaitCommand(1),
+                        new ParallelCommandGroup(
+                        new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),
+                        new ArmCommand(armAngleSubsystem, ArmAngle.ZERO)));          
+        }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,
                         IndexSubsystem indexSubsystem, ShootSubsystem shootSubsystem,

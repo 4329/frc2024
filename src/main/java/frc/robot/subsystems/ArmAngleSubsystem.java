@@ -33,7 +33,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     private RelativeEncoder armEncoder;
     private SparkPIDController armPID;
-    
+
     private boolean brake;
 
     private final double tolerance = 0.1;
@@ -51,7 +51,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     
     public ArmAngleSubsystem() {
-        
+
         armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
         armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
         armPID = armMotor.getPIDController();
@@ -63,16 +63,15 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         armMotor.setSoftLimit(SoftLimitDirection.kForward, (float) ArmAngle.FULL.getValue());
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) ArmAngle.ZERO.getValue());
         armMotor.enableVoltageCompensation(Constants.voltageCompensation);
-    
+
         armEncoder.setPosition(0);
         armPID.setP(0.5);
         armPID.setI(0);
         armPID.setD(1.75);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.1, 0.1); 
+        armPID.setOutputRange(-0.1, 0.1);
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
-    
 
         setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
@@ -120,30 +119,22 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     public void armPositonUp() {
         if (setpoint < ArmAngle.ARMAMP.getValue() - 0.05) {
-
             setpoint = Math.min(setpoint + 0.05, ArmAngle.ARMAMP.getValue());
         }
-
         else {
             setpoint = ArmAngle.FULL.getValue();
-
         }
     }
 
-        
     public void armPositonDown() {
-       if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
-
+        if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
             setpoint = Math.max(setpoint - 0.05, ArmAngle.ZERO.getValue());
-       }   
-       
-       else {
+        }
+        else {
             setpoint = ArmAngle.ZERO.getValue();
-
-       }
+        }
     }
 
-    
     @Override
     public void periodic() {
         setpointGE.setDouble(setpoint);
@@ -156,12 +147,10 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         setpoint = armAngle.getValue();
     }
 
-    private void setArmAngle(double armAngle) {
-        setpoint = armAngle;
-    }
+
 
     public double getAngleRadians() {
         return setpoint / ticksPerRad;
     }
-    
+
 }
