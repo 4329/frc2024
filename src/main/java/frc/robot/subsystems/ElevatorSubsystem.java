@@ -106,7 +106,11 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     public boolean atSetpoint() {
 
+
+        System.out.println(elevatorEncoder.getPosition() - setPoint);
         return Math.abs(elevatorEncoder.getPosition() - setPoint) <= tolerance;
+
+
 
     }
 
