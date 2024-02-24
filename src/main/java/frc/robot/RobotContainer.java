@@ -291,10 +291,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-<<<<<<< HEAD
-
-=======
->>>>>>> e0e5250 (Elevator development stuff (#42))
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
