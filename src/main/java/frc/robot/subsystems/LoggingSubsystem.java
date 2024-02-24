@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,11 @@ public class LoggingSubsystem extends SubsystemBase {
             }
             isEven = !isEven;
         }
+    }
+
+    public static interface LoggedSubsystem {
+
+        public LoggableInputs log();
     }
 
 }

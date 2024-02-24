@@ -6,8 +6,9 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Model.LineBreakAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
-public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSubsystem{
+public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private DigitalInput lineBreak;
     private LineBreakAutoLogged lineBreakAutoLogged;

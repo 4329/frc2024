@@ -9,9 +9,10 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.IndexLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.SparkFactory;
 
-public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem{
+public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private CANSparkMax topIndexMotor;
     private CANSparkMax bottomIndexMotor;

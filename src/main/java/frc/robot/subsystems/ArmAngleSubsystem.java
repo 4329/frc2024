@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ArmAngleLog;
 import frc.robot.Model.ArmAngleLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.BuiltOutWidgets;
 import frc.robot.utilities.MathUtils;

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.PoseEstimationLog;
 import frc.robot.Model.PoseEstimationLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 
 public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubsystem {
