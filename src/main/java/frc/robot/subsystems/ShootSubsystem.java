@@ -136,12 +136,12 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     public void getData(SysIdRoutineLog sysIdRoutineLog) {
-        Logger.recordOutput("sdifa", RobotController.getBatteryVoltage());
-        Logger.recordOutput("lsdoflsoaolodsflsdfldlsoflso", rightMotor.getAppliedOutput());
+        Logger.recordOutput("voltage", RobotController.getBatteryVoltage());
+        Logger.recordOutput("output", rightMotor.getAppliedOutput());
 
         rightMotor.getVoltageCompensationNominalVoltage();
         sysIdRoutineLog.motor("Shoot")
-                .voltage(BaseUnits.Voltage.of(rightMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+                .voltage(BaseUnits.Voltage.of(rightMotor.getAppliedOutput() * Constants.voltageCompensation))
                 .angularPosition(Units.Rotations.of(rightEncoder.getPosition()))
                 .angularVelocity(Units.RotationsPerSecond.of(rightEncoder.getVelocity() / 60));
     }
