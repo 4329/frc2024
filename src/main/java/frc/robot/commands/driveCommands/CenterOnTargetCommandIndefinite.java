@@ -14,7 +14,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
-public class CenterOnTargetCommand extends Command {
+public class CenterOnTargetCommandIndefinite extends Command {
 
     private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
@@ -25,14 +25,14 @@ public class CenterOnTargetCommand extends Command {
     private Timer timer = new Timer();
 
 
-    public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
+    public CenterOnTargetCommandIndefinite(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
         this.visionSubsystem = visionSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
         this.xboxController = xboxController;
 
-        rotationPID = new PIDController(0.00002, 0, 0);
+        rotationPID = new PIDController(0.035, 0, 0);
         
         addRequirements(visionSubsystem, m_drivetrain);
     }
@@ -76,7 +76,7 @@ public class CenterOnTargetCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return rotationPID.atSetpoint();
+        return false;
     }
 
     private double inputTransform(double input) {

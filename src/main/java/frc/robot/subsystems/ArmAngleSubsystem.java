@@ -41,7 +41,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((50.0 * Math.PI) / (180.0));
 
-    private final double speakerHeight = 2;
+    private final double speakerHeight = 2.15;
     private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
@@ -53,7 +53,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     public ArmAngleSubsystem() {
 
         armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
-        armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
+        armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, false);
         armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
 
@@ -69,7 +69,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         armPID.setI(0);
         armPID.setD(1.75);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.1, 0.1);
+        armPID.setOutputRange(-0.15, 0.15); 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
