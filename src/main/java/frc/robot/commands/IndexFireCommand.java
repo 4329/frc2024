@@ -23,7 +23,9 @@ public class IndexFireCommand extends Command {
     @Override
     public void initialize() {
         
+            System.out.println("index fire init");
                 indexSubsystem.in();
+                timer.reset();
                 timer.start();
         
     }
@@ -31,6 +33,7 @@ public class IndexFireCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("index fire stop");
         indexSubsystem.stop();
         shootSubsystem.stop();
 
@@ -38,6 +41,7 @@ public class IndexFireCommand extends Command {
 
     @Override
     public boolean isFinished() {
+        System.out.println("index fire is finished");
         return timer.hasElapsed(0.33334);
     }
 

@@ -183,7 +183,7 @@ public class RobotContainer {
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
 
-    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
@@ -302,11 +302,11 @@ public class RobotContainer {
     driverController.start().whileTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
+    driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
     driverController.x().whileTrue(new ShootFireCommand(shootSubsystem)).toggleOnFalse(new IndexFireCommand(indexSubsystem, shootSubsystem));
-    driverController.y().whileTrue(new CenterOnTargetCommandIndefinite(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
-
+    driverController.y().whileTrue(CommandGroups.aim(m_robotDrive, visionSubsystem, driverController, armAngleSubsystem));
+    
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povLeft().onTrue(new ArmHorizontalCommand(armAngleSubsystem));
@@ -314,6 +314,14 @@ public class RobotContainer {
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
+
+
+
+
+
+
+
+
 
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);

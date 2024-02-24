@@ -55,5 +55,4 @@ public class IntakeSubsystem extends SubsystemBase implements LoggedSubsystem {
         intakeLogAutoLogged.topIntakeMotor = topIntakeMotor.get() != 0;
         return intakeLogAutoLogged;
     }
-
 }

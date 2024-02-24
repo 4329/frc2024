@@ -45,10 +45,11 @@ public class CommandGroups {
         }
 
         public static Command intakeWithLineBreakSensor(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem,
-                        LineBreakSensorSubsystem lineBreakSensorSubsystem) {
+                        LineBreakSensorSubsystem lineBreakSensorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
                                 new ParallelCommandGroup(
+                                                new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                                 new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
                                                 new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem)
 
@@ -76,27 +77,13 @@ public class CommandGroups {
 
         }
 
-        public static Command aimAndShoot(ShootSubsystem shootSubsystem, Drivetrain m_robotDrive,
-                        IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem,
-                        CommandXboxController driverController,
-                        ArmAngleSubsystem armAngleSubsystem) {
+        public static Command aim(Drivetrain m_robotDrive, VisionSubsystem visionSubsystem,
+                        CommandXboxController driverController, ArmAngleSubsystem armAngleSubsystem) {
 
-                return new SequentialCommandGroup(
-
-                                new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive,
-                                                                AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
-                                                                driverController).withTimeout(1.25),
-                                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
-                                                                .withTimeout(1.25)
-
-                                ),
-
-                                new WaitCommand(1),
-
-                                new ShooterShotCommand(shootSubsystem, indexSubsystem));
-
-
+                return new ParallelCommandGroup(
+                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive,
+                                                AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController),
+                                new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
         }
 
@@ -109,26 +96,24 @@ public class CommandGroups {
                                 new ShootFireCommand(shootSubsystem));
 
         };
-    
 
         public static Command elevatorAndAngleToAmp(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem,
-                ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
-                        return new SequentialCommandGroup(
+                        ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+                return new SequentialCommandGroup(
                                 new ParallelCommandGroup(
-                                        new ElevatorToAmpCommand(elevatorSubsystem),
-                                        new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP))
-                                        );
+                                                new ElevatorToAmpCommand(elevatorSubsystem),
+                                                new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
         }
 
-        public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem){
-        
-                        return new ParallelCommandGroup(
+        public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem,
+                        ArmAngleSubsystem armAngleSubsystem) {
+
+                return new SequentialCommandGroup(
 
                                 new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),
-                                new SequentialCommandGroup(
 
-                                        new WaitCommand(1),
-                                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)));          
+                                new ArmCommand(armAngleSubsystem, ArmAngle.ZERO));
+
         }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,
@@ -143,4 +128,5 @@ public class CommandGroups {
                                 new IndexFireCommand(indexSubsystem, shootSubsystem));
 
         }
+
 }
