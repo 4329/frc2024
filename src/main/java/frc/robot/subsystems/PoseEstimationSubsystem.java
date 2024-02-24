@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -21,7 +22,7 @@ import frc.robot.Model.PoseEstimationLog;
 import frc.robot.Model.PoseEstimationLogAutoLogged;
 import frc.robot.subsystems.swerve.Drivetrain;
 
-public class PoseEstimationSubsystem extends SubsystemBase {
+public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     PoseEstimationLogAutoLogged poseEstimationLogAutoLogged;
 
@@ -76,18 +77,18 @@ public class PoseEstimationSubsystem extends SubsystemBase {
         }
     }
 
+
     @Override
     public void periodic() {
         updateEstimation();
 
-        updateInputs(poseEstimationLogAutoLogged);
     }
-
-    private void updateInputs(PoseEstimationLog poseEstimationLog) {
-        poseEstimationLog.combined = transformFieldToAdvantageKit(getPose());
-        poseEstimationLog.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
-        poseEstimationLog.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
-        poseEstimationLog.pathPlannerPosy = pathPlannerPose;
+    @Override
+    public LoggableInputs log() {
+        poseEstimationLogAutoLogged.combined = transformFieldToAdvantageKit(getPose());
+        poseEstimationLogAutoLogged.limOnly = transformFieldToAdvantageKit(visionSubsystem.getRobotPose());
+        poseEstimationLogAutoLogged.driveOnly = transformFieldToAdvantageKit(drivetrain.getPose());
+        poseEstimationLogAutoLogged.pathPlannerPosy = pathPlannerPose;
         Logger.processInputs("Estimated Field Position", poseEstimationLogAutoLogged);
         Logger.recordOutput("zero", new Pose2d());
         Logger.recordOutput("zeroes", new Pose3d[] {
@@ -98,6 +99,7 @@ public class PoseEstimationSubsystem extends SubsystemBase {
             new Pose3d(), // Elevator Base
             new Pose3d(0, 0, 0, new Rotation3d()) // Elevator left
         });
+        return poseEstimationLogAutoLogged;
     }
 
     private Pose2d transformFieldToAdvantageKit(Pose2d pose) {

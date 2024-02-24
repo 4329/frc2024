@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.SparkLimitSwitch.Type;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -26,7 +27,7 @@ import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.SometimesTextSendable;
 import frc.robot.utilities.SparkFactory;
 
-public class ArmAngleSubsystem extends SubsystemBase {
+public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private CANSparkMax armMotor;
 
@@ -109,12 +110,12 @@ public class ArmAngleSubsystem extends SubsystemBase {
         return Math.abs(armEncoder.getPosition() - setpoint) <= tolerance;
 
     }
-
-    private void updateInputs(ArmAngleLog armAngleLog) {
-        armAngleLog.setpoint = setpoint;
-        armAngleLog.position = armEncoder.getPosition();
-        armAngleLog.radians = armEncoder.getPosition() / 4.1284; //subject to change
-        Logger.processInputs("Arm Angle", armAngleLogAutoLogged);
+    @Override
+    public LoggableInputs log() {
+        armAngleLogAutoLogged.setpoint = setpoint;
+        armAngleLogAutoLogged.position = armEncoder.getPosition();
+        armAngleLogAutoLogged.radians = armEncoder.getPosition() / 4.1284; //subject to change
+        return armAngleLogAutoLogged;
     }
 
     public void armPositonUp() {
@@ -148,7 +149,6 @@ public class ArmAngleSubsystem extends SubsystemBase {
         setpointGE.setDouble(setpoint);
         positionGE.setDouble(armEncoder.getPosition());
         armPID.setReference(setpoint, ControlType.kPosition);
-        updateInputs(armAngleLogAutoLogged);
     }
 
     public void setArmAngle(ArmAngle armAngle) {

@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class LoggingSubsystem extends SubsystemBase{
+public class LoggingSubsystem extends SubsystemBase {
 
     private LoggedSubsystem[] subsystems;
 
@@ -17,10 +17,8 @@ public class LoggingSubsystem extends SubsystemBase{
 
         for (LoggedSubsystem subsystemLog : subsystems) {
             
-            Logger.processInputs(subsystemLog.getClass().getName(), subsystemLog.log());
-            
+            Logger.processInputs(subsystemLog.getClass().getName(), subsystemLog.log());   
         }
-
     }
     
 }

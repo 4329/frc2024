@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -11,7 +12,7 @@ import frc.robot.Constants;
 import frc.robot.Model.IntakeLogAutoLogged;
 import frc.robot.utilities.SparkFactory;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase implements LoggedSubsystem{
 
     private CANSparkMax topIntakeMotor;
     private CANSparkMax bottomIntakeMotor;
@@ -49,9 +50,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
     @Override
-    public void periodic() {
+    public LoggableInputs log() {
         intakeLogAutoLogged.topIntakeMotor = topIntakeMotor.get() != 0;
-        Logger.processInputs("Intaking", intakeLogAutoLogged);
+        return intakeLogAutoLogged;
     }
 
 }
