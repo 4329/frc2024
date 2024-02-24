@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.LinearInterpolationTable;
 import frc.robot.utilities.SparkFactory;
