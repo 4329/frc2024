@@ -31,10 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorToAmpCommand;
-import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShotReverseCommand;
@@ -43,6 +40,7 @@ import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
+import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
@@ -55,8 +53,6 @@ import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
-import frc.robot.commands.armCommands.ShootAmpCommand;
-import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -393,7 +389,7 @@ public class RobotContainer {
   }
 
   public void robotInit() {
-    new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
+    //new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
     limDriveSetCommand.schedule();
   }
 
