@@ -19,11 +19,17 @@ public class LoggingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        if (timer.hasElapsed(1)) {
+        if (timer.hasElapsed(.5)) {
 
-            for (LoggedSubsystem subsystemLog : subsystems) {
-                String name = subsystemLog.getClass().getSimpleName();
-                Logger.processInputs(name, subsystemLog.log());
+            for (int i = 0; i < subsystems.length; i += 2) {
+                String name = subsystems[i].getClass().getSimpleName();
+                Logger.processInputs(name, subsystems[i].log());
+            }
+        } else if (timer.hasElapsed(1)) {
+
+            for (int i = 1; i < subsystems.length; i += 2) {
+                String name = subsystems[i].getClass().getSimpleName();
+                Logger.processInputs(name, subsystems[i].log());
             }
             timer.restart();
         }
