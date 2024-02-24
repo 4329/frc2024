@@ -8,6 +8,7 @@ import com.revrobotics.SparkAnalogSensor.Mode;
 import java.security.spec.EncodedKeySpec;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -28,7 +29,7 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.SparkFactory;
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem{
 
     private CANSparkMax elevatorMotor1;
     private CANSparkMax elevatorMotor2;
@@ -142,15 +143,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
-    public void updateInputs(Elevator elevator) {
-        elevator.position = elevatorEncoder.getPosition();
-        elevator.setpoint = setPoint;
-        Logger.processInputs("George", elevatorAutoLogged);
+
+    @Override
+    public LoggableInputs log() {
+        elevatorAutoLogged.position = elevatorEncoder.getPosition();
+        elevatorAutoLogged.setpoint = setPoint;
+        return elevatorAutoLogged;
     }
 
     @Override
     public void periodic() {
-        updateInputs(elevatorAutoLogged);
         elevatorPositionGenericEntry.setDouble(setPoint);
         elevatorActualPositionGenericEntry.setDouble(elevatorEncoder.getPosition());
 

@@ -72,6 +72,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
+import frc.robot.subsystems.LoggingSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
@@ -107,6 +108,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem;
   private final LightsSusbsystem lightsSusbsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
+  private final LoggingSubsystem loggingSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -155,7 +157,8 @@ public class RobotContainer {
     lightsSusbsystem = new LightsSusbsystem();
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
-
+    loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
+    
     // commands for auto
     NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));

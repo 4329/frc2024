@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Model.LineBreakAutoLogged;
 
-public class LineBreakSensorSubsystem extends SubsystemBase{
+public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSubsystem{
 
     private DigitalInput lineBreak;
     private LineBreakAutoLogged lineBreakAutoLogged;
@@ -18,11 +19,10 @@ public class LineBreakSensorSubsystem extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
+    public LoggableInputs log() {
          
         lineBreakAutoLogged.notBroken = isNotBroken();
-        Logger.processInputs("Line Break", lineBreakAutoLogged);
-
+        return lineBreakAutoLogged;
     }
 
 public Boolean isNotBroken(){

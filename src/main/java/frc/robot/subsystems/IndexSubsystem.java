@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -10,7 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Model.IndexLogAutoLogged;
 import frc.robot.utilities.SparkFactory;
 
-public class IndexSubsystem extends SubsystemBase {
+public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem{
 
     private CANSparkMax topIndexMotor;
     private CANSparkMax bottomIndexMotor;
@@ -54,11 +55,12 @@ public class IndexSubsystem extends SubsystemBase {
 
     }
     
+
     @Override
-    public void periodic() {
+    public LoggableInputs log() {
         indexLogAutoLogged.topIndexMotor = topIndexMotor.get();
         indexLogAutoLogged.bottomIndexMotor = bottomIndexMotor.get();
-        Logger.processInputs("index", indexLogAutoLogged);
+        return indexLogAutoLogged;
     }
 
     public void slowOut() {

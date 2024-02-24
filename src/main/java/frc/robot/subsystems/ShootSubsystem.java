@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -31,7 +33,7 @@ import frc.robot.utilities.SparkFactory;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-public class ShootSubsystem extends SubsystemBase {
+public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public final CANSparkMax rightMotor;
     public final CANSparkMax leftMotor;
@@ -84,17 +86,15 @@ public class ShootSubsystem extends SubsystemBase {
     public void stop(){
        rightMotor.stopMotor();
     }
-
-    private void updateInputs(ShootLog shootLog) {
-        shootLog.setpoint = setpoint;
-        shootLog.PIDOutput = rightMotor.get();
-        Logger.processInputs("Shooter", shootLogAutoLogged);
-
+    @Override
+    public LoggableInputs log() {
+        shootLogAutoLogged.setpoint = setpoint;
+        shootLogAutoLogged.PIDOutput = rightMotor.get();
+        return shootLogAutoLogged;
     }
 
     @Override
     public void periodic() {
-        updateInputs(shootLogAutoLogged);
         
 
         // setpoint = sadf.getDouble(0);
