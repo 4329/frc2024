@@ -111,13 +111,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void elevatorUp() {
 
-        if (setPoint < ElevatorSetpoints.FULL.getValue() - 2) {
+        if (setPoint < ElevatorSetpoints.AMPPOINT.getValue() - 2) {
 
-            setPoint = Math.min(setPoint + 2, ElevatorSetpoints.FULL.getValue());
+            setPoint = Math.min(setPoint + 2, ElevatorSetpoints.AMPPOINT.getValue());
         }
 
         else {
-            setPoint = ElevatorSetpoints.FULL.getValue();
+            setPoint = ElevatorSetpoints.AMPPOINT.getValue();
 
         }
     }
@@ -134,6 +134,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
+    public void elevatorMove(double lkajfds) {
+
+        if (setPoint > ElevatorSetpoints.ZERO.getValue() + 2 && setPoint < ElevatorSetpoints.AMPPOINT.getValue() - 2) {
+
+            setPoint = lkajfds;
+        }
+    }
+
     public void updateInputs(Elevator elevator) {
         elevator.position = elevatorEncoder.getPosition();
         elevator.setpoint = setPoint;
@@ -146,8 +154,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorPositionGenericEntry.setDouble(setPoint);
         elevatorActualPositionGenericEntry.setDouble(elevatorEncoder.getPosition());
 
-        // System.out.println("elvator actual position is ->>  " + elevatorEncoder.getPosition());
+        
         elevatorPID.setReference(setPoint, ControlType.kPosition);
+        
         /*
          * digiput.setDouble(digitalInput.get()?1:0);
          * digiputLimit.setBoolean(m_reverseLimit.isPressed());
@@ -155,8 +164,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     }
 
+
     public void zeroElevator() {
         elevatorMotor1.set(-0.1);
+    }
+
+    public void stop() {
+        double elevatorSpeed = 0.0;
+        elevatorMotor1.set(elevatorSpeed);
+        elevatorMotor2.set(elevatorSpeed);
     }
 
 }
