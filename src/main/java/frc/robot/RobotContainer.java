@@ -151,10 +151,9 @@ public class RobotContainer {
     loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
     
     // commands for auto
-    NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem).withTimeout(3));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
     NamedCommands.registerCommand("speakershoot", CommandGroups.aimAndShoot(shootSubsystem, drivetrain, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem).withTimeout(3));
-    NamedCommands.registerCommand("actualCompBotIntake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
+    NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
 
 
     // Command Instantiations

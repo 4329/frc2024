@@ -14,30 +14,30 @@
         {
           "type": "path",
           "data": {
-            "pathName": "testableCenterGrab"
+            "pathName": "FirstShotRot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TCG#2"
+            "pathName": "CloseTopIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TCG#3"
+            "pathName": "ToTopIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TCG#4"
+            "pathName": "TopBackShot"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "ActualAutos",
   "choreoAuto": false
 }
