@@ -23,16 +23,18 @@ public class ShooterShotCommand extends Command {
     public void initialize() {
 
         shootSubsystem.changeSetpoint(setpoint);
-        timer.start();
+        
 
     }
 
     @Override
     public void execute() {
 
-        if (timer.hasElapsed(1.5)) {
+        if (shootSubsystem.atSetpoint() == true) {
 
+            timer.start();
             indexSubsystem.in();
+
 
         }
 
@@ -42,7 +44,7 @@ public class ShooterShotCommand extends Command {
     public boolean isFinished() {
 
 
-        return timer.hasElapsed(1.75);
+        return timer.hasElapsed(0.25);
     }
 
     @Override

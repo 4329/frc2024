@@ -3,7 +3,6 @@ package frc.robot;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -11,19 +10,13 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.EncoderType;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,7 +24,6 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -39,13 +31,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.IDFlywheelCommand;
-import frc.robot.commands.IndexReverseForShotCommand;
-import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IndexFireCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.LimDriveSetCommand;
 import frc.robot.commands.ShootCommand;
@@ -55,7 +44,6 @@ import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
-import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -66,7 +54,6 @@ import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.commands.drive.ResetOdometryTargetSpaceCommand;
 import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
@@ -96,7 +83,6 @@ public class RobotContainer {
   // private final VisionSubsystem visionSubsystem;
   // private final VisionSubsystem photonVisionSubsystem;
   private final VisionSubsystem visionSubsystem;
-  
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
@@ -119,6 +105,7 @@ public class RobotContainer {
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
+  private final ShotReverseCommand shotReverseCommand;
   private final DriveToTargetCommand driveToTargetCommand;
   
   private final LimDriveSetCommand limDriveSetCommand;
@@ -168,6 +155,7 @@ public class RobotContainer {
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
+    shotReverseCommand = new ShotReverseCommand(shootSubsystem);
 
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
     lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
@@ -291,8 +279,8 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(exampleCommand);
     driverController.leftTrigger().whileTrue(exampleCommand);
 
-    driverController.rightBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
-    driverController.leftBumper().whileTrue(new ShotReverseCommand(shootSubsystem));
+    driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new IndexFireCommand(indexSubsystem, shootSubsystem));
+    driverController.leftBumper().whileTrue(shotReverseCommand);
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
