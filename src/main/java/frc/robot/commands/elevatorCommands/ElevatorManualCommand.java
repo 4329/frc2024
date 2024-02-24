@@ -24,10 +24,10 @@ public class ElevatorManualCommand extends Command {
     @Override
     public void execute() {
         if (rightTriggerSupplier.get() > 0.1) {
-            elevatorSubsystem.elevatorMove(rightTriggerSupplier.get());
+            elevatorSubsystem.elevatorMove(rightTriggerSupplier.get() * 2);
 
         } else if (leftTriggerSupplier.get() > 0.1) {
-            elevatorSubsystem.elevatorMove(-leftTriggerSupplier.get());
+            elevatorSubsystem.elevatorMove(-leftTriggerSupplier.get() * 2);
         } else {
 
             elevatorSubsystem.stop();
