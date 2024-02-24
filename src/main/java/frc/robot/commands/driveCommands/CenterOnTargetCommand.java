@@ -2,6 +2,7 @@ package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +34,7 @@ public class CenterOnTargetCommand extends Command {
 
         rotationPID = new PIDController(0.00002, 0, 0);
         
-        addRequirements((SubsystemBase)visionSubsystem, m_drivetrain);
+        addRequirements(visionSubsystem, m_drivetrain);
     }
 
     @Override
@@ -45,6 +46,7 @@ public class CenterOnTargetCommand extends Command {
         rotationPID.setTolerance(0.2);
         rotationPID.setSetpoint(0);
     }
+
     
     @Override
     public void execute() {

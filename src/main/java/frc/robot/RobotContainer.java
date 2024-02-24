@@ -3,9 +3,6 @@ package frc.robot;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import org.ejml.dense.row.CommonOps_MT_CDRM;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -13,19 +10,13 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.EncoderType;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,7 +24,6 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,19 +31,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.elevatorCommands.ElevatorCommand;
-import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
-import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
-import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
-import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
-import frc.robot.commands.intakeOuttakeCommands.IntakeCommand;
-import frc.robot.commands.shootCommands.IDFlywheelCommand;
-import frc.robot.commands.shootCommands.ShootCommand;
-import frc.robot.commands.shootCommands.ShooterAimCommand;
-import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
-import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LightCommand;
+import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
@@ -64,7 +44,12 @@ import frc.robot.commands.driveCommands.CoastCommand;
 import frc.robot.commands.driveCommands.DriveByController;
 import frc.robot.commands.driveCommands.DriveToTargetCommand;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
-import frc.robot.commands.driveCommands.ResetOdometryTargetSpaceCommand;
+import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
+import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
+import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
+import frc.robot.commands.shootCommands.ShootCommand;
+import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
+import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -99,7 +84,6 @@ public class RobotContainer {
   // private final VisionSubsystem visionSubsystem;
   // private final VisionSubsystem photonVisionSubsystem;
   private final VisionSubsystem visionSubsystem;
-  
   private final ShootSubsystem shootSubsystem;
   private final IntakeSubsystem intakeSubsystem;
   private final IndexSubsystem indexSubsystem;
@@ -124,6 +108,7 @@ public class RobotContainer {
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
+  private final ShotReverseCommand shotReverseCommand;
   private final DriveToTargetCommand driveToTargetCommand;
   
   private final LimDriveSetCommand limDriveSetCommand;
@@ -174,6 +159,7 @@ public class RobotContainer {
     shootCommand = new ShootCommand(shootSubsystem);
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
+    shotReverseCommand = new ShotReverseCommand(shootSubsystem);
 
     elevatorManualCommand = new ElevatorManualCommand(elevatorSubsystem, () -> driverController.getLeftTriggerAxis(), () -> driverController.getRightTriggerAxis());
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
@@ -181,8 +167,9 @@ public class RobotContainer {
     limDriveSetCommand = new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
-    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
-    armAngleSubsystem));
+
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
+    // armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
@@ -295,8 +282,9 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
 
-    driverController.rightBumper().whileTrue(shuffleBoardShootCommand);
-    driverController.leftBumper().whileTrue(shootCommand);
+    driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
+    driverController.leftBumper().whileTrue(shotReverseCommand);
+
 
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);

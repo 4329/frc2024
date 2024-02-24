@@ -83,7 +83,18 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     }
 
+    public boolean atSetpoint() {
+
+        if (setpoint == setpoint) {
+            return true;
+        }
+        return false;
+
+
+    }
+
     public void stop(){
+       setpoint = 0;
        rightMotor.stopMotor();
     }
     @Override
