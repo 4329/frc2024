@@ -298,8 +298,8 @@ public class RobotContainer {
     driverController.leftBumper().whileTrue(shotReverseCommand);
 
 
-    driverController.rightBumper().onTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
-    driverController.leftBumper().whileTrue(new ShotReverseCommand(shootSubsystem));
+    driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new IndexFireCommand(indexSubsystem, shootSubsystem));
+    driverController.leftBumper().whileTrue(shotReverseCommand);
     driverController.start().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
