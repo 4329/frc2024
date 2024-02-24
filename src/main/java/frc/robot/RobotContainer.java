@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -372,16 +373,18 @@ public class RobotContainer {
         }
       }
 
-      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
-          new SysIdRoutine.Mechanism(shootSubsystem::setVoltage, shootSubsystem::getData, shootSubsystem));
-      m_chooser.addOption("yes", new SequentialCommandGroup(
-          sysIdRoutine.dynamic(Direction.kForward),
-          new WaitCommand(5),
-          sysIdRoutine.dynamic(Direction.kReverse),
-          new WaitCommand(5),
-          sysIdRoutine.quasistatic(Direction.kForward),
-          new WaitCommand(5),
-          sysIdRoutine.quasistatic(Direction.kReverse)));
+      SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), shootSubsystem.getMechanism());
+      m_chooser.addOption("Identify Shooter", new SequentialCommandGroup(
+        sysIdRoutine.dynamic(Direction.kForward),
+        new WaitCommand(10),
+        sysIdRoutine.dynamic(Direction.kReverse),
+        new WaitCommand(10),
+        sysIdRoutine.quasistatic(Direction.kForward),
+        new WaitCommand(10),
+        sysIdRoutine.quasistatic(Direction.kReverse),
+        new WaitCommand(10),
+        new StartEndCommand(() -> System.out.println("sadjfaiulsurouxp9iou icljsizfjldskljdngksdfnafjjrorodsdf"), () -> System.out.println("wily wonka"))
+      ));
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 

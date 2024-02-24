@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
@@ -53,6 +54,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     LinearInterpolationTable shootTable = new LinearInterpolationTable(
         new Point(0, 0)
     );
+
+    private Mechanism shooterMechanism;
     
 
     // 240 inches is the theroetical max shot for the shooter
@@ -78,6 +81,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         shooterBangBang = new BangBangController();
 
         shootLogAutoLogged = new ShootLogAutoLogged();
+
+        shooterMechanism = new Mechanism(this::setVoltage, this::getData, this);
     }
 
     public void changeSetpoint(double set) {
@@ -143,6 +148,10 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public double getVelocity() {
         return rightEncoder.getVelocity();
+    }
+
+    public Mechanism getMechanism() {
+        return shooterMechanism;
     }
 }
 
