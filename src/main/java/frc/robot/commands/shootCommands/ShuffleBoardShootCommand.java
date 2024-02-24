@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.shootCommands;
 
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
