@@ -76,7 +76,7 @@ public class CenterOnTargetCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return rotationPID.atSetpoint();
     }
 
     private double inputTransform(double input) {

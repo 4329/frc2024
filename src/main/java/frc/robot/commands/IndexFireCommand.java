@@ -14,6 +14,7 @@ public class IndexFireCommand extends Command {
     public IndexFireCommand(IndexSubsystem indexSubsystem, ShootSubsystem shootSubsystem) {
 
         this.indexSubsystem = indexSubsystem;
+        this.shootSubsystem = shootSubsystem;
         this.timer = new Timer();
         addRequirements(indexSubsystem);
 

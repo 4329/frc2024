@@ -38,10 +38,13 @@ import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
+import frc.robot.commands.armCommands.ArmHorizontalCommand;
+import frc.robot.commands.armCommands.ArmIntakeCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
+import frc.robot.commands.driveCommands.CenterOnTargetCommandIndefinite;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
 import frc.robot.commands.driveCommands.DriveByController;
@@ -51,6 +54,7 @@ import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
+import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -66,6 +70,7 @@ import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.HoorayConfig;
 
@@ -176,8 +181,7 @@ public class RobotContainer {
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
 
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
-    // armAngleSubsystem));
+    armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem, armAngleSubsystem));
 
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
@@ -290,30 +294,26 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
 
-    driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
-    driverController.leftBumper().whileTrue(shotReverseCommand);
+    driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
+    driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
     driverController.rightBumper()
         .onTrue(CommandGroups.AmpShootCommand(shootSubsystem, elevatorSubsystem, armAngleSubsystem, indexSubsystem));
     driverController.leftBumper().onTrue(
         CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
 
-    driverController.start()
-        .whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
+    driverController.start().whileTrue(exampleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP));
-    driverController.b().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
-    driverController.x().onTrue(elevatorToAmpCommand);
-    driverController.y().whileTrue(new ArmDownCommand(armAngleSubsystem));
+    driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem));
+    driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    driverController.x().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));    
+    driverController.y().whileTrue(new CenterOnTargetCommandIndefinite(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
 
-    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem,
-    // m_robotDrive, indexSubsystem, visionSubsystem, driverController,
-    // armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem,
-    // ArmAngle.ZERO));
-    driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
-    driverController.povLeft().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    // driverController.povDown().whileTrue(exampleCommand);
+    // driverController.povUp().whileTrue(CommandGroups.aimAndShoot(shootSubsystem, m_robotDrive, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
+    // driverController.povRight().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    driverController.povLeft().whileTrue(new ArmHorizontalCommand(armAngleSubsystem));
+    driverController.povDown().whileTrue(new ArmIntakeCommand(armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient

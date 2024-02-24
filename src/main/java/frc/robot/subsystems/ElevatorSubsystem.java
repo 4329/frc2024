@@ -135,9 +135,12 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem{
 
     public void elevatorMove(double lkajfds) {
 
-        if (setPoint > ElevatorSetpoints.ZERO.getValue() + 2 && setPoint < ElevatorSetpoints.AMPPOINT.getValue() - 2) {
 
-            setPoint = lkajfds;
+        double newSetPoint = setPoint + lkajfds;
+
+        if (newSetPoint > ElevatorSetpoints.ZERO.getValue() &&  newSetPoint < ElevatorSetpoints.AMPPOINT.getValue()) {
+
+            setPoint = newSetPoint;
         }
     }
 
