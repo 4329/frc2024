@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.ejml.dense.row.CommonOps_MT_CDRM;
 
+import org.ejml.dense.row.CommonOps_MT_CDRM;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
+import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
@@ -281,6 +284,9 @@ public class RobotContainer {
     // Driver Controller
     driverController.rightTrigger().whileTrue(elevatorManualCommand);
     driverController.leftTrigger().whileTrue(elevatorManualCommand);
+
+    driverController.rightBumper().whileTrue(shuffleBoardShootCommand);
+    driverController.leftBumper().whileTrue(shootCommand);
 
     driverController.rightBumper().whileTrue(CommandGroups.holdShot(shootSubsystem, m_robotDrive, visionSubsystem, driverController, armAngleSubsystem)).toggleOnFalse(CommandGroups.centerAndFire(visionSubsystem, m_robotDrive, indexSubsystem, shootSubsystem, driverController));
     driverController.leftBumper().whileTrue(shotReverseCommand);
