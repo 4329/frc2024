@@ -1,24 +1,20 @@
 package frc.robot.commands;
 
-import org.junit.runners.ParentRunner;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ShooterAimCommand;
 import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.AprilTagUtil;
 
 public class CommandGroups {
 
@@ -73,7 +69,8 @@ public class CommandGroups {
                 return new SequentialCommandGroup(
 
                                 new ParallelCommandGroup(
-                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 7,
+                                                new CenterOnTargetCommand(visionSubsystem, m_robotDrive,
+                                                                AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                                                                 driverController).withTimeout(1.25),
                                                 new ShooterAimCommand(visionSubsystem, armAngleSubsystem)
                                                                 .withTimeout(1.25)
@@ -91,9 +88,21 @@ public class CommandGroups {
                         ArmAngleSubsystem armAngleSubsystem) {
 
                 return new ParallelCommandGroup(
-                                new CenterOnTargetCommand(visionSubsystem, drivetrain, 0, driverController),
                                 new ShooterAimCommand(visionSubsystem, armAngleSubsystem),
                                 new ShootFireCommand(shootSubsystem));
 
         };
+
+        public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,
+                        IndexSubsystem indexSubsystem, ShootSubsystem shootSubsystem,
+                        CommandXboxController commandXboxController) {
+
+                return new SequentialCommandGroup(
+
+                                new CenterOnTargetCommand(visionSubsystem, drivetrain,
+                                                AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
+                                                commandXboxController),
+                                new IndexFireCommand(indexSubsystem, shootSubsystem));
+
+        }
 }
