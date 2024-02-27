@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -39,13 +41,25 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public final CANSparkMax rightMotor;
     public final CANSparkMax leftMotor;
     public final RelativeEncoder rightEncoder;
+    public final SparkPIDController m_aimBot;
+    private double P = 0.5;
+    private double I = 0.0;
+    private double D = 0.0;
 
     private double setpoint = 0;
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
     private final SimpleMotorFeedforward aimFeed;
-    private final BangBangController shooterBangBang;
+
+    private double kP = 0.0004;
+    private double kI = 0.00001;
+    private double kD = 3;
+    private double kFF = 0.00015;
+    
+    GenericEntry p;
+    GenericEntry i;
+    GenericEntry d;
 
     private GenericEntry sadf = Shuffleboard.getTab("Asdfsdaf").add("saldjfk", 0).getEntry();
     private GenericEntry vel = Shuffleboard.getTab("Asdfsdaf").add("vel", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
@@ -59,7 +73,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public ShootSubsystem() {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot1);
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot2);
-
+        m_aimBot = rightMotor.getPIDController();
         rightEncoder = rightMotor.getEncoder();
 
         leftMotor.follow(rightMotor, true);
@@ -72,12 +86,23 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         rightMotor.burnFlash();
         leftMotor.burnFlash();
+        
+
+        m_aimBot.setP(kP);
+        m_aimBot.setI(kI);
+        m_aimBot.setD(kD);
+        m_aimBot.setFF(kFF);
+
+        p = Shuffleboard.getTab("shoot").add("P Gain", 0).getEntry();
+        i = Shuffleboard.getTab("shoot").add("I Gain", 0).getEntry();
+        d = Shuffleboard.getTab("shoot").add("D Gain", 0).getEntry();
 
         aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(),
             HoorayConfig.gimmeConfig().getShooterkV());
-        shooterBangBang = new BangBangController();
+        
 
         shootLogAutoLogged = new ShootLogAutoLogged();
+        
     }
 
     public void changeSetpoint(double set) {
@@ -118,7 +143,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
             rightMotor.stopMotor();
             leftMotor.stopMotor();
         } else {
-            rightMotor.setVoltage(shooterBangBang.calculate(rightEncoder.getVelocity(), setpoint) * 12.0 + (aimFeed.calculate(setpoint / 60) * 0.9));
+            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
         }
     }
 
