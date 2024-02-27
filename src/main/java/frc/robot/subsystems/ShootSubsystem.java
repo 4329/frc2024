@@ -42,28 +42,17 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public final CANSparkMax leftMotor;
     public final RelativeEncoder rightEncoder;
     public final SparkPIDController m_aimBot;
-    private double P = 0.5;
-    private double I = 0.0;
-    private double D = 0.0;
 
     private double setpoint = 0;
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
-    private final SimpleMotorFeedforward aimFeed;
-
     private double kP = 0.0004;
     private double kI = 0.00001;
     private double kD = 3;
     private double kFF = 0.00015;
-    
-    GenericEntry p;
-    GenericEntry i;
-    GenericEntry d;
 
-    private GenericEntry sadf = Shuffleboard.getTab("Asdfsdaf").add("saldjfk", 0).getEntry();
-    private GenericEntry vel = Shuffleboard.getTab("Asdfsdaf").add("vel", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
-
+   
     LinearInterpolationTable shootTable = new LinearInterpolationTable(
         new Point(0, 0)
     );
@@ -93,12 +82,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         m_aimBot.setD(kD);
         m_aimBot.setFF(kFF);
 
-        p = Shuffleboard.getTab("shoot").add("P Gain", 0).getEntry();
-        i = Shuffleboard.getTab("shoot").add("I Gain", 0).getEntry();
-        d = Shuffleboard.getTab("shoot").add("D Gain", 0).getEntry();
-
-        aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(),
-            HoorayConfig.gimmeConfig().getShooterkV());
+        
+            HoorayConfig.gimmeConfig().getShooterkV();
         
 
         shootLogAutoLogged = new ShootLogAutoLogged();
@@ -136,7 +121,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         
 
         // setpoint = sadf.getDouble(0);
-        vel.setDouble(rightEncoder.getVelocity() / 60);
+    
 
         if (setpoint == 0) {
 
