@@ -16,6 +16,7 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -160,6 +161,9 @@ public class RobotContainer {
     // commands for auto
     NamedCommands.registerCommand("intake", CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+    //NamedCommands.registerCommand("speakershoot", CommandGroups.aimAndShoot(shootSubsystem, drivetrain, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem).withTimeout(3));
+    NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
+
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();

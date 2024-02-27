@@ -42,15 +42,18 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public final CANSparkMax leftMotor;
     public final RelativeEncoder rightEncoder;
     public final SparkPIDController m_aimBot;
+    private GenericEntry rpmSetpointGE;
+    private GenericEntry rpmActualGE;
 
     private double setpoint = 0;
+    private double tolerance = 50; //arbitrary
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
-    private double kP = 0.0004;
-    private double kI = 0.00001;
-    private double kD = 3;
-    private double kFF = 0.00015;
+    private double kP = 0.000045;
+    private double kI = 0;
+    private double kD = 0;
+    private double kFF = 0.00018;
 
    
     LinearInterpolationTable shootTable = new LinearInterpolationTable(
@@ -67,8 +70,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         leftMotor.follow(rightMotor, true);
 
-        rightMotor.enableVoltageCompensation(Constants.voltageCompensation);
-        leftMotor.enableVoltageCompensation(Constants.voltageCompensation);
+        rightMotor.enableVoltageCompensation(12.7);
+        leftMotor.enableVoltageCompensation(12.7);
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
@@ -87,6 +90,11 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         
 
         shootLogAutoLogged = new ShootLogAutoLogged();
+
+        
+        rpmActualGE =  Shuffleboard.getTab("shoot").add("rpm actual", 0).getEntry();
+
+        rpmSetpointGE = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
         
     }
 
@@ -97,7 +105,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public boolean atSetpoint() {
 
-        if (setpoint == setpoint) {
+        if (Math.abs(setpoint - rightEncoder.getVelocity()) <= tolerance) {
             return true;
         }
         return false;
@@ -121,7 +129,10 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         
 
         // setpoint = sadf.getDouble(0);
-    
+
+
+        rpmActualGE.setDouble(rightEncoder.getVelocity());
+        rpmSetpointGE.setDouble(setpoint);
 
         if (setpoint == 0) {
 
@@ -131,7 +142,6 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
             m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
         }
     }
-
     public void setRPM(double rpm) {
         setpoint = rpm;
     }
