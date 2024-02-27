@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
@@ -51,6 +53,7 @@ public class CommandGroups {
                         LineBreakSensorSubsystem lineBreakSensorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
+                                new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                 new ParallelCommandGroup(
                                                 new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                                 new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),

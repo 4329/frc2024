@@ -188,7 +188,7 @@ public class RobotContainer {
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
     shotReverseCommand = new ShotReverseCommand(shootSubsystem);
-    toggleIntakeCommand = new ToggleIntakeCommand(new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem), new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem), new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
+    toggleIntakeCommand = new ToggleIntakeCommand(new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem), new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem), new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem), armAngleSubsystem);
 
     elevatorManualCommand = new ElevatorManualCommand(elevatorSubsystem, () -> driverController.getLeftTriggerAxis(), () -> driverController.getRightTriggerAxis());
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
