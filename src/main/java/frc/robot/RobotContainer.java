@@ -243,7 +243,7 @@ public class RobotContainer {
         m_robotDrive::getChassisSpeed,
         m_robotDrive::setModuleStates,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(Constants.AutoConstants.kPXController),
+            new PIDConstants(Constants.AutoConstants.kPXController, Constants.AutoConstants.kDxController),
             new PIDConstants(Constants.AutoConstants.kPThetaController),
             Constants.AutoConstants.kMaxSpeed,
             Math.sqrt(Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2) + Math.pow(Constants.DriveConstants.kWheelBaseLength, 2)) / 2,
@@ -374,8 +374,10 @@ public class RobotContainer {
         Command pathCommand = new PathPlannerAuto(name);
         pathCommand = new SequentialCommandGroup(new ParallelCommandGroup(pathCommand, 
             new SequentialCommandGroup(
-              new InstantCommand(() -> {Constants.StupidNonConstants.idioticness = PathPlannerAuto.getStaringPoseFromAutoFile(name);}),
-              new RepeatCommand(new InstantCommand(poseEstimationSubsystem::add)).withTimeout(0.1))),
+              new InstantCommand(() -> {
+                Pose2d posee = PathPlannerAuto.getStaringPoseFromAutoFile(name);
+                Constants.StupidNonConstants.idioticness = new Pose2d(posee.getX(), posee.getY(), new Rotation2d(posee.getRotation().getRadians()));}),
+              new InstantCommand(poseEstimationSubsystem::add))),
             new InstantCommand(drivetrain::stop));
         if (name.endsWith("BalanceAuto")) {
           // m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new

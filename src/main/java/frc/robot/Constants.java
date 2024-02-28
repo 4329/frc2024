@@ -123,7 +123,7 @@ public final class Constants {
 
     public static final double kVelocityFactor = (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
     
-    public static final double kPositionFactor = 1.0 / kTranslationGearRatio * kWheelDiameter;
+    public static final double kPositionFactor = 1.0 / kTranslationGearRatio * (kWheelDiameter * Math.PI);
 
     // NOTE: You shoulds ALWAYS define a reasonable current limit when using
     // brushless motors due to the extremely high stall current available
@@ -145,7 +145,7 @@ public final class Constants {
                                                          // controller will be on a different port
   }
 
-  /**
+  /*
    * Static method containing all Autonomous constants
    */
   public static final class AutoConstants {
@@ -159,9 +159,10 @@ public final class Constants {
                                                            // but spinning fast is not particularly useful or driver
                                                            // friendly
 
-    public static final double kPXController = 1.5;
+    public static final double kPXController = 2;
+    public static final double kDxController = 0.00005;
     // public static final double kPYController = 0.0000;
-    public static final double kPThetaController = 2;
+    public static final double kPThetaController = 1.25;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands
