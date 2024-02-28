@@ -2,12 +2,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.armCommands.ArmCommand;
-import frc.robot.commands.armCommands.ShootAmpCommand;
+import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
@@ -19,6 +18,8 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.OutakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
+import frc.robot.commands.shootCommands.ShooterAimCommandIndefinite;
+import frc.robot.commands.shootCommands.ShotRevCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -130,13 +131,34 @@ public class CommandGroups {
         }
 
 
-        // public static Command shoot(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem, Drivetrain drivetrain, CommandXboxController commandXboxController) {
+        public static Command shoot(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem, Drivetrain drivetrain, CommandXboxController commandXboxController, ArmAngleSubsystem armAngleSubsystem) {
+                                
+                
+                System.out.println("shoot1");
 
-        //         return new SequentialCommandGroup(
+                return new SequentialCommandGroup(
+                        new ParallelRaceGroup(
+                                new ShotRevCommand(shootSubsystem),
+                              //  new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
+                                new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
+
+                        ),
+
+                        new ParallelRaceGroup(
+
+                                new ShooterShotCommand(shootSubsystem, indexSubsystem),
+                             //   new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
+                                new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
+
+
+                        ),
                         
-        //         )
+                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)
+                        );
 
 
-        // }
+
+
+        }
 
 }

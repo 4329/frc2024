@@ -15,7 +15,7 @@ public class ArmToIntakeCommand extends InstantCommand {
 
     @Override
     public void initialize() {
-       armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);
+       armAngleSubsystem.setArmAngle(ArmAngle.ZERO);
     
 
     }

@@ -108,6 +108,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public boolean atSetpoint() {
 
         if (Math.abs(setpoint - rightEncoder.getVelocity()) <= tolerance) {
+          System.out.println("atsetpoint ----");
+
             return true;
         }
         return false;
@@ -125,6 +127,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     public void stop(){
+        System.out.println("shootSTOP");
+
        setpoint = 0;
        rightMotor.stopMotor();
     }

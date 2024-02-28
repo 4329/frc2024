@@ -40,13 +40,16 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     private final double tolerance = 0.1;
     private double setpoint = 0;
 
-    double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((50.0 * Math.PI) / (180.0));
+    double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((59.5 * Math.PI) / (180.0));
 
     private final double speakerHeight = 2.15;
+    private double speakerMod = 0;
     private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
     private GenericEntry radiansRotatedGE;
+    private GenericEntry radians2RotatedGE;
+    private GenericEntry speakerModGE;
     private ArmAngleLogAutoLogged armAngleLogAutoLogged;
 
 
@@ -77,6 +80,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
         radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
+        radians2RotatedGE = Shuffleboard.getTab("Arm Angle").add("Radians2Rotated", 0).getEntry();
+        speakerModGE = Shuffleboard.getTab("Arm Angle").add("SpeakerMod", 0).getEntry();
 
         armMotor.burnFlash();
     }
@@ -98,12 +103,17 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     public void setArmAngle(Pose3d pose) {
 
-        double radians = Math.atan2(goalConstant, pose.getZ());
-        radians = MathUtils.clamp(0, .88, radians); //was 1.22
-        radiansRotatedGE.setDouble(radians);
+        double radians1 = Math.atan2(goalConstant, pose.getZ());
+        speakerMod = speakerHeight - (radians1 * 0.2);
+        radians1 = MathUtils.clamp(0, 1.03, radians1); //was 1.22
+        double radians2 = Math.atan2(speakerMod, pose.getZ());
+        speakerModGE.setDouble(speakerMod);
+        radiansRotatedGE.setDouble(radians1);
+        radians2RotatedGE.setDouble(radians2);
 
 
-        setpoint = ArmAngle.HORIZONTAL.getValue() - (radians * ticksPerRad);
+
+        setpoint = ArmAngle.HORIZONTAL.getValue() - (radians2 * ticksPerRad);
     }
 
     public boolean atSetpoint() {
