@@ -138,7 +138,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_fieldRelVel = new FieldRelativeSpeed(getChassisSpeed(), getGyro());
+    // m_fieldRelVel = new FieldRelativeSpeed(getChassisSpeed(), getGyro());
     m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, DriveConstants.kLoopTime);
     m_lastFieldRelVel = m_fieldRelVel;
     // Update swerve drive odometry periodically so robot pose can be tracked
@@ -147,7 +147,7 @@ public class Drivetrain extends SubsystemBase {
     // pitch.setDouble(ahrs.getPitch());
 
     // Calls get pose function which sends the Pose information to the
-    getPose();
+    // getPose();
   }
 
   /**
@@ -202,13 +202,22 @@ public class Drivetrain extends SubsystemBase {
 
     return m_fieldRelAccel;
   }
+  Pose2d set;
+  public void setNesss(Pose2d set) {
+    this.set = set;
+  }
+  public Pose2d jgetNesss() {
+    return set;
+  }
 
   /**
    * @return Pose2d object containing the X and Y position and the heading of the
    *         robot.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    Pose2d initialPose = m_odometry.getPoseMeters();
+    // System.out.println("______________________________________________________________________________");
+    return new Pose2d(initialPose.getX(), initialPose.getY(), new Rotation2d(initialPose.getRotation().getRadians()));
   }
 
   /**
@@ -217,15 +226,13 @@ public class Drivetrain extends SubsystemBase {
    * @param pose in which to set the odometry and gyro.
    */
   public void resetOdometry(Pose2d pose) {
-
     ahrs.reset();
     ahrs.setAngleAdjustment(-pose.getRotation().getDegrees());
     keepAngle = getGyro().getRadians();
     m_odometry.resetPosition(ahrs.getRotation2d(), getModulePositions(), pose);
   }
-
+  
   public void setPose(Pose2d pose) {
-
     m_odometry.resetPosition(ahrs.getRotation2d().times(-1.0), getModulePositions(), pose);
     keepAngle = getGyro().getRadians();
   }
@@ -237,7 +244,7 @@ public class Drivetrain extends SubsystemBase {
    * @return ChassisSpeeds object containing robot X, Y, and Angular velocity
    */
   public ChassisSpeeds getChassisSpeed() {
-
+    // System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(),
         m_backLeft.getState(),
         m_backRight.getState());

@@ -125,7 +125,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder()));
+    return new SwerveModuleState(m_driveEncoder.getVelocity() / 2, new Rotation2d(getTurnEncoder()));
   }
 
   /**
