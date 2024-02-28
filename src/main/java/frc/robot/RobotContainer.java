@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -242,19 +244,20 @@ public class RobotContainer {
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
         poseEstimationSubsystem::getPathPlannerStuff,
-        m_robotDrive::resetOdometry,
+        poseEstimationSubsystem::setInitialPose,
         m_robotDrive::getChassisSpeed,
         m_robotDrive::setModuleStates,
         new HolonomicPathFollowerConfig(
             new PIDConstants(Constants.AutoConstants.kPXController),
             new PIDConstants(Constants.AutoConstants.kPThetaController),
             Constants.AutoConstants.kMaxSpeed,
-            0.4,
-            new ReplanningConfig()),
+            Math.sqrt(Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2) + Math.pow(Constants.DriveConstants.kWheelBaseLength, 2)) / 2,
+            new ReplanningConfig(false, false)),
         () -> {
           return false;
         },
         m_robotDrive);
+    
   }
 
   // private SwerveAutoBuilder createAutoBuilder() {
@@ -374,6 +377,11 @@ public class RobotContainer {
         // constraints);
 
         Command pathCommand = new PathPlannerAuto(name);
+        pathCommand = new SequentialCommandGroup(new ParallelCommandGroup(pathCommand, 
+            new SequentialCommandGroup(
+              new InstantCommand(() -> {Constants.StupidNonConstants.idioticness = PathPlannerAuto.getStaringPoseFromAutoFile(name);}),
+              new RepeatCommand(new InstantCommand(poseEstimationSubsystem::add)).withTimeout(0.1))),
+            new InstantCommand(drivetrain::stop));
         if (name.endsWith("BalanceAuto")) {
           // m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new
           // BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
@@ -410,7 +418,6 @@ public class RobotContainer {
   public void autonomousInit() {
 
     limDriveSetCommand.schedule();
-
   }
 
   public void teleopInit() {
@@ -425,9 +432,6 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-
-    if (!limDriveSetCommand.isScheduled())
-      limDriveSetCommand.schedule();
 
   }
 

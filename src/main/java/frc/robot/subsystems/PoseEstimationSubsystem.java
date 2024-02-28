@@ -5,12 +5,15 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,6 +43,8 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     private final double shootDexerX = -0.115;
     private final double shooterYawOffset = -0.1;
 
+    private Pose2d initialPose;
+
     public PoseEstimationSubsystem(Drivetrain drivetrain, VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem) {
         this.visionSubsystem = visionSubsystem;
         this.drivetrain = drivetrain;
@@ -67,6 +72,17 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
         Shuffleboard.getTab("field").add("field", field);
     }
 
+    public void setInitialPose(Pose2d initialPose) {
+        this.initialPose = initialPose;
+    }
+
+    public void add() {
+        System.out.println(Constants.StupidNonConstants.idioticness);
+        estimator.addVisionMeasurement(Constants.StupidNonConstants.idioticness, MathSharedStore.getTimestamp());
+        System.out.println("__________________________________________");
+        System.out.println(estimator.getEstimatedPosition());
+    }
+
     public Pose2d getPose() {
         return estimator.getEstimatedPosition();
     }
@@ -74,7 +90,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
         if (visionSubsystem.seeingAnything()) {
-            estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+            // estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 
@@ -84,6 +100,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
         updateEstimation();
 
     }
+
     @Override
     public LoggableInputs log() {
         poseEstimationLogAutoLogged.combined = transformFieldToAdvantageKit(getPose());

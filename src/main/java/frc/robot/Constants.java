@@ -2,6 +2,7 @@ package frc.robot;
 
 
 import frc.robot.utilities.HoorayConfig;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -122,7 +123,7 @@ public final class Constants {
 
     public static final double kVelocityFactor = (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
     
-    public static final double kPositionFactor = 1.0 / kTranslationGearRatio;
+    public static final double kPositionFactor = 1.0 / kTranslationGearRatio * kWheelDiameter;
 
     // NOTE: You shoulds ALWAYS define a reasonable current limit when using
     // brushless motors due to the extremely high stall current available
@@ -158,7 +159,7 @@ public final class Constants {
                                                            // but spinning fast is not particularly useful or driver
                                                            // friendly
 
-    public static final double kPXController = 0.004;
+    public static final double kPXController = 1.5;
     // public static final double kPYController = 0.0000;
     public static final double kPThetaController = 2;
 
@@ -187,5 +188,9 @@ public final class Constants {
   public static final class FieldConstants {
     public static final double fieldWidth = 16;
     public static final double fieldLength = 8;
+  }
+
+  public static class StupidNonConstants {
+    public static Pose2d idioticness;
   }
 }
