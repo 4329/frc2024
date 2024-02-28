@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -39,17 +41,22 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public final CANSparkMax rightMotor;
     public final CANSparkMax leftMotor;
     public final RelativeEncoder rightEncoder;
+    public final SparkPIDController m_aimBot;
+    private GenericEntry rpmSetpointGE;
+    private GenericEntry rpmActualGE;
 
     private double setpoint = 0;
+    private double tolerance = 50; //arbitrary
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
-    private final SimpleMotorFeedforward aimFeed;
-    private final BangBangController shooterBangBang;
+    private double kP = 0.0000432;
+    private double kI = 0.000001;
+    private double kD = 0.00017;
+    private double kFF = 0.00018;
+    private double kIZ = 67;
 
-    private GenericEntry sadf = Shuffleboard.getTab("Asdfsdaf").add("saldjfk", 0).getEntry();
-    private GenericEntry vel = Shuffleboard.getTab("Asdfsdaf").add("vel", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
-
+   
     LinearInterpolationTable shootTable = new LinearInterpolationTable(
         new Point(0, 0)
     );
@@ -59,25 +66,38 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public ShootSubsystem() {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot1);
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot2);
-
+        m_aimBot = rightMotor.getPIDController();
         rightEncoder = rightMotor.getEncoder();
 
         leftMotor.follow(rightMotor, true);
 
-        rightMotor.enableVoltageCompensation(Constants.voltageCompensation);
-        leftMotor.enableVoltageCompensation(Constants.voltageCompensation);
+        rightMotor.enableVoltageCompensation(12.7);
+        leftMotor.enableVoltageCompensation(12.7);
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
 
         rightMotor.burnFlash();
         leftMotor.burnFlash();
+        
 
-        aimFeed = new SimpleMotorFeedforward(HoorayConfig.gimmeConfig().getShooterkS(),
-            HoorayConfig.gimmeConfig().getShooterkV());
-        shooterBangBang = new BangBangController();
+        m_aimBot.setP(kP);
+        m_aimBot.setI(kI);
+        m_aimBot.setD(kD);
+        m_aimBot.setFF(kFF);
+        m_aimBot.setIZone(kIZ);
+
+        
+            HoorayConfig.gimmeConfig().getShooterkV();
+        
 
         shootLogAutoLogged = new ShootLogAutoLogged();
+
+        
+        rpmActualGE =  Shuffleboard.getTab("shoot").add("rpm actual", 0).getEntry();
+
+        rpmSetpointGE = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
+        
     }
 
     public void changeSetpoint(double set) {
@@ -87,11 +107,20 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public boolean atSetpoint() {
 
-        if (setpoint == setpoint) {
+        if (Math.abs(setpoint - rightEncoder.getVelocity()) <= tolerance) {
             return true;
         }
         return false;
 
+
+    }
+
+    public boolean aboveSetpoint() {
+
+        if (rightEncoder.getVelocity() >= setpoint) {
+            return true;
+        }
+        return false;
 
     }
 
@@ -111,17 +140,19 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         
 
         // setpoint = sadf.getDouble(0);
-        vel.setDouble(rightEncoder.getVelocity() / 60);
+
+
+        rpmActualGE.setDouble(rightEncoder.getVelocity());
+        rpmSetpointGE.setDouble(setpoint);
 
         if (setpoint == 0) {
 
             rightMotor.stopMotor();
             leftMotor.stopMotor();
         } else {
-            rightMotor.setVoltage(shooterBangBang.calculate(rightEncoder.getVelocity(), setpoint) * 12.0 + (aimFeed.calculate(setpoint / 60) * 0.9));
+            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
         }
     }
-
     public void setRPM(double rpm) {
         setpoint = rpm;
     }

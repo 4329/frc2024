@@ -129,4 +129,14 @@ public class CommandGroups {
 
         }
 
+
+        // public static Command shoot(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem, Drivetrain drivetrain, CommandXboxController commandXboxController) {
+
+        //         return new SequentialCommandGroup(
+                        
+        //         )
+
+
+        // }
+
 }

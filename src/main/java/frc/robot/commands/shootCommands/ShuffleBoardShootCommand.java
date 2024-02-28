@@ -18,7 +18,7 @@ public class ShuffleBoardShootCommand extends Command {
     public ShuffleBoardShootCommand(ShootSubsystem shootSubsystem) {
         this.shootSubsystem = shootSubsystem;
 
-        rpm = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
+        //rpm = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
         velocity = Shuffleboard.getTab("shoot").add("velocity out", 0).getEntry();
 
         addRequirements(shootSubsystem);
