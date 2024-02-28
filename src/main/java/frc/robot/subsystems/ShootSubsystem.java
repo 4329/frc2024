@@ -50,10 +50,11 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
-    private double kP = 0.000045;
-    private double kI = 0;
-    private double kD = 0;
+    private double kP = 0.0000432;
+    private double kI = 0.000001;
+    private double kD = 0.00017;
     private double kFF = 0.00018;
+    private double kIZ = 67;
 
    
     LinearInterpolationTable shootTable = new LinearInterpolationTable(
@@ -84,6 +85,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         m_aimBot.setI(kI);
         m_aimBot.setD(kD);
         m_aimBot.setFF(kFF);
+        m_aimBot.setIZone(kIZ);
 
         
             HoorayConfig.gimmeConfig().getShooterkV();
@@ -110,6 +112,15 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         }
         return false;
 
+
+    }
+
+    public boolean aboveSetpoint() {
+
+        if (rightEncoder.getVelocity() >= setpoint) {
+            return true;
+        }
+        return false;
 
     }
 

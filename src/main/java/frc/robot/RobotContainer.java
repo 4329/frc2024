@@ -37,6 +37,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IndexFireCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.ShootFireCommand;
+import frc.robot.commands.ShooterShotCommand;
 import frc.robot.commands.ShotReverseCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
@@ -308,7 +309,7 @@ public class RobotContainer {
 
     driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().whileTrue(new ShootFireCommand(shootSubsystem)).toggleOnFalse(new IndexFireCommand(indexSubsystem, shootSubsystem));
+    driverController.x().onTrue(new ShooterShotCommand(shootSubsystem, indexSubsystem));
     driverController.y().whileTrue(CommandGroups.aim(m_robotDrive, visionSubsystem, driverController, armAngleSubsystem));
     
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
@@ -414,14 +415,13 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
+      limDriveSetCommand.schedule();
     // autoZero.schedule();
   }
 
   public void autonomousPeriodic() {
 
-    if (!limDriveSetCommand.isScheduled())
-      limDriveSetCommand.schedule();
-
+    
   }
 
   public void teleopPeriodic() {
