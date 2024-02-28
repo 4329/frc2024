@@ -32,7 +32,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
 
     private final Drivetrain drivetrain;
     private final VisionSubsystem visionSubsystem;
-    private final SwerveDrivePoseEstimator estimator;
+    private SwerveDrivePoseEstimator estimator;
     private final double pathPlannerFieldWidth = 8.21;
     private final double pathPlannerFieldLength = 16.54;
     private Field2d field = new Field2d();
@@ -77,20 +77,22 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     }
 
     public void add() {
-        System.out.println(Constants.StupidNonConstants.idioticness);
-        estimator.addVisionMeasurement(Constants.StupidNonConstants.idioticness, MathSharedStore.getTimestamp());
-        System.out.println("__________________________________________");
-        System.out.println(estimator.getEstimatedPosition());
+        estimator = new SwerveDrivePoseEstimator(
+                Constants.DriveConstants.kDriveKinematics,
+                drivetrain.getGyro(),
+                drivetrain.getModulePositions(),
+                transformPathPlannerToField(Constants.StupidNonConstants.idioticness));
     }
 
     public Pose2d getPose() {
+        // System.out.println(estimator.getEstimatedPosition());
         return estimator.getEstimatedPosition();
     }
 
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
         if (visionSubsystem.seeingAnything()) {
-            // estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+    //        estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 
@@ -98,7 +100,6 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     @Override
     public void periodic() {
         updateEstimation();
-
     }
 
     @Override
@@ -134,7 +135,22 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
                 pose.getRotation());
     }
 
+    private Pose2d transformPathPlannerToField(Pose2d pose) {
+        return new Pose2d(
+                pose.getX() - (pathPlannerFieldLength / 2),
+                pose.getY() - (pathPlannerFieldWidth / 2),
+
+                pose.getRotation());
+    }
+
+    int count = 0;
+
     public Pose2d getPathPlannerStuff() {
+        System.out.println(Constants.StupidNonConstants.idioticness);
+        if (count == 0) {
+            count++;
+            return initialPose;
+        }
         return transformFieldToPathPlanner(getPose());
     }
 
