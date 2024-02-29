@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -55,7 +56,10 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
                 Constants.DriveConstants.kDriveKinematics,
                 drivetrain.getGyro(),
                 drivetrain.getModulePositions(),
-                drivetrain.getPose());
+                drivetrain.getPose(),
+                VecBuilder.fill(0.229,0.229,0.0),
+                VecBuilder.fill(5,5,5)
+                );
 
         PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
             field.setRobotPose(new Pose2d(0, 5, new Rotation2d()));
@@ -92,7 +96,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
         if (visionSubsystem.seeingAnything()) {
-    //        estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+            estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 

@@ -16,6 +16,7 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -249,7 +250,11 @@ public class RobotContainer {
             Math.sqrt(Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2) + Math.pow(Constants.DriveConstants.kWheelBaseLength, 2)) / 2,
             new ReplanningConfig(false, false)),
         () -> {
-          return false;
+          var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
         },
         m_robotDrive);
     
