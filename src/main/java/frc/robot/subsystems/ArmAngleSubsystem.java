@@ -80,8 +80,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
         radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
+        speakerModGE = Shuffleboard.getTab("Arm Angle").add("speakerMod", 0).getEntry();
         radians2RotatedGE = Shuffleboard.getTab("Arm Angle").add("Radians2Rotated", 0).getEntry();
-        speakerModGE = Shuffleboard.getTab("Arm Angle").add("SpeakerMod", 0).getEntry();
 
         armMotor.burnFlash();
     }
@@ -104,9 +104,11 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     public void setArmAngle(Pose3d pose) {
 
         double radians1 = Math.atan2(goalConstant, pose.getZ());
-        speakerMod = speakerHeight - (radians1 * 0.2);
+        speakerMod = speakerHeight - (radians1 * 0.6) ;
         radians1 = MathUtils.clamp(0, 1.03, radians1); //was 1.22
+
         double radians2 = Math.atan2(speakerMod, pose.getZ());
+
         speakerModGE.setDouble(speakerMod);
         radiansRotatedGE.setDouble(radians1);
         radians2RotatedGE.setDouble(radians2);

@@ -44,6 +44,11 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     }
 
+    public void inForShot() {
+        topIndexMotor.set(1);
+        bottomIndexMotor.set(0.5);
+    }
+
     public void out() {
         topIndexMotor.set(-0.8);
         bottomIndexMotor.set(-0.4);

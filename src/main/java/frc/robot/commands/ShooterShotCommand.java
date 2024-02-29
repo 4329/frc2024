@@ -34,7 +34,7 @@ public class ShooterShotCommand extends Command {
         if (shootSubsystem.atSetpoint() == true) {
 
             timer.start();
-            indexSubsystem.in();
+            indexSubsystem.inForShot();
 
 
         }

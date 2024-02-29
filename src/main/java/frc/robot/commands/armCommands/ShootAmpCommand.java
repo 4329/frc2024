@@ -25,7 +25,7 @@ public class ShootAmpCommand extends Command {
     @Override
     public void execute() {
         if (shootSubsystem.atSetpoint()) {
-            indexSubsystem.in();
+            indexSubsystem.inForShot();
             timer.start();
         }
     }
