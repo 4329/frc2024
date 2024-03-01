@@ -155,6 +155,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         updateInputs();
         
         occasionalCheck();
+        // if (seeingAnything())
+            // System.out.println("dsl_____________________________________________________________________________________");
     }
 
     private void occasionalCheck() {
