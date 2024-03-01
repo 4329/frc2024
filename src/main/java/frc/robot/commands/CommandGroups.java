@@ -148,7 +148,7 @@ public class CommandGroups {
 
                                 new ShooterShotCommand(shootSubsystem, indexSubsystem),
                              //   new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
-                                new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
+                                 new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
 
 
                         ),

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
+import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -30,6 +31,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     double[] hrm;
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
+    private GenericEntry zGE;
 
     private Timer timer;
     private CheckLimelightCommand checkLimelightCommand;
@@ -38,6 +40,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         timer = new Timer();
         timer.start();
         checkLimelightCommand = new CheckLimelightCommand();
+        
+        zGE = Shuffleboard.getTab("Arm Angle").add("zPose", 0).getEntry();
     }
 
     public boolean CameraConnected() {
@@ -136,13 +140,20 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     @Override
     public void periodic() {
+
         if (checkLimelightCommand.isConnected()) {
             limelightResults = LimelightHelpers
-                    .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+            .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+            Pose3d pose3d = getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
+            if (pose3d != null) {
+
+                zGE.setDouble(pose3d.getZ());
+
+            }
         }
-
+        
         updateInputs();
-
+        
         occasionalCheck();
     }
 

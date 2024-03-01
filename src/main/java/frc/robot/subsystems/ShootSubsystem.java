@@ -80,8 +80,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         leftMotor.follow(rightMotor, true);
 
-        rightMotor.enableVoltageCompensation(12.7);
-        leftMotor.enableVoltageCompensation(12.7);
+        rightMotor.enableVoltageCompensation(11.8);
+        leftMotor.enableVoltageCompensation(12.8);
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
@@ -116,7 +116,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public boolean atSetpoint() {
 
-        if (Math.abs(setpoint - leftEncoder.getVelocity()) <= tolerance) {
+        if (Math.abs(setpoint - getVelocity()) <= tolerance) {
           System.out.println("atsetpoint ----");
 
             return true;
