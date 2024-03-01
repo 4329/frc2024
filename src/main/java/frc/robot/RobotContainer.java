@@ -309,8 +309,8 @@ public class RobotContainer {
 
     driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().onTrue(new ShooterShotCommand(shootSubsystem, indexSubsystem));
-    driverController.y().whileTrue(CommandGroups.aim(m_robotDrive, visionSubsystem, driverController, armAngleSubsystem));
+    driverController.x().onTrue(CommandGroups.shoot(shootSubsystem, indexSubsystem, visionSubsystem, m_robotDrive, driverController, armAngleSubsystem));
+    driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
     
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
@@ -318,7 +318,7 @@ public class RobotContainer {
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
+    driverController.leftStick().whileTrue(resetOdometryCommandBackward); // field orient
 
 
 
