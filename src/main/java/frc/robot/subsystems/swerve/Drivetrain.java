@@ -138,7 +138,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // m_fieldRelVel = new FieldRelativeSpeed(getChassisSpeed(), getGyro());
+    m_fieldRelVel = new FieldRelativeSpeed(getChassisSpeed(), getGyro());
     m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, DriveConstants.kLoopTime);
     m_lastFieldRelVel = m_fieldRelVel;
     // Update swerve drive odometry periodically so robot pose can be tracked
@@ -147,7 +147,7 @@ public class Drivetrain extends SubsystemBase {
     // pitch.setDouble(ahrs.getPitch());
 
     // Calls get pose function which sends the Pose information to the
-    // getPose();
+    getPose();
   }
 
   /**
