@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.GenericEntry;
@@ -181,4 +183,11 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     public double getTargetX(int id) {
         return getFiducial(id).tx;
     }
+
+    @Override
+    public double faceTag(int id) {
+        Pose2d initialPose = getTargetSpacePose(id).toPose2d();
+        return Math.atan2(initialPose.getX(), initialPose.getY());
+    }
+
 }

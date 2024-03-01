@@ -38,4 +38,5 @@ public interface VisionSubsystem extends Subsystem {
 
     LimelightTarget_Fiducial limelightTarget_Fiducial(int id);
 
+    double faceTag(int id);
 }
