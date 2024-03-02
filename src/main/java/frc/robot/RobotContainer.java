@@ -119,7 +119,6 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
-  private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   private final AutoZero autoZero;
   private final ElevatorManualCommand elevatorManualCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
@@ -185,7 +184,6 @@ public class RobotContainer {
     shootCommand = new ShootCommand(shootSubsystem);
     shootAmpCommand = new ShootAmpCommand(shootSubsystem, indexSubsystem);
     elevatorToAmpCommand = new ElevatorToAmpCommand(elevatorSubsystem);
-    shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
     shotReverseCommand = new ShotReverseCommand(shootSubsystem);
     toggleIntakeCommand = new ToggleIntakeCommand(new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem), new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem), new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem), armAngleSubsystem);
@@ -320,7 +318,7 @@ public class RobotContainer {
 
     driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().onTrue(CommandGroups.shoot(shootSubsystem, indexSubsystem, visionSubsystem, m_robotDrive, driverController, armAngleSubsystem));
+    driverController.x().whileTrue(CommandGroups.shoot(shootSubsystem, indexSubsystem, visionSubsystem, m_robotDrive, driverController, armAngleSubsystem));
     driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
@@ -329,7 +327,7 @@ public class RobotContainer {
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandBackward); // field orient
+    driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
 
 
 

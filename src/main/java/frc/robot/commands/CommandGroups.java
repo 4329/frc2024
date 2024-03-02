@@ -1,5 +1,9 @@
 package frc.robot.commands;
 
+import javax.sound.midi.VoiceStatus;
+
+import org.hamcrest.core.IsInstanceOf;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -10,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
-import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
@@ -24,6 +27,7 @@ import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommandIndefinite;
 import frc.robot.commands.shootCommands.ShotRevCommand;
+import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
@@ -144,15 +148,15 @@ public class CommandGroups {
 
                 return new SequentialCommandGroup(
                         new ParallelRaceGroup(
-                                new ShotRevCommand(shootSubsystem),
+                                new ShotRevCommand(shootSubsystem, visionSubsystem).withTimeout(3),
                               //  new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
-                                new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
+                               new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
 
                         ),
 
                         new ParallelRaceGroup(
 
-                                new ShooterShotCommand(shootSubsystem, indexSubsystem),
+                                new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
                              //   new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
                                  new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
 
@@ -161,10 +165,7 @@ public class CommandGroups {
                         
                         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)
                         );
+                }
 
-
-
-
-        }
 
 }
