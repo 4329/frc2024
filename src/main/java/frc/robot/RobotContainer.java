@@ -180,7 +180,7 @@ public class RobotContainer {
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
-    centerOnTargetCommand = new CenterOnTargetCommand(visionSubsystem, m_robotDrive, 3, driverController);
+    centerOnTargetCommand = new CenterOnTargetCommand(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController);
     shootCommand = new ShootCommand(shootSubsystem);
     shootAmpCommand = new ShootAmpCommand(shootSubsystem, indexSubsystem);
     elevatorToAmpCommand = new ElevatorToAmpCommand(elevatorSubsystem);
