@@ -136,9 +136,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
                 new Point2D.Double(2.89, 1.76),
 
                 //no more range xD UWU 
-                new Point2D.Double(3.11, 1.86)
+                new Point2D.Double(3.11, 1.77)
 
-            
         );
 
 
@@ -157,8 +156,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonUp() {
-        if (setpoint < ArmAngle.ARMAMP.getValue() - 0.01) {
-            setpoint = Math.min(setpoint + 0.01, ArmAngle.ARMAMP.getValue());
+        if (setpoint < ArmAngle.ARMAMP.getValue() - 0.05) {
+            setpoint = Math.min(setpoint + 0.05, ArmAngle.ARMAMP.getValue());
         }
         else {
             setpoint = ArmAngle.FULL.getValue();
@@ -166,8 +165,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonDown() {
-        if (setpoint > ArmAngle.ZERO.getValue() + 0.01) {
-            setpoint = Math.max(setpoint - 0.01, ArmAngle.ZERO.getValue());
+        if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
+            setpoint = Math.max(setpoint - 0.05, ArmAngle.ZERO.getValue());
         }
         else {
             setpoint = ArmAngle.ZERO.getValue();

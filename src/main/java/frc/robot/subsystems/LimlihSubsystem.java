@@ -41,7 +41,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         timer.start();
         checkLimelightCommand = new CheckLimelightCommand();
         
-        zGE = Shuffleboard.getTab("Arm Angle").add("zPose", 0).getEntry();
+        zGE = Shuffleboard.getTab("shoot").add("zPose", 0).getEntry();
     }
 
     public boolean CameraConnected() {
