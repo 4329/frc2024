@@ -80,8 +80,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         leftMotor.follow(rightMotor, true);
 
-        rightMotor.enableVoltageCompensation(11.8);
-        leftMotor.enableVoltageCompensation(12.8);
+        rightMotor.enableVoltageCompensation(12.5);
+        leftMotor.enableVoltageCompensation(12.5);
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
@@ -145,6 +145,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public LoggableInputs log() {
         shootLogAutoLogged.setpoint = setpoint;
         shootLogAutoLogged.PIDOutput = rightMotor.get();
+        shootLogAutoLogged.leftEncoder = leftEncoder.getPosition();
+        shootLogAutoLogged.rightEncoder = rightEncoder.getPosition();
         return shootLogAutoLogged;
     }
 
