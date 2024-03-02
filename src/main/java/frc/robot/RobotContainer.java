@@ -307,7 +307,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(exampleCommand);
+    driverController.start().whileTrue(shuffleBoardShootCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
