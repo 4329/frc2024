@@ -51,12 +51,15 @@ public class DriveToTargetCommand extends Command {
 
     @Override
     public void execute() {
+        System.out.println("Drive to Target Command Executed");
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
+            System.out.println("IF STATEMENT IS RUNNING AAAAAAAAAAAAAAAAAAAAAa");
             double rotOutput = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
             double forwardsbackwardsOutput = forwardsbackwardsPidController
                     .calculate(visionSubsystem.getTargetSpacePose(targetId).getZ());
             double leftrightOutput = leftrightPidController
                     .calculate(-visionSubsystem.getTargetSpacePose(targetId).getX());
+            System.out.println(rotationPID.atSetpoint()+", "+forwardsbackwardsPidController.atSetpoint());
             drivetrain.drive(forwardsbackwardsOutput, leftrightOutput, rotOutput, true);
         } else {
             drivetrain.drive(0, 0, 0, false);

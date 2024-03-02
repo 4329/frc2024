@@ -1,6 +1,10 @@
 package frc.robot.commands.driveCommands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -9,42 +13,42 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.Model.HelpLogAutoLogged;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
 public class CenterOnTargetCommand extends Command {
-
+HelpLogAutoLogged georgeo;
     private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
     private final int targetId;
 
     private final PIDController rotationPID;
     private final CommandXboxController xboxController;
-    private Timer timer = new Timer();
-
 
     public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
+                georgeo = visionSubsystem.gHelpLogAutoLogged();
         this.visionSubsystem = visionSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
         this.xboxController = xboxController;
 
-        rotationPID = new PIDController(0.00002, 0, 0);
+        rotationPID = new PIDController(1, 0, 0);// 0.75, 0, 0
+        rotationPID.setTolerance(0);
+        rotationPID.setSetpoint(0);
+
+        rotationPID.enableContinuousInput(0, 2 * Math.PI);
         
         addRequirements(visionSubsystem, m_drivetrain);
     }
 
     @Override
     public void initialize() {
-        timer.reset();
-        timer.start();
-
-        rotationPID.setP(0.035);
-        rotationPID.setTolerance(0.2);
-        rotationPID.setSetpoint(0);
+    
     }
 
     
@@ -52,8 +56,15 @@ public class CenterOnTargetCommand extends Command {
     public void execute() {
         double rotationCalc = 0;
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
-            rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
-            System.out.println(visionSubsystem.getTargetX(targetId));
+            double currentRot = -visionSubsystem.getTargetSpacePose(targetId).getRotation().toRotation2d().getRadians();
+            double hopefulRot = Math.atan2(visionSubsystem.getTargetSpacePose(targetId).getX(), visionSubsystem.getTargetSpacePose(targetId).getY());
+            Pose2d pose=visionSubsystem.getTargetSpacePose(targetId).toPose2d();
+
+            georgeo.a=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(hopefulRot));
+            georgeo.b=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(currentRot));
+            System.out.println(currentRot + "," + hopefulRot);
+            rotationCalc = rotationPID.calculate(hopefulRot - currentRot);
+            georgeo.dumb = rotationCalc;
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
             else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
@@ -71,6 +82,8 @@ public class CenterOnTargetCommand extends Command {
                             * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
                     rotationCalc,
                     true);
+                    System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    System.out.println("rotation output is --> " + rotationCalc);
         }
     }
 
