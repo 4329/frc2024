@@ -327,7 +327,7 @@ public class RobotContainer {
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandBackward); // field orient
+    driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
 
 
 

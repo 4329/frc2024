@@ -78,11 +78,11 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     // private double kD = 0.00017;
     // private double kFF = 0.00018;
     // private double kIZ = 67;
-    private double kP = 0.0000432;
+    private double kP = 0.0002;
     private double kI = 0.000001;
-    private double kD = 0.00017;
-    private double kFF = 0.00018;
-    private double kIZ = 67;
+    private double kD = 0.0006;
+    private double kFF = 0.0001811;
+    private double kIZ = 43;
 
 
     // 240 inches is the theroetical max shot for the shooter

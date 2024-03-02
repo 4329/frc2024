@@ -148,9 +148,9 @@ public class CommandGroups {
 
                 return new SequentialCommandGroup(
                         new ParallelRaceGroup(
-                                new ShotRevCommand(shootSubsystem, visionSubsystem),
+                                new ShotRevCommand(shootSubsystem, visionSubsystem).withTimeout(3),
                               //  new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
-                                new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
+                               new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)
 
                         ),
 
