@@ -7,9 +7,9 @@ public abstract class ReInitCommand extends Command {
 
     @Override
     public void schedule() {
-        if (this.isScheduled())
+        if (this.isScheduled()) {
             initialize();
-        else
+        } else
             CommandScheduler.getInstance().schedule(this);
     }
 }
