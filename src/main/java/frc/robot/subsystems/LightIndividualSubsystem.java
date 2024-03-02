@@ -107,9 +107,9 @@ public class LightIndividualSubsystem extends SubsystemBase {
         for (var i = 0; i < addressableLEDBuffer.getLength(); i++) {
             // Calculate the hue - hue is easier for rainbows because the color
             // shape is a circle so only one value needs to precess
-            final int hues = (int) (hue + (i * 180 / addressableLEDBuffer.getLength())) % 180;
+            final int hue1 = (int) (hue + (i * 180 / addressableLEDBuffer.getLength())) % 180;
             // Set the value
-            addressableLEDBuffer.setHSV(i, hues, 255, 128);
+            addressableLEDBuffer.setHSV(i, hue1, 255, 128);
         }
         // Increase by to make the rainbow "move"
         hue += 1;
@@ -117,6 +117,27 @@ public class LightIndividualSubsystem extends SubsystemBase {
         hue %= 180;
 
     }
+
+    public void rainbowSaturation() {
+        // For every pixel
+        for (var i = 0; i < addressableLEDBuffer.getLength(); i++) {
+            // Calculate the hue - hue is easier for rainbows because the color
+            // shape is a circle so only one value needs to precess
+            final int hue2 = (int) (hue + (i * 180 / addressableLEDBuffer.getLength())) % 180;
+            //saturation
+            final int saturation1 = (int) (saturation + (i * 255 / addressableLEDBuffer.getLength())) % 255;
+            // Set the value
+            addressableLEDBuffer.setHSV(i, hue2, saturation1, 128);
+        }
+        // Increase by to make the rainbow "move"
+        hue += 1;
+        saturation +=1;
+        // Check bounds
+        hue %= 180;
+        saturation %= 255;
+
+    }
+
 
     @Override
     public void periodic() {
