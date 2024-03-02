@@ -2,7 +2,8 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/RobotData/SelectAuto": "String Chooser"
+      "/Shuffleboard/RobotData/SelectAuto": "String Chooser",
+      "/Shuffleboard/field/field": "Field2d"
     }
   },
   "NetworkTables": {

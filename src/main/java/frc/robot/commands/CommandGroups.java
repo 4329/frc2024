@@ -4,7 +4,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
@@ -49,6 +53,7 @@ public class CommandGroups {
                         LineBreakSensorSubsystem lineBreakSensorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
+                                new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                 new ParallelCommandGroup(
                                                 new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                                 new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
@@ -102,19 +107,20 @@ public class CommandGroups {
                         ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
                 return new SequentialCommandGroup(
                                 new ParallelCommandGroup(
-                                                new ElevatorToAmpCommand(elevatorSubsystem),
-                                                new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
+                                        new ElevatorToAmpCommand(elevatorSubsystem),
+                                        new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP))
+                                        );
         }
 
-        public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem,
-                        ArmAngleSubsystem armAngleSubsystem) {
-
-                return new SequentialCommandGroup(
+        public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem){
+        
+                        return new ParallelCommandGroup(
 
                                 new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),
+                                new SequentialCommandGroup(
 
-                                new ArmCommand(armAngleSubsystem, ArmAngle.ZERO));
-
+                                        new WaitCommand(1),
+                                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)));          
         }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,

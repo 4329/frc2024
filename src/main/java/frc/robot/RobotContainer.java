@@ -59,6 +59,10 @@ import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
+import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
+import frc.robot.commands.indexCommands.IndexSensorCommand;
+import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
+import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
@@ -118,7 +122,8 @@ public class RobotContainer {
   private final ShuffleBoardShootCommand shuffleBoardShootCommand;
   private final AutoZero autoZero;
   private final ElevatorManualCommand elevatorManualCommand;
-
+  private final ToggleIntakeCommand toggleIntakeCommand;
+  
   private final LightCommand lightCommandTwinkles;
   private final LightCommand lightCommandBlack;
 
@@ -183,6 +188,7 @@ public class RobotContainer {
     shuffleBoardShootCommand = new ShuffleBoardShootCommand(shootSubsystem);
     autoZero = new AutoZero(elevatorSubsystem, armAngleSubsystem);
     shotReverseCommand = new ShotReverseCommand(shootSubsystem);
+    toggleIntakeCommand = new ToggleIntakeCommand(new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem), new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem), new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem), armAngleSubsystem);
 
     elevatorManualCommand = new ElevatorManualCommand(elevatorSubsystem, () -> driverController.getLeftTriggerAxis(), () -> driverController.getRightTriggerAxis());
     lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
@@ -202,7 +208,6 @@ public class RobotContainer {
     initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
-
   }
 
   /**
@@ -310,7 +315,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(exampleCommand);
+    driverController.start().onTrue(toggleIntakeCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().whileTrue(CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
