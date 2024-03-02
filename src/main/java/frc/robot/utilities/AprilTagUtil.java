@@ -20,8 +20,10 @@ public class AprilTagUtil {
             return 4;
 
 
+        } else {
+            return 7;
         }
-        return 7;
-
+            
+            
     }
 }

@@ -51,18 +51,18 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private GenericEntry rpmActual2GE;
     private LinearInterpolationTable shotTable = new LinearInterpolationTable(
                        
-                new Point2D.Double(0, 2500),
-                new Point2D.Double(1.06, 2500),
-                new Point2D.Double(1.25, 2550),
-                new Point2D.Double(1.427, 2600),
-                new Point2D.Double(1.614, 2650),
-                new Point2D.Double(1.835, 2700),
-                new Point2D.Double(2.0, 2750),
-                new Point2D.Double(2.268, 2900),
-                new Point2D.Double(2.5, 3200),
-                new Point2D.Double(2.75, 3500),
+                new Point2D.Double(0, 2700),
+                new Point2D.Double(1.06, 2700),
+                new Point2D.Double(1.25, 2750),
+                new Point2D.Double(1.427, 2800),
+                new Point2D.Double(1.614, 2850),
+                new Point2D.Double(1.835, 2900),
+                new Point2D.Double(2.0, 2950),
+                new Point2D.Double(2.268, 3100),
+                new Point2D.Double(2.5, 3400),
+                new Point2D.Double(2.75, 3700),
                 new Point2D.Double(2.89, 3700),
-                new Point2D.Double(3.11, 3750));
+                new Point2D.Double(3.11, 3700));
 
 
 
@@ -103,11 +103,11 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setInverted(true);
 
         rightMotor.burnFlash();
         leftMotor.burnFlash();
 
-        leftMotor.setInverted(true);
         
 
         rm_aimBot.setP(rP);

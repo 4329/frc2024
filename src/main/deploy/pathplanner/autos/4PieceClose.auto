@@ -36,12 +36,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "SECONDAUTOSHOT"
@@ -57,12 +51,6 @@
           "type": "named",
           "data": {
             "name": "speakershoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SECONDSHOTtoMID"
           }
         },
         {
@@ -87,12 +75,6 @@
           "type": "path",
           "data": {
             "pathName": "CloseRightFromMid"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CloseRightShot"
           }
         },
         {

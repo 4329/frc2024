@@ -327,7 +327,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(toggleIntakeCommand);
     driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().onTrue(CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
+    driverController.x().onTrue(CommandGroups.autoShoot(shootSubsystem, indexSubsystem,visionSubsystem, driverController, armAngleSubsystem));
     driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));

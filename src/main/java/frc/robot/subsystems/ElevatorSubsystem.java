@@ -47,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
     // GenericEntry digiput;
     // GenericEntry digiputLimit;
 
-    private SparkLimitSwitch m_reverseLimit;
+    // private SparkLimitSwitch m_reverseLimit;
 
     public ElevatorSubsystem() {
         elevatorAutoLogged = new ElevatorAutoLogged();
@@ -92,8 +92,8 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
          * .getEntry();
          */
 
-        m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        m_reverseLimit.enableLimitSwitch(true);
+        // m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        // m_reverseLimit.enableLimitSwitch(false);
         // digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus",
         // false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
