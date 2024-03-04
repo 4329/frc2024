@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.shootCommands;
 
 import org.photonvision.estimation.VisionEstimation;
 
@@ -15,8 +15,8 @@ public class ShooterShotCommand extends Command {
     private ShootSubsystem shootSubsystem;
     private IndexSubsystem indexSubsystem;
     private VisionSubsystem visionSubsystem;
-   private double setpoint = 2500;
     private Timer timer = new Timer();
+    private boolean shot = false;
 
     public ShooterShotCommand(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem, VisionSubsystem visionSubsystem) {
         this.shootSubsystem = shootSubsystem;
@@ -29,6 +29,7 @@ public class ShooterShotCommand extends Command {
     @Override
     public void initialize() {
         
+        shot = false;
         timer.reset();
         
         if (visionSubsystem.getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker())) {
@@ -44,11 +45,13 @@ public class ShooterShotCommand extends Command {
     @Override
     public void execute() {
 
-        if (shootSubsystem.aboveSetpoint() == true) {
+
+        System.out.println("is shooting from shootershot");
+        if (!shot && shootSubsystem.aboveSetpoint() == true) {
 
             timer.start();
             indexSubsystem.inForShot();
-
+            shot = true;
 
         }
 

@@ -75,11 +75,7 @@ HelpLogAutoLogged georgeo;
             double adjTranslation = ((Constants.DriveConstants.kMaxAngularSpeed - Math.abs(rotationCalc))
                     / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
 
-            drivetrain.drive(
-                    -inputTransform(xboxController.getLeftY())
-                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
-                    -inputTransform(xboxController.getLeftX())
-                            * (Constants.DriveConstants.kMaxSpeedMetersPerSecond * adjTranslation),
+            drivetrain.drive(0, 0,
                     rotationCalc,
                     true);
                     System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");

@@ -44,72 +44,83 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     public final CANSparkMax leftMotor;
     public final RelativeEncoder rightEncoder;
     public final RelativeEncoder leftEncoder;
-    public final SparkPIDController m_aimBot;
+    public final SparkPIDController rm_aimBot;
+    public final SparkPIDController lm_aimBot;
     private GenericEntry rpmSetpointGE;
     private GenericEntry rpmActualGE;
     private GenericEntry rpmActual2GE;
     private LinearInterpolationTable shotTable = new LinearInterpolationTable(
                        
-                new Point2D.Double(0, 2500),
-                new Point2D.Double(1.06, 2500),
-                new Point2D.Double(1.25, 2550),
-                new Point2D.Double(1.427, 2600),
-                new Point2D.Double(1.614, 2650),
-                new Point2D.Double(1.835, 2700),
-                new Point2D.Double(2.0, 2750),
-                new Point2D.Double(2.268, 2900),
-                new Point2D.Double(2.5, 3200),
-                new Point2D.Double(2.75, 3500),
+                new Point2D.Double(0, 2700),
+                new Point2D.Double(1.06, 2700),
+                new Point2D.Double(1.25, 2750),
+                new Point2D.Double(1.427, 2800),
+                new Point2D.Double(1.614, 2850),
+                new Point2D.Double(1.835, 2900),
+                new Point2D.Double(2.0, 2950),
+                new Point2D.Double(2.268, 3100),
+                new Point2D.Double(2.5, 3400),
+                new Point2D.Double(2.75, 3700),
                 new Point2D.Double(2.89, 3700),
-              
-                new Point2D.Double(3.11, 3750));
+                new Point2D.Double(3.11, 3700));
 
 
 
 
     
     private double setpoint = 0;
-    private double tolerance = 50; //arbitrary
+    private double tolerance = 200; //arbitrary
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
-    // private double kP = 0.0000432;
-    // private double kI = 0.000001;
-    // private double kD = 0.00017;
-    // private double kFF = 0.00018;
-    // private double kIZ = 67;
-    private double kP = 0.0002;
-    private double kI = 0.000001;
-    private double kD = 0.0006;
-    private double kFF = 0.0001811;
-    private double kIZ = 43;
+    private double lP = 0.00025;
+    private double lI = 0.000001;
+    private double lD = 0.01;
+    private double lFF = 0.000185;
+    private double lIZ = 43;
+
+
+    private double rP = 0.0002;
+    private double rI = 0.000001;
+    private double rD = 0.1;
+    private double rFF = 0.0001811;
+    private double rIZ = 43;
 
 
     // 240 inches is the theroetical max shot for the shooter
     public ShootSubsystem() {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot1);
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot2);
-        m_aimBot = rightMotor.getPIDController();
+        rm_aimBot = rightMotor.getPIDController();
+        lm_aimBot = leftMotor.getPIDController();
         rightEncoder = rightMotor.getEncoder();
         leftEncoder = leftMotor.getEncoder();
 
-        leftMotor.follow(rightMotor, true);
+        // leftMotor.follow(rightMotor, true);
 
         rightMotor.enableVoltageCompensation(12.5);
         leftMotor.enableVoltageCompensation(12.5);
 
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setInverted(true);
 
         rightMotor.burnFlash();
         leftMotor.burnFlash();
+
         
 
-        m_aimBot.setP(kP);
-        m_aimBot.setI(kI);
-        m_aimBot.setD(kD);
-        m_aimBot.setFF(kFF);
-        m_aimBot.setIZone(kIZ);
+        rm_aimBot.setP(rP);
+        rm_aimBot.setI(rI);
+        rm_aimBot.setD(rD);
+        rm_aimBot.setFF(rFF);
+        rm_aimBot.setIZone(rIZ);
+
+        lm_aimBot.setP(lP);
+        lm_aimBot.setI(lI);
+        lm_aimBot.setD(lD);
+        lm_aimBot.setFF(lFF);
+        lm_aimBot.setIZone(lIZ);
 
         
             HoorayConfig.gimmeConfig().getShooterkV();
@@ -189,7 +200,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
             rightMotor.stopMotor();
             leftMotor.stopMotor();
         } else {
-            m_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+            rm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+            lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
         }
     }
     public void setRPM(double rpm) {

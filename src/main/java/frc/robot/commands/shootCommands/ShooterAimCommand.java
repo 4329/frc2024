@@ -18,7 +18,6 @@ public class ShooterAimCommand extends Command {
     }
 
     private int getAprilTagSpeakerIDAprilTagIDSpeaker() {
-
         if (DriverStation.Alliance.Red.equals(DriverStation.getAlliance().get()))
             return 4;
         return 7;
@@ -34,11 +33,10 @@ public class ShooterAimCommand extends Command {
 
         if (visionSubsystem.getTargetVisible(getAprilTagSpeakerIDAprilTagIDSpeaker())) {
 
-            System.out.println("arm shooter aim command is running");
-            Pose3d pose3d = visionSubsystem.getTargetPoseInRobotSpace(getAprilTagSpeakerIDAprilTagIDSpeaker());
-            if (pose3d != null) {
+        Pose3d pose3d = visionSubsystem.getTargetPoseInRobotSpace(getAprilTagSpeakerIDAprilTagIDSpeaker());
+        if (pose3d != null) {
 
-                armAngleSubsystem.setArmAngle(pose3d);
+            armAngleSubsystem.setArmAngle(pose3d);
 
             }
         }

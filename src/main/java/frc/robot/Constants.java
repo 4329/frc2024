@@ -130,7 +130,7 @@ public final class Constants {
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
-    public static final double[] kTurnPID = { 0.70, 0, 0 }; // should show some minor oscillation when no weight is
+    public static final double[] kTurnPID = { 0.65, 0, 0 }; // should show some minor oscillation when no weight is
                                                              // loaded on the modules
   }
 
@@ -189,9 +189,5 @@ public final class Constants {
   public static final class FieldConstants {
     public static final double fieldWidth = 16;
     public static final double fieldLength = 8;
-  }
-
-  public static class StupidNonConstants {
-    public static Pose2d idioticness;
   }
 }

@@ -73,26 +73,22 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     }
 
     public void setInitialPose(Pose2d initialPose) {
-        this.initialPose = initialPose;
-    }
-
-    public void add() {
         estimator = new SwerveDrivePoseEstimator(
                 Constants.DriveConstants.kDriveKinematics,
                 drivetrain.getGyro(),
                 drivetrain.getModulePositions(),
-                transformPathPlannerToField(Constants.StupidNonConstants.idioticness));
+                transformPathPlannerToField(initialPose));
     }
 
     public Pose2d getPose() {
-        // System.out.println(estimator.getEstimatedPosition());
+        System.out.println(estimator.getEstimatedPosition());
         return estimator.getEstimatedPosition();
     }
 
     private void updateEstimation() {
         estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
         if (visionSubsystem.seeingAnything()) {
-    //        estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+        //    estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
         }
     }
 
@@ -143,14 +139,8 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
                 pose.getRotation());
     }
 
-    int count = 0;
 
     public Pose2d getPathPlannerStuff() {
-        System.out.println(Constants.StupidNonConstants.idioticness);
-        if (count == 0) {
-            count++;
-            return initialPose;
-        }
         return transformFieldToPathPlanner(getPose());
     }
 
