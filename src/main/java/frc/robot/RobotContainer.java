@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexFireCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
@@ -62,6 +63,7 @@ import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.elevatorCommands.ElevatorUpCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
+import frc.robot.commands.indexCommands.OutdexCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
@@ -322,12 +324,12 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().onTrue(exampleCommand);
+    driverController.start().whileTrue(new CenterOnTargetCommandIndefinite(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    driverController.x().onTrue(CommandGroups.autoShoot(shootSubsystem, indexSubsystem,visionSubsystem, driverController, armAngleSubsystem));
+    driverController.b().whileTrue(new OutdexCommand(indexSubsystem));
+    driverController.x().onTrue(CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem, driverController, armAngleSubsystem));
     driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));

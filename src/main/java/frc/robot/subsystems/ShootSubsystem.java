@@ -51,23 +51,21 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private GenericEntry rpmActual2GE;
     private LinearInterpolationTable shotTable = new LinearInterpolationTable(
                        
-                new Point2D.Double(0, 2000),
-                new Point2D.Double(1.1, 2000),
-                new Point2D.Double(1.2, 2100),
-                new Point2D.Double(1.4, 2250),
-                new Point2D.Double(1.6, 2400),
-                new Point2D.Double(1.8, 2600),
-                new Point2D.Double(2, 2600),
-                new Point2D.Double(2.2, 2600),
-                new Point2D.Double(2.4, 2800),
-                new Point2D.Double(2.6, 3000),
-                new Point2D.Double(2.8, 3100),
-                new Point2D.Double(3, 3350),
-                new Point2D.Double(3.2, 3600),
-                new Point2D.Double(4, 3700));
-
-
-
+                new Point2D.Double(0, 2500),
+                new Point2D.Double(1.1, 2500),
+                new Point2D.Double(1.2, 2550),
+                new Point2D.Double(1.4, 2650),
+                new Point2D.Double(1.6, 2700),
+                new Point2D.Double(1.794, 2750),
+                new Point2D.Double(2, 2800),
+                new Point2D.Double(2.2, 2950),
+                new Point2D.Double(2.4, 3050),
+                new Point2D.Double(2.47, 2900),
+                new Point2D.Double(2.6, 3050),
+                new Point2D.Double(2.8, 3200),
+                new Point2D.Double(3, 3300));
+                // new Point2D.Double(3.2, 3600),
+                // new Point2D.Double(4, 3700));
 
     
     private double setpoint = 0;

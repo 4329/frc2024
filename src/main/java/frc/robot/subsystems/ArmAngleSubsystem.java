@@ -33,7 +33,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     private boolean brake;
 
-    private final double tolerance = 0.05;
+    private final double tolerance = 0.1;
     private double setpoint = 0;
 
     double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((59.5 * Math.PI) / (180.0));
@@ -126,18 +126,19 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
                  
                 new Point2D.Double(0, 0),
                 new Point2D.Double(1.0, 0),
-                new Point2D.Double(1.2, 0.2),
-                new Point2D.Double(1.4, 0.34),
-                new Point2D.Double(1.6, 0.54),
-                new Point2D.Double(1.8, 0.74),
-                new Point2D.Double(2, 0.94),
-                new Point2D.Double(2.2, 1.04),
-                new Point2D.Double(2.4, 1.24),
-                new Point2D.Double(2.6, 1.3),
-                new Point2D.Double(2.8, 1.36),
-                new Point2D.Double(3, 1.44),
-                new Point2D.Double(3.2, 1.48),
-                new Point2D.Double(4, 1.5));
+                new Point2D.Double(1.2, 0),
+                new Point2D.Double(1.4, 0.5),
+                new Point2D.Double(1.6, 0.64),
+                new Point2D.Double(1.794, 0.84),
+                new Point2D.Double(2, 1.02),
+                new Point2D.Double(2.2, 1.26),
+                new Point2D.Double(2.4, 1.32),
+                // new Point2D.Double(2.47, 1.42),
+                new Point2D.Double(2.6, 1.42),
+                new Point2D.Double(2.8, 1.5),
+                new Point2D.Double(3, 1.56));
+                // new Point2D.Double(3.2, 1.48),
+                // new Point2D.Double(4, 1.5));
 
 
     }
