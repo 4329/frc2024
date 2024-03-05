@@ -35,6 +35,13 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LightCommand;
+import frc.robot.commands.LightCommands.LightBlankCommand;
+import frc.robot.commands.LightCommands.LightCommandGroup;
+import frc.robot.commands.LightCommands.LightFastProgressCommand;
+import frc.robot.commands.LightCommands.LightProgressCommand;
+import frc.robot.commands.LightCommands.LightRambowCommand;
+//import frc.robot.commands.LightCommands.LightIndividualCommand;
+import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmHorizontalCommand;
@@ -67,7 +74,6 @@ import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LightsSusbsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.LoggingSubsystem;
@@ -75,6 +81,7 @@ import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
@@ -106,9 +113,9 @@ public class RobotContainer {
   private final ArmAngleSubsystem armAngleSubsystem;
   private final PoseEstimationSubsystem poseEstimationSubsystem;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final LightsSusbsystem lightsSusbsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private final LoggingSubsystem loggingSubsystem;
+  private final LightSubsystem lightUnderGlowSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -119,8 +126,11 @@ public class RobotContainer {
   private final ElevatorManualCommand elevatorManualCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
   
-  private final LightCommand lightCommandTwinkles;
-  private final LightCommand lightCommandBlack;
+  private final LightProgressCommand lightProgressCommand;
+  private final LightBlankCommand lightBlankCommand;
+  private final LightsOnCommand lightsOnCommand;
+  private final LightRambowCommand lightRambowCommand;
+  private final LightFastProgressCommand lightFastProgressCommand;
 
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
@@ -136,11 +146,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
    * @param drivetrain
+   * @param lightUnderGlowSubsystem
    */
 
-  public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand) {
+  public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand, LightSubsystem lightSubsystem) {
     m_robotDrive = drivetrain;
-
+    
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
@@ -158,17 +169,16 @@ public class RobotContainer {
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
-    lightsSusbsystem = new LightsSusbsystem();
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
+    this.lightUnderGlowSubsystem = lightUnderGlowSubsystem;
 
     // commands for auto
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
     NamedCommands.registerCommand("speakershoot", CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem,driverController, armAngleSubsystem).withTimeout(2.75));
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     alliance = Shuffleboard.getTab("Config").add("Alliance", "aaaanoalliance").getEntry();
-    
 
     // Command Instantiations
     exampleCommand = new ExampleCommand();
@@ -186,8 +196,6 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem), new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem), new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem), armAngleSubsystem);
 
     elevatorManualCommand = new ElevatorManualCommand(elevatorSubsystem, () -> driverController.getLeftTriggerAxis(), () -> driverController.getRightTriggerAxis());
-    lightCommandTwinkles = new LightCommand(lightsSusbsystem, 0.51);
-    lightCommandBlack = new LightCommand(lightsSusbsystem, 0.99);
     limDriveSetCommand = new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
@@ -199,6 +207,21 @@ public class RobotContainer {
 
     new CommandLoginator();
 
+    lightProgressCommand = new LightProgressCommand(lightUnderGlowSubsystem, 0.75, 125, 200);
+    lightBlankCommand = new LightBlankCommand(lightUnderGlowSubsystem);
+    lightsOnCommand = new LightsOnCommand(lightUnderGlowSubsystem);
+    lightRambowCommand = new LightRambowCommand(lightUnderGlowSubsystem);
+    lightFastProgressCommand = new LightFastProgressCommand(lightUnderGlowSubsystem);
+
+    
+    //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
+    //lightUnderGlowSubsystem.setDefaultCommand(lightBlankCommand);
+
+    
+    // driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
+    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem, armAngleSubsystem));
+    
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
