@@ -339,13 +339,6 @@ public class RobotContainer {
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
 
 
-
-
-
-
-
-
-
     // Operator Controller
     operatorController.rightTrigger().whileTrue(exampleCommand);
     operatorController.leftTrigger().whileTrue(exampleCommand);
