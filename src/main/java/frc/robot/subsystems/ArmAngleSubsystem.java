@@ -40,6 +40,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     private final double speakerHeight = 2.15;
     private double speakerMod = 0;
+    private double rateOfChange = 0.05;
     private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
@@ -156,8 +157,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonUp() {
-        if (setpoint < ArmAngle.ARMAMP.getValue() - 0.02) {
-            setpoint = Math.min(setpoint + 0.02, ArmAngle.ARMAMP.getValue());
+        if (setpoint < ArmAngle.ARMAMP.getValue() - rateOfChange) {
+            setpoint = Math.min(setpoint + rateOfChange, ArmAngle.ARMAMP.getValue());
         }
         else {
             setpoint = ArmAngle.FULL.getValue();
@@ -165,8 +166,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonDown() {
-        if (setpoint > ArmAngle.ZERO.getValue() + 0.02) {
-            setpoint = Math.max(setpoint - 0.02, ArmAngle.ZERO.getValue());
+        if (setpoint > ArmAngle.ZERO.getValue() + rateOfChange) {
+            setpoint = Math.max(setpoint - rateOfChange, ArmAngle.ZERO.getValue());
         }
         else {
             setpoint = ArmAngle.ZERO.getValue();
