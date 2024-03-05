@@ -18,8 +18,7 @@ public class ShuffleBoardShootCommand extends Command {
     public ShuffleBoardShootCommand(ShootSubsystem shootSubsystem) {
         this.shootSubsystem = shootSubsystem;
 
-        rpm = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
-        velocity = Shuffleboard.getTab("shoot").add("velocity of shooter", 0).getEntry();
+        rpm = Shuffleboard.getTab("shoot").add("Manuel rpm setpoint", 0).getEntry();
 
         addRequirements(shootSubsystem);
     }
@@ -28,7 +27,6 @@ public class ShuffleBoardShootCommand extends Command {
     @Override
     public void execute() {
         shootSubsystem.setRPM(rpm.getDouble(0));
-        velocity.setDouble(shootSubsystem.getRightVelocity());
         
     }
     

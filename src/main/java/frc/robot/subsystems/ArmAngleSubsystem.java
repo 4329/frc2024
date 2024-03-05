@@ -40,6 +40,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     private final double speakerHeight = 2.15;
     private double speakerMod = 0;
+    private double rateOfChange = 0.05;
     private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
     private GenericEntry setpointGE;
     private GenericEntry positionGE;
@@ -75,7 +76,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
-        setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
+        setpointGE = Shuffleboard.getTab("shoot").add("arm setpoint", 0).getEntry();
         positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
         radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
         speakerModGE = Shuffleboard.getTab("Arm Angle").add("speakerMod", 0).getEntry();
@@ -123,22 +124,22 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
         armTable = new LinearInterpolationTable(
                        
+                 
                 new Point2D.Double(0, 0),
-                new Point2D.Double(1.06, 0),
-                new Point2D.Double(1.25, 0.27),
-                new Point2D.Double(1.427, 0.45),
-                new Point2D.Double(1.614, 0.6),
-                new Point2D.Double(1.835, 0.8),
-                new Point2D.Double(2.0, 0.9),
-                new Point2D.Double(2.268, 1.15),
-                new Point2D.Double(2.5, 1.4),
-                new Point2D.Double(2.75, 1.58),
-                new Point2D.Double(2.89, 1.73),
-
-                //no more range xD UWU 
-                new Point2D.Double(3.11, 1.77)
-
-        );
+                new Point2D.Double(1.0, 0),
+                new Point2D.Double(1.2, 0),
+                new Point2D.Double(1.4, 0.5),
+                new Point2D.Double(1.6, 0.64),
+                new Point2D.Double(1.794, 0.84),
+                new Point2D.Double(2, 1.02),
+                new Point2D.Double(2.2, 1.26),
+                new Point2D.Double(2.4, 1.32),
+                // new Point2D.Double(2.47, 1.42),
+                new Point2D.Double(2.6, 1.42),
+                new Point2D.Double(2.8, 1.5),
+                new Point2D.Double(3, 1.56));
+                // new Point2D.Double(3.2, 1.48),
+                // new Point2D.Double(4, 1.5));
 
 
     }
@@ -156,8 +157,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonUp() {
-        if (setpoint < ArmAngle.ARMAMP.getValue() - 0.05) {
-            setpoint = Math.min(setpoint + 0.05, ArmAngle.ARMAMP.getValue());
+        if (setpoint < ArmAngle.ARMAMP.getValue() - rateOfChange) {
+            setpoint = Math.min(setpoint + rateOfChange, ArmAngle.ARMAMP.getValue());
         }
         else {
             setpoint = ArmAngle.FULL.getValue();
@@ -165,8 +166,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     }
 
     public void armPositonDown() {
-        if (setpoint > ArmAngle.ZERO.getValue() + 0.05) {
-            setpoint = Math.max(setpoint - 0.05, ArmAngle.ZERO.getValue());
+        if (setpoint > ArmAngle.ZERO.getValue() + rateOfChange) {
+            setpoint = Math.max(setpoint - rateOfChange, ArmAngle.ZERO.getValue());
         }
         else {
             setpoint = ArmAngle.ZERO.getValue();

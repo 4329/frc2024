@@ -51,25 +51,25 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private GenericEntry rpmActual2GE;
     private LinearInterpolationTable shotTable = new LinearInterpolationTable(
                        
-                new Point2D.Double(0, 2700),
-                new Point2D.Double(1.06, 2700),
-                new Point2D.Double(1.25, 2750),
-                new Point2D.Double(1.427, 2800),
-                new Point2D.Double(1.614, 2850),
-                new Point2D.Double(1.835, 2900),
-                new Point2D.Double(2.0, 2950),
-                new Point2D.Double(2.268, 3100),
-                new Point2D.Double(2.5, 3400),
-                new Point2D.Double(2.75, 3700),
-                new Point2D.Double(2.89, 3700),
-                new Point2D.Double(3.11, 3700));
-
-
-
+                new Point2D.Double(0, 2500),
+                new Point2D.Double(1.1, 2500),
+                new Point2D.Double(1.2, 2550),
+                new Point2D.Double(1.4, 2650),
+                new Point2D.Double(1.6, 2700),
+                new Point2D.Double(1.794, 2750),
+                new Point2D.Double(2, 2800),
+                new Point2D.Double(2.2, 2950),
+                new Point2D.Double(2.4, 3050),
+                new Point2D.Double(2.47, 2900),
+                new Point2D.Double(2.6, 3050),
+                new Point2D.Double(2.8, 3200),
+                new Point2D.Double(3, 3300));
+                // new Point2D.Double(3.2, 3600),
+                // new Point2D.Double(4, 3700));
 
     
     private double setpoint = 0;
-    private double tolerance = 200; //arbitrary
+    private double tolerance = 40; //arbitrary
 
     private ShootLogAutoLogged shootLogAutoLogged;
 
@@ -104,24 +104,22 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setInverted(true);
-
-        rightMotor.burnFlash();
-        leftMotor.burnFlash();
-
         
-
         rm_aimBot.setP(rP);
         rm_aimBot.setI(rI);
         rm_aimBot.setD(rD);
         rm_aimBot.setFF(rFF);
         rm_aimBot.setIZone(rIZ);
-
+        
         lm_aimBot.setP(lP);
         lm_aimBot.setI(lI);
         lm_aimBot.setD(lD);
         lm_aimBot.setFF(lFF);
         lm_aimBot.setIZone(lIZ);
-
+        
+        
+        rightMotor.burnFlash();
+        leftMotor.burnFlash();
         
             HoorayConfig.gimmeConfig().getShooterkV();
         
@@ -130,9 +128,9 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         
         rpmActualGE =  Shuffleboard.getTab("shoot").add("rpm actual 1", 0).getEntry();
-        rpmSetpointGE = Shuffleboard.getTab("shoot").add("rpm setpoint", 0).getEntry();
-        
         rpmActual2GE = Shuffleboard.getTab("shoot").add("rpm actual 2", 0).getEntry();
+        rpmSetpointGE = Shuffleboard.getTab("shoot").add("current rpm setpoint", 0).getEntry();
+        
     }
 
     public void changeSetpoint(double set) {

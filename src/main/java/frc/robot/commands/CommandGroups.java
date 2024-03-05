@@ -62,7 +62,7 @@ public class CommandGroups {
                         LineBreakSensorSubsystem lineBreakSensorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
 
                 return new SequentialCommandGroup(
-                                new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE),
+                                new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE).withTimeout(0.5),
                                 new ParallelCommandGroup(
                                                 new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
                                                 new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
