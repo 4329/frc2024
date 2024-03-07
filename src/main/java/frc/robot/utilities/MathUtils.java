@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.units.Power;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 
@@ -40,6 +41,10 @@ public class MathUtils {
    */
   public static double singedSquare(double input) {
     return Math.signum(input) * Math.pow(input, 2);
+  }
+
+  public static double singedPow(double input, double power) {
+    return Math.signum(input) * Math.abs(Math.pow(input, power));
   }
 
   /**

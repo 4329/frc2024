@@ -1,15 +1,14 @@
 package frc.robot.commands.driveCommands;
 
-import frc.robot.Constants.*;
-import frc.robot.subsystems.swerve.*;
-import frc.robot.utilities.MathUtils;
-
 import java.util.Map;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.MathUtils;
 
 /**
  * Implements a DriveByController command which extends the Command class
@@ -85,7 +84,7 @@ public class DriveByController extends Command {
    * @return the transformed input value
    */
   private double inputTransform(double input) {
-    return MathUtils.singedSquare(MathUtils.applyDeadband(input));
+    return MathUtils.singedPow(MathUtils.applyDeadband(input), 4);
   }
 
 }

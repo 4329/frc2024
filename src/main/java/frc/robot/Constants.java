@@ -108,7 +108,7 @@ public final class Constants {
     public static final double kMinTranslationCommand = DriveConstants.kMaxSpeedMetersPerSecond
         * Math.pow(DriveConstants.kInnerDeadband, 2);
 
-    public static final double[] kKeepAnglePID = { 0.400000, 0, 0 };
+    public static final double[] kKeepAnglePID = { 0.550, 0, 0 };
   }
 
   /**

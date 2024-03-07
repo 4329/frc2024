@@ -72,12 +72,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4PieceLastPath"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "stop"

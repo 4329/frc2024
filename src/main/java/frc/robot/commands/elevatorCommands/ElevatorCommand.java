@@ -19,7 +19,7 @@ public class ElevatorCommand extends Command {
 
     @Override
     public void initialize() {
-
+        
         elevatorSubsystem.setElevatorPose(elevatorSetpoints);
 
     }

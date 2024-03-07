@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utilities.ArmAngle;
 
 public class ShooterAimCommandIndefinite extends Command {
 
@@ -41,6 +42,10 @@ public class ShooterAimCommandIndefinite extends Command {
                 armAngleSubsystem.setArmAngle(pose3d);
 
             }
+        } else {
+
+            armAngleSubsystem.setArmAngle(ArmAngle.ZERO);
+
         }
     }
 

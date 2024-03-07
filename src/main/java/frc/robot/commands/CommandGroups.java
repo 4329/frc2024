@@ -123,13 +123,10 @@ public class CommandGroups {
 
         public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem){
         
-                        return new ParallelCommandGroup(
-
+                        return new SequentialCommandGroup(
                                 new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),
-                                new SequentialCommandGroup(
-
-                                        new WaitCommand(1),
-                                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)));          
+                                
+                                new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));          
         }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,

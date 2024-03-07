@@ -131,13 +131,13 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
                 new Point2D.Double(1.4, 0.5),
                 new Point2D.Double(1.6, 0.64),
                 new Point2D.Double(1.794, 0.84),
-                new Point2D.Double(2, 1.02),
-                new Point2D.Double(2.2, 1.26),
-                new Point2D.Double(2.4, 1.32),
+                new Point2D.Double(2, 1.16),
+                new Point2D.Double(2.2, 1.29),
+                new Point2D.Double(2.4, 1.41),
                 // new Point2D.Double(2.47, 1.42),
-                new Point2D.Double(2.6, 1.42),
-                new Point2D.Double(2.8, 1.5),
-                new Point2D.Double(3, 1.56));
+                new Point2D.Double(2.6, 1.48),
+                new Point2D.Double(2.8, 1.56),
+                new Point2D.Double(3, 1.59));
                 // new Point2D.Double(3.2, 1.48),
                 // new Point2D.Double(4, 1.5));
 

@@ -1,8 +1,9 @@
 package frc.robot.commands.intakeOuttakeCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import java.util.Map;
+
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
@@ -16,19 +17,23 @@ public class ToggleIntakeCommand extends ReInitCommand {
     IndexReverseForShotCommand indexReverseForShotCommand;
 
     private boolean toggled;
+    private GenericEntry toggleEntry;
 
     public ToggleIntakeCommand(IntakeSensorCommand intakeSensorCommand, IndexSensorCommand indexSensorCommand, IndexReverseForShotCommand indexReverseForShotCommand, ArmAngleSubsystem armAngleSubsystem) {
         intakeSensorGroup = intakeSensorCommand.alongWith(indexSensorCommand).beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE));
         this.indexReverseForShotCommand = indexReverseForShotCommand;
+
+        toggleEntry = Shuffleboard.getTab("RobotData").add("Intake Toggled", false).withPosition(3, 2).withSize(2, 2).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).getEntry();
     }
     
     @Override
     public void initialize() {
         if (!toggled) {
             intakeSensorGroup.schedule();
-        } else
+        } else 
             this.cancel();
         toggled = !toggled;
+        toggleEntry.setBoolean(toggled);
     }
 
     @Override
@@ -44,6 +49,8 @@ public class ToggleIntakeCommand extends ReInitCommand {
     @Override
     public void end(boolean interrupted) {
         intakeSensorGroup.cancel();
+        toggled = false;
+        toggleEntry.setBoolean(toggled);
         System.out.println(intakeSensorGroup.isScheduled() + "{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
         if (!interrupted) {
             indexReverseForShotCommand.schedule();

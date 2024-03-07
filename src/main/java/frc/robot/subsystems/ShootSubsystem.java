@@ -60,7 +60,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
                 new Point2D.Double(2, 2800),
                 new Point2D.Double(2.2, 2950),
                 new Point2D.Double(2.4, 3050),
-                new Point2D.Double(2.47, 2900),
+                // new Point2D.Double(2.47, 2900),
                 new Point2D.Double(2.6, 3050),
                 new Point2D.Double(2.8, 3200),
                 new Point2D.Double(3, 3300));
