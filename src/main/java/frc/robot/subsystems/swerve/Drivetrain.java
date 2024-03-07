@@ -13,6 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,6 +25,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
+import frc.robot.Model.DrivetrainLog;
+import frc.robot.Model.DrivetrainLogAutoLogged;
 import frc.robot.utilities.FieldRelativeAccel;
 import frc.robot.utilities.FieldRelativeSpeed;
 import frc.robot.utilities.HoorayConfig;
@@ -31,6 +35,8 @@ import frc.robot.utilities.HoorayConfig;
  * Implements a swerve Drivetrain Subsystem for the Robot
  */
 public class Drivetrain extends SubsystemBase {
+
+  private DrivetrainLogAutoLogged drivetrainLogAutoLogged;
 
   public boolean isLocked;
 
@@ -91,6 +97,8 @@ public class Drivetrain extends SubsystemBase {
    * Constructs a Drivetrain and resets the Gyro and Keep Angle parameters
    */
   public Drivetrain() {
+    drivetrainLogAutoLogged = new DrivetrainLogAutoLogged();
+
     keepAngleTimer.reset();
     keepAngleTimer.start();
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
@@ -145,9 +153,15 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     // roll.setDouble(getOffsetRoll());
     // pitch.setDouble(ahrs.getPitch());
-
+    updateInputs(drivetrainLogAutoLogged);
     // Calls get pose function which sends the Pose information to the
     getPose();
+  }
+
+  private void updateInputs(DrivetrainLog drivetrainLog) {
+    drivetrainLog.swerveModuleStates = getModuleStates();
+    drivetrainLog.rotation = getGyro();
+    Logger.processInputs("Drivetrain", drivetrainLogAutoLogged);
   }
 
   /**
@@ -346,6 +360,15 @@ public class Drivetrain extends SubsystemBase {
         m_frontRight.getPosition(),
         m_backLeft.getPosition(),
         m_backRight.getPosition() };
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    return new SwerveModuleState[] {
+      m_frontLeft.getState(),
+      m_frontRight.getState(),
+      m_backLeft.getState(),
+      m_backRight.getState()
+    };
   }
 
   public double getRoll() {

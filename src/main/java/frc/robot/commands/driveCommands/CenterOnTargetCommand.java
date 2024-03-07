@@ -1,27 +1,14 @@
 package frc.robot.commands.driveCommands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.Model.HelpLogAutoLogged;
-import frc.robot.subsystems.PhotonVisionSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
 public class CenterOnTargetCommand extends Command {
-HelpLogAutoLogged georgeo;
     private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
     private final int targetId;
@@ -31,7 +18,6 @@ HelpLogAutoLogged georgeo;
 
     public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
-                georgeo = visionSubsystem.gHelpLogAutoLogged();
         this.visionSubsystem = visionSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
@@ -57,7 +43,7 @@ HelpLogAutoLogged georgeo;
         double rotationCalc = 0;
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
 
-        rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
+            rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
         
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;

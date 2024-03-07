@@ -1,29 +1,17 @@
 package frc.robot.subsystems;
 
-import org.ejml.equation.IntegerSequence.For;
 import org.littletonrobotics.junction.Logger;
-
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder.Value;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
-import frc.robot.Model.HelpLogAutoLogged;
 import frc.robot.utilities.LimelightHelpers;
-import frc.robot.utilities.LimelightHelpers.LimelightResults;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
-import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
@@ -128,6 +116,14 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             seeingThings[i] = getFiducial(i) != null;
         }
         Logger.recordOutput("Tags Seen", seeingThings);
+        double[] txes = new double[16];
+        for (int i = 0; i < 16; i++) {
+            if (seeingThings[i])
+                txes[i] = getTargetX(i);
+        }
+        Logger.recordOutput("Txes", txes);
+
+        Logger.recordOutput("Limlih connected", CameraConnected());
     }
 
     public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
@@ -149,15 +145,12 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             if (pose3d != null) {
 
                 zGE.setDouble(pose3d.getZ());
-
             }
         }
         
         updateInputs();
         
         occasionalCheck();
-        // if (seeingAnything())
-            // System.out.println("dsl_____________________________________________________________________________________");
     }
 
     private void occasionalCheck() {
@@ -171,8 +164,4 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     public double getTargetX(int id) {
         return getFiducial(id).tx;
     }
-@Override
-public HelpLogAutoLogged gHelpLogAutoLogged() {
-    return new HelpLogAutoLogged();
-}
 }

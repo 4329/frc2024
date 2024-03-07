@@ -81,7 +81,7 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
     }
 
     public Pose2d getPose() {
-        System.out.println(estimator.getEstimatedPosition());
+        // System.out.println(estimator.getEstimatedPosition());
         return estimator.getEstimatedPosition();
     }
 

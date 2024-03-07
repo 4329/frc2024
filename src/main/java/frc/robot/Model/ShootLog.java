@@ -6,7 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 public class ShootLog {
 
     public double setpoint;
-    public double PIDOutput;
-    public double leftEncoder;
-    public double rightEncoder;
+    public double rightPIDOutput;
+    public double leftPIDOutput;
+    public double leftVel;
+    public double rightVel;
 }
