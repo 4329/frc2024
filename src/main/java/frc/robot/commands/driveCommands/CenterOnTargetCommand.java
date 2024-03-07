@@ -56,15 +56,9 @@ HelpLogAutoLogged georgeo;
     public void execute() {
         double rotationCalc = 0;
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
-            double currentRot = -visionSubsystem.getTargetSpacePose(targetId).getRotation().toRotation2d().getRadians();
-            double hopefulRot = Math.atan2(visionSubsystem.getTargetSpacePose(targetId).getX(), visionSubsystem.getTargetSpacePose(targetId).getY());
-            Pose2d pose=visionSubsystem.getTargetSpacePose(targetId).toPose2d();
 
-            georgeo.a=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(hopefulRot));
-            georgeo.b=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(currentRot));
-            System.out.println(currentRot + "," + hopefulRot);
-            rotationCalc = rotationPID.calculate(hopefulRot - currentRot);
-            georgeo.dumb = rotationCalc;
+        rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
+        
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
             else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
