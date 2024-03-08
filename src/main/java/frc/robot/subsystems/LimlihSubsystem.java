@@ -43,6 +43,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     public boolean getTargetVisible(int id) {
+        if (limelightResults == null) {
+            return false;
+        }
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return true;
@@ -157,7 +160,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
         updateInputs();
 
-        // occasionalCheck();
+        occasionalCheck();
     }
 
     private void occasionalCheck() {

@@ -4,8 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "2024BasePaths",
-    "BottomSidePaths",
     "4PieceClosePaths",
+    "BottomSidePaths",
+    "New Folder",
     "testingautos",
     "topAuto1"
   ],

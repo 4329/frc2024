@@ -8,8 +8,9 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.MathUtils;
+import frc.robot.utilities.ReInitCommand;
 
-public class CenterOnTargetCommand extends Command {
+public class CenterOnTargetCommand extends Command{
     private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
     private int targetId;
@@ -36,6 +37,7 @@ public class CenterOnTargetCommand extends Command {
 
     @Override
     public void initialize() {
+
         drivetrain.drive(0, 0, 0, true);
         targetId = AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker();
     }
