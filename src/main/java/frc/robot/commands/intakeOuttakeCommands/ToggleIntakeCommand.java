@@ -16,7 +16,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
     SequentialCommandGroup intakeSensorGroup;
     IndexReverseForShotCommand indexReverseForShotCommand;
 
-    private boolean toggled;
+    // private boolean toggled;
     private GenericEntry toggleEntry;
 
     public ToggleIntakeCommand(IntakeSensorCommand intakeSensorCommand, IndexSensorCommand indexSensorCommand, IndexReverseForShotCommand indexReverseForShotCommand, ArmAngleSubsystem armAngleSubsystem) {
@@ -28,12 +28,12 @@ public class ToggleIntakeCommand extends ReInitCommand {
     
     @Override
     public void initialize() {
-        if (!toggled) {
+        if (!intakeSensorGroup.isScheduled()) {
             intakeSensorGroup.schedule();
         } else 
             this.cancel();
-        toggled = !toggled;
-        toggleEntry.setBoolean(toggled);
+        // toggled = !toggled;
+        toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
     }
 
     @Override
@@ -49,8 +49,8 @@ public class ToggleIntakeCommand extends ReInitCommand {
     @Override
     public void end(boolean interrupted) {
         intakeSensorGroup.cancel();
-        toggled = false;
-        toggleEntry.setBoolean(toggled);
+        // toggled = false;
+        toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
         System.out.println(intakeSensorGroup.isScheduled() + "{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
         if (!interrupted) {
             indexReverseForShotCommand.schedule();

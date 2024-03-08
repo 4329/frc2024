@@ -71,6 +71,7 @@ import frc.robot.commands.shootCommands.ShooterAimCommand;
 import frc.robot.commands.shootCommands.ShooterShotCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
+import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -148,7 +149,7 @@ public class RobotContainer {
    * @param drivetrain
    */
 
-  public RobotContainer(Drivetrain drivetrain) {
+  public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand) {
     m_robotDrive = drivetrain;
 
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -160,7 +161,7 @@ public class RobotContainer {
       visionSubsystem = new PhotonVisionSubsystem();
       Shuffleboard.getTab("Config").add("Camera", "Photon");
     } else {
-      visionSubsystem = new LimlihSubsystem();
+      visionSubsystem = new LimlihSubsystem(checkLimelightCommand);
       Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
     shootSubsystem = new ShootSubsystem();
@@ -324,7 +325,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(new CenterOnTargetCommandIndefinite(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
+    driverController.start().whileTrue(new CenterOnTargetCommand(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);

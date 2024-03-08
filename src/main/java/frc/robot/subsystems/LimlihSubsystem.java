@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,16 +23,19 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
     private GenericEntry zGE;
+    private GenericEntry sight;
 
     private Timer timer;
     private CheckLimelightCommand checkLimelightCommand;
 
-    public LimlihSubsystem() {
+    public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
         timer = new Timer();
         timer.start();
-        checkLimelightCommand = new CheckLimelightCommand();
-        
+        this.checkLimelightCommand = checkLimelightCommand;
+
         zGE = Shuffleboard.getTab("shoot").add("zPose", 0).getEntry();
+        sight = Shuffleboard.getTab("RobotData").add("Seeing Speaker", false).withPosition(3, 0).withSize(2, 2)
+                .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).getEntry();
     }
 
     public boolean CameraConnected() {
@@ -140,17 +145,19 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
         if (checkLimelightCommand.isConnected()) {
             limelightResults = LimelightHelpers
-            .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+                    .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
             Pose3d pose3d = getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
             if (pose3d != null) {
 
                 zGE.setDouble(pose3d.getZ());
             }
         }
-        
+
+        sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
+
         updateInputs();
-        
-        occasionalCheck();
+
+        // occasionalCheck();
     }
 
     private void occasionalCheck() {

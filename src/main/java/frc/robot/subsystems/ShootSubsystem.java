@@ -153,9 +153,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public void shooterDistance(Pose3d pose) {
 
-        setpoint = shotTable.getOutput(pose.getZ());
-
-
+        setpoint = shotTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
     }
 
     public boolean aboveSetpoint() {
