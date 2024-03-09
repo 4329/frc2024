@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
@@ -28,6 +29,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     private Timer timer;
     private CheckLimelightCommand checkLimelightCommand;
 
+    private LimlihLogAutoLogged limlihLogAutoLogged;
+
     public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
         timer = new Timer();
         timer.start();
@@ -36,6 +39,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         zGE = Shuffleboard.getTab("shoot").add("zPose", 0).getEntry();
         sight = Shuffleboard.getTab("RobotData").add("Seeing Speaker", false).withPosition(3, 0).withSize(2, 2)
                 .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).getEntry();
+
+        limlihLogAutoLogged = new LimlihLogAutoLogged();
     }
 
     public boolean CameraConnected() {
@@ -101,6 +106,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     private LimelightTarget_Fiducial getFiducial(int id) {
+        if (limelightResults == null)
+            return null;
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return LIMGHT;
@@ -110,7 +117,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     public boolean seeingAnything() {
-        if (limelightResults.length > 0) {
+        if (limelightResults != null && limelightResults.length > 0) {
             return true;
         } else {
             return false;
@@ -119,19 +126,14 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     private void updateInputs() {
 
-        boolean[] seeingThings = new boolean[16];
         for (int i = 0; i < 16; i++) {
-            seeingThings[i] = getFiducial(i) != null;
+            limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
+            if (limlihLogAutoLogged.tvs[i])
+                limlihLogAutoLogged.tXs[i] = getTargetX(i);
         }
-        Logger.recordOutput("Tags Seen", seeingThings);
-        double[] txes = new double[16];
-        for (int i = 0; i < 16; i++) {
-            if (seeingThings[i])
-                txes[i] = getTargetX(i);
-        }
-        Logger.recordOutput("Txes", txes);
+        limlihLogAutoLogged.limlihconnected = CameraConnected();
 
-        Logger.recordOutput("Limlih connected", CameraConnected());
+        Logger.processInputs("Limlihsubsystem", limlihLogAutoLogged);
     }
 
     public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {

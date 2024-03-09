@@ -2,6 +2,8 @@ package frc.robot.commands.driveCommands;
 
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +54,8 @@ public class DriveByController extends Command {
         -inputTransform(m_controller.getRightX())
             * DriveConstants.kMaxAngularSpeed,
         fieldOrient);
+
+    Logger.recordOutput("Field Oriented", fieldOrient);
   }
 
   /**

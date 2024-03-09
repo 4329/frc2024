@@ -72,7 +72,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         armPID.setI(0);
         armPID.setD(1.75);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.1, 0.1); 
+        armPID.setOutputRange(-0.1, 0.15); 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 

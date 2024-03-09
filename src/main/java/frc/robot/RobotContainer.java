@@ -164,7 +164,7 @@ public class RobotContainer {
 
     // commands for auto
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
-    NamedCommands.registerCommand("speakershoot", CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem,driverController, armAngleSubsystem));
+    NamedCommands.registerCommand("speakershoot", CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem,driverController, armAngleSubsystem).withTimeout(2.75));
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     alliance = Shuffleboard.getTab("Config").add("Alliance", "aaaanoalliance").getEntry();
     
@@ -358,6 +358,7 @@ public class RobotContainer {
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
   // SwerveAutoBuilder swerveAutoBuilder;
+  Map<Command, String> autoName = new HashMap<Command, String>();
 
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
@@ -378,13 +379,14 @@ public class RobotContainer {
 
         // List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
         // constraints);
-
         Command pathCommand = new PathPlannerAuto(name);
         Command autoCommand = new SequentialCommandGroup(
-        CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
-        pathCommand,
-            new InstantCommand(drivetrain::stop));
+          CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+          pathCommand,
+          new InstantCommand(drivetrain::stop));
           m_chooser.addOption(name, autoCommand);
+
+          autoName.put(autoCommand, name);
       }
 
       SysIdRoutine sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
@@ -435,13 +437,16 @@ public class RobotContainer {
    * @return Selected Auto
    */
   public Command getAuto() {
-
     return m_chooser.getSelected();
   }
 
   public void configureTestMode() {
 
     m_robotDrive.setDefaultCommand(new CoastCommand(m_robotDrive));
+  }
+
+  public String getAutoName(Command command) {
+    return autoName.containsKey(command) ? autoName.get(command) : "Nothing?????/?///?";
   }
 
 }
