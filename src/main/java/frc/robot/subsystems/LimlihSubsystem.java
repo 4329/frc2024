@@ -14,6 +14,7 @@ import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
+import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 
 public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
@@ -85,7 +86,6 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         if (limetarget != null) {
 
             return limetarget.getTargetPose_RobotSpace();
-
         }
         return null;
     }
@@ -128,8 +128,10 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
         for (int i = 0; i < 16; i++) {
             limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
-            if (limlihLogAutoLogged.tvs[i])
+            if (limlihLogAutoLogged.tvs[i]) {
                 limlihLogAutoLogged.tXs[i] = getTargetX(i);
+                limlihLogAutoLogged.tagPoses[i] = MathUtils.addPoses3D(getTargetPoseInRobotSpace(i), MathUtils.pose2DtoPose3D(getRobotPose()));
+            }
         }
         limlihLogAutoLogged.limlihconnected = CameraConnected();
 
