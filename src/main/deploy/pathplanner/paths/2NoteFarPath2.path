@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.18,
+        "x": 8.4329,
         "y": 2.44
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.840016532805698,
+        "x": 7.092916532805698,
         "y": 2.4466563988715326
       },
       "isLocked": false,
@@ -81,7 +81,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "2NoteFar",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

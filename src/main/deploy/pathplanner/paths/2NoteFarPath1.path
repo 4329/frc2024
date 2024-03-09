@@ -48,11 +48,11 @@
     },
     {
       "anchor": {
-        "x": 8.181454055215804,
+        "x": 8.4329,
         "y": 2.4371348742697485
       },
       "prevControl": {
-        "x": 6.839549832945821,
+        "x": 7.090995777730017,
         "y": 2.4272679314589416
       },
       "nextControl": null,
@@ -99,7 +99,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "2NoteFar",
   "previewStartingState": {
     "rotation": 120.39872771416606,
     "velocity": 0
