@@ -120,6 +120,8 @@ public class LightSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         lightIO.periodic();
+
+        rainbow();
     }
 
 }

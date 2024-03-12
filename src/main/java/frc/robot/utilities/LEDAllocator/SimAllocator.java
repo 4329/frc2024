@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class SimAllocator implements LEDAllocator {
+public final class SimAllocator implements LEDAllocator {
 
     private AddressableLEDSim addressableLEDSim;
     private AddressableLED addressableLED;
