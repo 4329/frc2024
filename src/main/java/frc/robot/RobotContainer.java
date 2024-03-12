@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.LightCommand;
 import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightCommandGroup;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
@@ -115,7 +114,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private final LoggingSubsystem loggingSubsystem;
-  private final LightSubsystem lightUnderGlowSubsystem;
+  private final LightSubsystem lightSubsystem;
 
   // Command Declarations
   private final ExampleCommand exampleCommand;
@@ -146,7 +145,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
    * @param drivetrain
-   * @param lightUnderGlowSubsystem
+   * @param lightSubsystem
    */
 
   public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand, LightSubsystem lightSubsystem) {
@@ -172,7 +171,7 @@ public class RobotContainer {
     lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     poseEstimationSubsystem = new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem = new LoggingSubsystem(armAngleSubsystem, elevatorSubsystem, indexSubsystem, intakeSubsystem, lineBreakSensorSubsystem, poseEstimationSubsystem, shootSubsystem);
-    this.lightUnderGlowSubsystem = lightUnderGlowSubsystem;
+    this.lightSubsystem = lightSubsystem;
 
     // commands for auto
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
@@ -207,11 +206,11 @@ public class RobotContainer {
 
     new CommandLoginator();
 
-    lightProgressCommand = new LightProgressCommand(lightUnderGlowSubsystem, 0.75, 125, 200);
-    lightBlankCommand = new LightBlankCommand(lightUnderGlowSubsystem);
-    lightsOnCommand = new LightsOnCommand(lightUnderGlowSubsystem);
-    lightRambowCommand = new LightRambowCommand(lightUnderGlowSubsystem);
-    lightFastProgressCommand = new LightFastProgressCommand(lightUnderGlowSubsystem);
+    lightProgressCommand = new LightProgressCommand(lightSubsystem, 0.75, 125, 200);
+    lightBlankCommand = new LightBlankCommand(lightSubsystem);
+    lightsOnCommand = new LightsOnCommand(lightSubsystem);
+    lightRambowCommand = new LightRambowCommand(lightSubsystem);
+    lightFastProgressCommand = new LightFastProgressCommand(lightSubsystem);
 
     
     //shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
