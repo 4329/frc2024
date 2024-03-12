@@ -123,13 +123,11 @@ public class CommandGroups {
 
         public static Command FullZeroCommand(ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem){
         
-                        return new ParallelCommandGroup(
-
+                        return new SequentialCommandGroup(
                                 new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),
-                                new SequentialCommandGroup(
-
-                                        new WaitCommand(1),
-                                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE)));          
+                                
+                                // new ArmCommand(armAngleSubsystem, ArmAngle.HORIZONTAL),          
+                                new ArmCommand(armAngleSubsystem, ArmAngle.ZERO));          
         }
 
         public static Command centerAndFire(VisionSubsystem visionSubsystem, Drivetrain drivetrain,
@@ -198,4 +196,25 @@ public class CommandGroups {
                 }
 
 
+                public static Command armToIntakeCommandGroup (ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+
+                        
+                        return new SequentialCommandGroup(
+
+                        new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).withTimeout(3),
+                        new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+                                 
+                                
+                        }
+
+                    public static Command armToHorizonalCommandGroup (ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+
+                        
+                        return new SequentialCommandGroup(
+
+                        new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).withTimeout(3),
+                        new ArmCommand(armAngleSubsystem, ArmAngle.HORIZONTAL));
+                                 
+                                
+                        }
 }

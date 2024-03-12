@@ -58,6 +58,8 @@ public class SwerveModule {
   private final PIDController m_turningPIDController = new PIDController(ModuleConstants.kTurnPID[0],
       ModuleConstants.kTurnPID[1], ModuleConstants.kTurnPID[2]);
 
+  private double angularOffset;
+
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, and turning
    * encoder.
@@ -102,6 +104,7 @@ public class SwerveModule {
     // position converted to the range of 0-2*PI in radians offset by the tuned
     // module offset
     m_turningEncoder = new AnalogPotentiometer(turningEncoderChannel, 2.0 * Math.PI, angularOffset);
+    this.angularOffset = angularOffset;
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous so the PID will command the shortest path.
@@ -126,6 +129,10 @@ public class SwerveModule {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder()));
+  }
+
+  public SwerveModuleState getStateNoOffset() {
+    return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder() - angularOffset));
   }
 
   /**

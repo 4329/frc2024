@@ -7,8 +7,12 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Power;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 
@@ -40,6 +44,10 @@ public class MathUtils {
    */
   public static double singedSquare(double input) {
     return Math.signum(input) * Math.pow(input, 2);
+  }
+
+  public static double singedPow(double input, double power) {
+    return Math.signum(input) * Math.abs(Math.pow(input, power));
   }
 
   /**
@@ -99,6 +107,16 @@ public class MathUtils {
         transform.getZ(),
         transform.getRotation().toRotation2d()
       );
+  }
+
+  public static Pose3d pose2DtoPose3D(Pose2d pose) {
+    return new Pose3d(pose.getX(), pose.getY(), 0, new Rotation3d(0, 0, pose.getRotation().getRadians()));
+  }
+
+  public static Pose3d addPoses3D(Pose3d one, Pose3d two) {
+    Translation3d translation3d = one.getTranslation().plus(two.getTranslation());
+    Rotation3d rotation3d = one.getRotation().plus(two.getRotation());
+    return new Pose3d(translation3d, rotation3d);
   }
 
 }

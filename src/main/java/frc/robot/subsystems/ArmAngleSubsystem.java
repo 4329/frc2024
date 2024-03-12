@@ -72,7 +72,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         armPID.setI(0);
         armPID.setD(1.75);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.15, 0.15); 
+        armPID.setOutputRange(-0.1, 0.15); 
 
         armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
@@ -117,7 +117,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         // setpoint = ArmAngle.HORIZONTAL.getValue() - (radians2 * ticksPerRad);
 
 
-        setpoint = armTable.getOutput(pose.getZ());
+        setpoint = armTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
     }
 
     public void armInterpolationTable() {
@@ -131,13 +131,13 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
                 new Point2D.Double(1.4, 0.5),
                 new Point2D.Double(1.6, 0.64),
                 new Point2D.Double(1.794, 0.84),
-                new Point2D.Double(2, 1.02),
-                new Point2D.Double(2.2, 1.26),
-                new Point2D.Double(2.4, 1.32),
-                // new Point2D.Double(2.47, 1.42),
-                new Point2D.Double(2.6, 1.42),
-                new Point2D.Double(2.8, 1.5),
-                new Point2D.Double(3, 1.56));
+                new Point2D.Double(2, 1.16),
+                new Point2D.Double(2.2, 1.54),
+                new Point2D.Double(2.4, 1.61),
+                new Point2D.Double(2.6, 1.63),
+                new Point2D.Double(2.8, 1.82),
+                new Point2D.Double(2.87, 1.85));
+                // new Point2D.Double(3, 1.59));
                 // new Point2D.Double(3.2, 1.48),
                 // new Point2D.Double(4, 1.5));
 
@@ -172,6 +172,10 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         else {
             setpoint = ArmAngle.ZERO.getValue();
         }
+    }
+
+    public void changeArmPosition(double moveAmount) {
+        setpoint = Math.min(Math.max(setpoint + moveAmount, ArmAngle.ZERO.getValue()), ArmAngle.ARMAMP.getValue());
     }
 
     @Override

@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPath"
+            "pathName": "2PieceFirstPath"
           }
         },
         {
@@ -38,25 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceSecondPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3PieceLastPath"
+            "pathName": "2PieceCloseLeave"
           }
         },
         {

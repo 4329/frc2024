@@ -1,85 +1,74 @@
 package frc.robot.commands.driveCommands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.Model.HelpLogAutoLogged;
-import frc.robot.subsystems.PhotonVisionSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.MathUtils;
+import frc.robot.utilities.ReInitCommand;
 
-public class CenterOnTargetCommand extends Command {
-HelpLogAutoLogged georgeo;
+public class CenterOnTargetCommand extends Command{
     private final VisionSubsystem visionSubsystem;
     private final Drivetrain drivetrain;
-    private final int targetId;
+    private int targetId;
 
     private final PIDController rotationPID;
     private final CommandXboxController xboxController;
 
     public CenterOnTargetCommand(VisionSubsystem visionSubsystem, Drivetrain m_drivetrain, int targetId,
             CommandXboxController xboxController) {
-                georgeo = visionSubsystem.gHelpLogAutoLogged();
         this.visionSubsystem = visionSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
         this.xboxController = xboxController;
 
-        rotationPID = new PIDController(1, 0, 0);// 0.75, 0, 0
-        rotationPID.setTolerance(0);
+        rotationPID = new PIDController(0.03975, 0, 0);// 0.75, 0, 0
+        rotationPID.setTolerance(0.1);
         rotationPID.setSetpoint(0);
+                
 
-        rotationPID.enableContinuousInput(0, 2 * Math.PI);
+        // rotationPID.enableContinuousInput(0, 2 * Math.PI);
         
         addRequirements(visionSubsystem, m_drivetrain);
     }
 
     @Override
     public void initialize() {
-    
+
+        drivetrain.drive(0, 0, 0, true);
+        targetId = AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker();
     }
 
     
     @Override
     public void execute() {
         double rotationCalc = 0;
+        System.out.println(visionSubsystem.CameraConnected() + ", " + visionSubsystem.getTargetVisible(targetId));
+        System.out.println(targetId);
         if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
-            double currentRot = -visionSubsystem.getTargetSpacePose(targetId).getRotation().toRotation2d().getRadians();
-            double hopefulRot = Math.atan2(visionSubsystem.getTargetSpacePose(targetId).getX(), visionSubsystem.getTargetSpacePose(targetId).getY());
-            Pose2d pose=visionSubsystem.getTargetSpacePose(targetId).toPose2d();
 
-            georgeo.a=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(hopefulRot));
-            georgeo.b=new Pose2d(pose.getX(),pose.getY(),new Rotation2d(currentRot));
-            System.out.println(currentRot + "," + hopefulRot);
-            rotationCalc = rotationPID.calculate(hopefulRot - currentRot);
-            georgeo.dumb = rotationCalc;
-            if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed)
+            rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
+        
+            if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed) {
                 rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
-            else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed)
-                rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
-            else if (rotationPID.atSetpoint())
+            }
+            else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed) {
+               rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
+            }
+            else if (rotationPID.atSetpoint()) {
                 rotationCalc = 0;
+            }
+                
 
             double adjTranslation = ((Constants.DriveConstants.kMaxAngularSpeed - Math.abs(rotationCalc))
                     / Constants.DriveConstants.kMaxAngularSpeed) * 0.5;
 
-            drivetrain.drive(0, 0,
-                    rotationCalc,
-                    true);
-                    System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                    System.out.println("rotation output is --> " + rotationCalc);
+            drivetrain.drive(0, 0, rotationCalc, true);
+            System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+            System.out.println("rotation output is --> " + rotationCalc);
         }
     }
 

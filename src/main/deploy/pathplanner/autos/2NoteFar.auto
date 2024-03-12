@@ -2,19 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.44,
-      "y": 6.56
+      "x": 0.66,
+      "y": 4.4
     },
-    "rotation": 180.0
+    "rotation": 120.4
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "speakershoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "FirstShotRot"
+            "pathName": "2NoteFarPath1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2NoteFarPath2"
           }
         },
         {
@@ -32,31 +44,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CloseTopIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SECONDAUTOSHOT"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
+            "pathName": "2NoteFarPath3"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
           }
         }
       ]

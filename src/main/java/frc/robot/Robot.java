@@ -63,9 +63,8 @@ public class Robot extends LoggedRobot {
 
      File homeDir = new File("/home/lvuser/logs");
      if (homeDir.exists() || homeDir.mkdir()) {
-       return homeDir;
-     }
-     else {
+      return homeDir;
+     } else {
       return null;
     }
   }
@@ -103,12 +102,13 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     drivetrain = new Drivetrain();
-    m_robotContainer = new RobotContainer(drivetrain);
-    drivetrain.resetOdometry(new Pose2d());
-
     checkLimelightCommand = new CheckLimelightCommand();
+    m_robotContainer = new RobotContainer(drivetrain, checkLimelightCommand);
 
+    drivetrain.resetOdometry(new Pose2d());
     m_robotContainer.robotInit();
+    
+    checkLimelightCommand.schedule();
   }
 
   @Override
@@ -122,7 +122,6 @@ public class Robot extends LoggedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-//    runsWhenDisabledCommand.schedule();
   }
 
   @Override
@@ -139,6 +138,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAuto();
+    Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
+
     
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

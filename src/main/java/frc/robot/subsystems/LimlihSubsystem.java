@@ -1,29 +1,21 @@
 package frc.robot.subsystems;
 
-import org.ejml.equation.IntegerSequence.For;
-import org.littletonrobotics.junction.Logger;
+import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder.Value;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Model.LimlihLogAutoLogged;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
-import frc.robot.Model.HelpLogAutoLogged;
 import frc.robot.utilities.LimelightHelpers;
-import frc.robot.utilities.LimelightHelpers.LimelightResults;
+import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
-import frc.robot.utilities.LimelightHelpers.Results;
 
 public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
@@ -33,16 +25,23 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     String limelightHelpNetworkTableName = "limelight-limlih";
     LimelightTarget_Fiducial[] limelightResults;
     private GenericEntry zGE;
+    private GenericEntry sight;
 
     private Timer timer;
     private CheckLimelightCommand checkLimelightCommand;
 
-    public LimlihSubsystem() {
+    private LimlihLogAutoLogged limlihLogAutoLogged;
+
+    public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
         timer = new Timer();
         timer.start();
-        checkLimelightCommand = new CheckLimelightCommand();
-        
+        this.checkLimelightCommand = checkLimelightCommand;
+
         zGE = Shuffleboard.getTab("shoot").add("zPose", 0).getEntry();
+        sight = Shuffleboard.getTab("RobotData").add("Seeing Speaker", false).withPosition(3, 0).withSize(2, 2)
+                .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).getEntry();
+
+        limlihLogAutoLogged = new LimlihLogAutoLogged();
     }
 
     public boolean CameraConnected() {
@@ -50,6 +49,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     public boolean getTargetVisible(int id) {
+        if (limelightResults == null) {
+            return false;
+        }
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return true;
@@ -84,7 +86,6 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         if (limetarget != null) {
 
             return limetarget.getTargetPose_RobotSpace();
-
         }
         return null;
     }
@@ -105,6 +106,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     private LimelightTarget_Fiducial getFiducial(int id) {
+        if (limelightResults == null)
+            return null;
         for (LimelightTarget_Fiducial LIMGHT : limelightResults) {
             if (LIMGHT.fiducialID == id) {
                 return LIMGHT;
@@ -114,7 +117,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     public boolean seeingAnything() {
-        if (limelightResults.length > 0) {
+        if (limelightResults != null && limelightResults.length > 0) {
             return true;
         } else {
             return false;
@@ -123,11 +126,19 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     private void updateInputs() {
 
-        boolean[] seeingThings = new boolean[16];
         for (int i = 0; i < 16; i++) {
-            seeingThings[i] = getFiducial(i) != null;
+            limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
+            if (limlihLogAutoLogged.tvs[i]) {
+                limlihLogAutoLogged.tXs[i] = getTargetX(i);
+                limlihLogAutoLogged.tagPoses[i] = MathUtils.addPoses3D(getTargetPoseInRobotSpace(i), MathUtils.pose2DtoPose3D(getRobotPose()));
+            }else {
+                limlihLogAutoLogged.tXs[i] = 0;
+                limlihLogAutoLogged.tagPoses[i] = new Pose3d();
+            }
         }
-        Logger.recordOutput("Tags Seen", seeingThings);
+        limlihLogAutoLogged.limlihconnected = CameraConnected();
+
+        Logger.processInputs("Limlihsubsystem", limlihLogAutoLogged);
     }
 
     public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
@@ -144,20 +155,19 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
         if (checkLimelightCommand.isConnected()) {
             limelightResults = LimelightHelpers
-            .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
+                    .getLatestResults(limelightHelpNetworkTableName).targetingResults.targets_Fiducials;
             Pose3d pose3d = getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
             if (pose3d != null) {
 
                 zGE.setDouble(pose3d.getZ());
-
             }
         }
-        
+
+        sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
+
         updateInputs();
-        
+
         occasionalCheck();
-        // if (seeingAnything())
-            // System.out.println("dsl_____________________________________________________________________________________");
     }
 
     private void occasionalCheck() {
@@ -171,8 +181,4 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     public double getTargetX(int id) {
         return getFiducial(id).tx;
     }
-@Override
-public HelpLogAutoLogged gHelpLogAutoLogged() {
-    return new HelpLogAutoLogged();
-}
 }

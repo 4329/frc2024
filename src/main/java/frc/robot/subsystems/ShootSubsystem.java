@@ -60,10 +60,10 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
                 new Point2D.Double(2, 2800),
                 new Point2D.Double(2.2, 2950),
                 new Point2D.Double(2.4, 3050),
-                new Point2D.Double(2.47, 2900),
-                new Point2D.Double(2.6, 3050),
+                new Point2D.Double(2.6, 3100),
                 new Point2D.Double(2.8, 3200),
-                new Point2D.Double(3, 3300));
+                new Point2D.Double(2.87, 3400));
+                // new Point2D.Double(3, 3300));
                 // new Point2D.Double(3.2, 3600),
                 // new Point2D.Double(4, 3700));
 
@@ -153,9 +153,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public void shooterDistance(Pose3d pose) {
 
-        setpoint = shotTable.getOutput(pose.getZ());
-
-
+        setpoint = shotTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
     }
 
     public boolean aboveSetpoint() {
@@ -176,9 +174,10 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     @Override
     public LoggableInputs log() {
         shootLogAutoLogged.setpoint = setpoint;
-        shootLogAutoLogged.PIDOutput = rightMotor.get();
-        shootLogAutoLogged.leftEncoder = leftEncoder.getVelocity();
-        shootLogAutoLogged.rightEncoder = rightEncoder.getVelocity();
+        shootLogAutoLogged.rightPIDOutput = rightMotor.get();
+        shootLogAutoLogged.leftPIDOutput = leftMotor.get();
+        shootLogAutoLogged.leftVel = leftEncoder.getVelocity();
+        shootLogAutoLogged.rightVel = rightEncoder.getVelocity();
         return shootLogAutoLogged;
     }
 
