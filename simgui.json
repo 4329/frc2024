@@ -1,9 +1,49 @@
 {
+  "HALProvider": {
+    "Analog Inputs": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Encoders": {
+      "0": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "PowerDistributions": {
+      "0": {
+        "PowerDistribution[0]": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/RobotData/SelectAuto": "String Chooser",
+      "/Shuffleboard/Sim/Flywheel": "Mechanism2d",
       "/Shuffleboard/field/field": "Field2d"
+    },
+    "windows": {
+      "/Shuffleboard/Sim/Flywheel": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/field/field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {

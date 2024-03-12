@@ -213,12 +213,10 @@ public class ShootIOReal implements ShootIO {
                 .angularVelocity(Units.RotationsPerSecond.of(rightEncoder.getVelocity() / 60));
     }
 
-    @Override
     public double getRightVelocity() {
         return rightEncoder.getVelocity();
     }
 
-    @Override
     public double getLeftVelocity() {
         return leftEncoder.getVelocity();
     }

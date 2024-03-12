@@ -1,36 +1,48 @@
 package frc.robot.subsystems.shoot;
 
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+import java.awt.geom.Point2D;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import frc.robot.Model.ShootLogAutoLogged;
+import frc.robot.utilities.LinearInterpolationTable;
 
 public interface ShootIO {
 
-    void changeSetpoint(double set);
+    public final LinearInterpolationTable shotTable = new LinearInterpolationTable(
+                new Point2D.Double(0, 2500),
+                new Point2D.Double(1.1, 2500),
+                new Point2D.Double(1.2, 2550),
+                new Point2D.Double(1.4, 2650),
+                new Point2D.Double(1.6, 2700),
+                new Point2D.Double(1.794, 2750),
+                new Point2D.Double(2, 2800),
+                new Point2D.Double(2.2, 2950),
+                new Point2D.Double(2.4, 3050),
+                new Point2D.Double(2.47, 2900),
+                new Point2D.Double(2.6, 3050),
+                new Point2D.Double(2.8, 3200),
+                new Point2D.Double(3, 3300));
 
-    boolean atSetpoint();
+    default void changeSetpoint(double set) {};
 
-    void shooterDistance(Pose3d pose);
+    default boolean atSetpoint() {return false;};
 
-    boolean aboveSetpoint();
+    default void shooterDistance(Pose3d pose) {};
 
-    void stop();
+    default boolean aboveSetpoint() {return false;};
 
-    void periodic();
+    default void stop() {};
 
-    void setRPM(double rpm);
+    default void periodic() {};
 
-    void setVoltage(Measure<Voltage> voltage);
+    default void setRPM(double rpm) {};
 
-    void getData(SysIdRoutineLog sysIdRoutineLog);
+    default void setVoltage(Measure<Voltage> voltage) {};
 
-    double getRightVelocity();
+    default void getData(SysIdRoutineLog sysIdRoutineLog) {};
 
-    double getLeftVelocity();
-
-    ShootLogAutoLogged log(ShootLogAutoLogged shootLogAutoLogged);
+    default ShootLogAutoLogged log(ShootLogAutoLogged shootLogAutoLogged) {return shootLogAutoLogged;};
 }
