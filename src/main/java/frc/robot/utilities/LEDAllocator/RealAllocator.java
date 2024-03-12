@@ -25,18 +25,19 @@ public class RealAllocator implements LEDAllocator {
         int storeLength = length;
         length += newLength;
 
-        Color8Bit[] transfer = new Color8Bit[storeLength];
-        for (int i = 0; i < length; i++) {
-            transfer[i] = addressableLEDBuffer.getLED8Bit(i);
-        }
+        addressableLEDBuffer = new AddressableLEDBuffer(length);
+        if (storeLength > 0) {
+            Color8Bit[] transfer = new Color8Bit[storeLength];
+            for (int i = 0; i < storeLength; i++) {
+                transfer[i] = addressableLEDBuffer.getLED8Bit(i);
+            }
 
-        addressableLEDBuffer = new AddressableLEDBuffer(storeLength);
-        for (int i = 0; i < storeLength; i++) {
-            addressableLEDBuffer.setLED(i, transfer[i]);
+            for (int i = 0; i < storeLength; i++) {
+                addressableLEDBuffer.setLED(i, transfer[i]);
+            }
         }
+        addressableLED.setLength(length);
 
-        addressableLED.setLength(storeLength);
-        
         addressableLED.start();
         return storeLength;
     }
@@ -50,7 +51,7 @@ public class RealAllocator implements LEDAllocator {
     public void setHSV(int index, int hue, int saturation, int value) {
         addressableLEDBuffer.setHSV(index, hue, saturation, value);
     }
-    
+
     @Override
     public void periodic() {
         addressableLED.setData(addressableLEDBuffer);
