@@ -41,6 +41,7 @@ import frc.robot.commands.armCommands.ArmHorizontalCommand;
 import frc.robot.commands.armCommands.ArmToIntakeCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
+import frc.robot.commands.armCommands.MoveArmCommand;
 import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
@@ -335,24 +336,24 @@ public class RobotContainer {
 
 
     // Operator Controller
-    operatorController.rightTrigger().whileTrue(exampleCommand);
-    operatorController.leftTrigger().whileTrue(exampleCommand);
+    operatorController.rightTrigger().whileTrue(elevatorManualCommand);
+    operatorController.leftTrigger().whileTrue(elevatorManualCommand);
 
-    operatorController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
-    operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
+    operatorController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.01));
+    operatorController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.01));
 
-    operatorController.start().whileTrue(exampleCommand);
+    operatorController.start().whileTrue(new CenterOnTargetCommand(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
     operatorController.back().onTrue(changeFieldOrientCommand);
 
-    operatorController.a().whileTrue(CommandGroups.intakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
-    operatorController.x().whileTrue(new ElevatorDownCommand(elevatorSubsystem));
-    operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was here
+    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was here
 
-    operatorController.povUp().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.ZERO));
-    operatorController.povRight().onTrue(exampleCommand);
-    operatorController.povLeft().onTrue(exampleCommand);
-    operatorController.povDown().onTrue(new ArmAngleCommand(armAngleSubsystem, ArmAngle.HORIZONTAL));
+    operatorController.povUp().onTrue(CommandGroups.elevatorAndAngleToAmp(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
+    operatorController.povRight().onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
+    operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
+    operatorController.povDown().onTrue(CommandGroups.armToIntakeCommandGroup(armAngleSubsystem, elevatorSubsystem));
   }
 
   // jonathan was here today 2/3/2023

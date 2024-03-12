@@ -131,6 +131,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             if (limlihLogAutoLogged.tvs[i]) {
                 limlihLogAutoLogged.tXs[i] = getTargetX(i);
                 limlihLogAutoLogged.tagPoses[i] = MathUtils.addPoses3D(getTargetPoseInRobotSpace(i), MathUtils.pose2DtoPose3D(getRobotPose()));
+            }else {
+                limlihLogAutoLogged.tXs[i] = 0;
+                limlihLogAutoLogged.tagPoses[i] = new Pose3d();
             }
         }
         limlihLogAutoLogged.limlihconnected = CameraConnected();

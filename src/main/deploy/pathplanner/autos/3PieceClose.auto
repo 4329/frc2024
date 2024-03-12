@@ -54,6 +54,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "3PieceLastPath"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "stop"

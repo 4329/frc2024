@@ -174,6 +174,10 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
         }
     }
 
+    public void changeArmPosition(double moveAmount) {
+        setpoint = Math.min(Math.max(setpoint + moveAmount, ArmAngle.ZERO.getValue()), ArmAngle.ARMAMP.getValue());
+    }
+
     @Override
     public void periodic() {
         setpointGE.setDouble(setpoint);
