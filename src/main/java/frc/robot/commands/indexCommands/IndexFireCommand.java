@@ -3,7 +3,7 @@ package frc.robot.commands.indexCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
-import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.shoot.ShootSubsystem;
 
 public class IndexFireCommand extends Command {
 

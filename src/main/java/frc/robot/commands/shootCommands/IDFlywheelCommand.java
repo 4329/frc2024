@@ -3,7 +3,8 @@ package frc.robot.commands.shootCommands;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.shoot.ShootSubsystem;
+import frc.robot.subsystems.shoot.ShootSubsystem;
 
 
 public class IDFlywheelCommand {

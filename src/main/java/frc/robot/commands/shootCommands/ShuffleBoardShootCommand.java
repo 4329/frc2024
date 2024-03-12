@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.subsystems.shoot.ShootSubsystem;
+import frc.robot.subsystems.shoot.ShootSubsystem;
 
 
 public class ShuffleBoardShootCommand extends Command {

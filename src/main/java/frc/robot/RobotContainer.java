@@ -82,8 +82,9 @@ import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.LoggingSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
-import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.shoot.ShootIOReal;
+import frc.robot.subsystems.shoot.ShootSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
@@ -163,7 +164,7 @@ public class RobotContainer {
       visionSubsystem = new LimlihSubsystem();
       Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
-    shootSubsystem = new ShootSubsystem();
+    shootSubsystem = new ShootSubsystem(new ShootIOReal());
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();

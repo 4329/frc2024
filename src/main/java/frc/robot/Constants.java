@@ -190,4 +190,12 @@ public final class Constants {
     public static final double fieldWidth = 16;
     public static final double fieldLength = 8;
   }
+
+  public static final class NEOConstants {
+    public static final double nominalVoltage = 12;
+    public static final double stallTorque = 2.6;
+    public static final double stallCurrent = 105;
+    public static final double freeCurrent = 1.8;
+    public static final double freeSpeed = (5676 * (2 * Math.PI)) / 60;
+  }
 }

@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shoot;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ShootLog;
 import frc.robot.Model.ShootLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.LinearInterpolationTable;
@@ -38,7 +39,7 @@ import java.awt.geom.Point2D;
 
 import javax.tools.ToolProvider;
 
-public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
+public class ShootIOReal implements ShootIO {
     
     public final CANSparkMax rightMotor;
     public final CANSparkMax leftMotor;
@@ -50,7 +51,6 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private GenericEntry rpmActualGE;
     private GenericEntry rpmActual2GE;
     private LinearInterpolationTable shotTable = new LinearInterpolationTable(
-                       
                 new Point2D.Double(0, 2500),
                 new Point2D.Double(1.1, 2500),
                 new Point2D.Double(1.2, 2550),
@@ -71,8 +71,6 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     private double setpoint = 0;
     private double tolerance = 40; //arbitrary
 
-    private ShootLogAutoLogged shootLogAutoLogged;
-
     private double lP = 0.00025;
     private double lI = 0.000001;
     private double lD = 0.01;
@@ -88,7 +86,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
 
     // 240 inches is the theroetical max shot for the shooter
-    public ShootSubsystem() {
+    public ShootIOReal() {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot1);
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.shoot2);
         rm_aimBot = rightMotor.getPIDController();
@@ -124,71 +122,62 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
             HoorayConfig.gimmeConfig().getShooterkV();
         
 
-        shootLogAutoLogged = new ShootLogAutoLogged();
-
-        
         rpmActualGE =  Shuffleboard.getTab("shoot").add("rpm actual 1", 0).getEntry();
         rpmActual2GE = Shuffleboard.getTab("shoot").add("rpm actual 2", 0).getEntry();
         rpmSetpointGE = Shuffleboard.getTab("shoot").add("current rpm setpoint", 0).getEntry();
         
     }
 
+    @Override
     public void changeSetpoint(double set) {
         this.setpoint = set;
 
     }
 
+    @Override
     public boolean atSetpoint() {
-
-
         if (Math.abs(setpoint - getRightVelocity()) <= tolerance && Math.abs(setpoint - getLeftVelocity()) <= tolerance) {
           System.out.println("atsetpoint ----");
 
             return true;
         }
         return false;
-
-
     }
 
+    @Override
     public void shooterDistance(Pose3d pose) {
 
         setpoint = shotTable.getOutput(pose.getZ());
-
-
     }
 
+    @Override
     public boolean aboveSetpoint() {
 
         if (leftEncoder.getVelocity() >= (setpoint - tolerance) && rightEncoder.getVelocity() >= (setpoint - tolerance)) {
             return true;
         }
         return false;
-
     }
 
+    @Override
     public void stop(){
         System.out.println("shootSTOP");
 
        setpoint = 0;
        rightMotor.stopMotor();
     }
+
     @Override
-    public LoggableInputs log() {
+    public ShootLogAutoLogged log(ShootLogAutoLogged shootLogAutoLogged) {
         shootLogAutoLogged.setpoint = setpoint;
         shootLogAutoLogged.PIDOutput = rightMotor.get();
         shootLogAutoLogged.leftEncoder = leftEncoder.getVelocity();
         shootLogAutoLogged.rightEncoder = rightEncoder.getVelocity();
         return shootLogAutoLogged;
     }
-
+    
     @Override
     public void periodic() {
-        
-
-        // setpoint = sadf.getDouble(0);
-
-
         rpmActualGE.setDouble(rightEncoder.getVelocity());
         rpmActual2GE.setDouble(leftEncoder.getVelocity());
         rpmSetpointGE.setDouble(setpoint);
@@ -202,14 +191,17 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
             lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
         }
     }
+    @Override
     public void setRPM(double rpm) {
         setpoint = rpm;
     }
 
+    @Override
     public void setVoltage(Measure<Voltage> voltage) {
         rightMotor.setVoltage(voltage.in(BaseUnits.Voltage));
     }
 
+    @Override
     public void getData(SysIdRoutineLog sysIdRoutineLog) {
         Logger.recordOutput("sdifa", RobotController.getBatteryVoltage());
         Logger.recordOutput("lsdoflsoaolodsflsdfldlsoflso", rightMotor.getAppliedOutput());
@@ -221,15 +213,15 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
                 .angularVelocity(Units.RotationsPerSecond.of(rightEncoder.getVelocity() / 60));
     }
 
+    @Override
     public double getRightVelocity() {
         return rightEncoder.getVelocity();
     }
 
+    @Override
     public double getLeftVelocity() {
         return leftEncoder.getVelocity();
     }
-
-
 
 }
 
