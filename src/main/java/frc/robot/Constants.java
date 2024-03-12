@@ -14,6 +14,8 @@ public final class Constants {
 
   public static Mode robotMode;
 
+  public static int LEDNum = 0;
+
   public static enum Mode {
     REAL,
     SIM,
