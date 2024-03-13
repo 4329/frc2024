@@ -113,6 +113,11 @@ public class PhotonVisionSubsystem extends SubsystemBase implements VisionSubsys
     }
 
     @Override
+    public double faceTag(int id) {
+        return 0;
+    }
+
+    @Override
     public void periodic() {
         result = photonCamera.getLatestResult();
         Optional<EstimatedRobotPose> estimatedPose = photonPoseEstimator.update();

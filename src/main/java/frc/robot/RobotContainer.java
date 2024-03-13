@@ -7,6 +7,8 @@ import java.util.Map;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -54,6 +56,7 @@ import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
 import frc.robot.commands.driveCommands.DriveByController;
 import frc.robot.commands.driveCommands.DriveToTargetCommand;
+import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorDownCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
@@ -174,6 +177,7 @@ public class RobotContainer {
     this.lightSubsystem = lightSubsystem;
 
     // commands for auto
+    NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
     NamedCommands.registerCommand("speakershoot", CommandGroups.autoShoot(shootSubsystem, indexSubsystem, visionSubsystem,driverController, armAngleSubsystem).withTimeout(2.75));
     NamedCommands.registerCommand("intake", CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
@@ -404,7 +408,7 @@ public class RobotContainer {
         // constraints);
         Command pathCommand = new PathPlannerAuto(name);
         Command autoCommand = new SequentialCommandGroup(
-          CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+          //// CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
           pathCommand,
           new InstantCommand(drivetrain::stop));
           m_chooser.addOption(name, autoCommand);

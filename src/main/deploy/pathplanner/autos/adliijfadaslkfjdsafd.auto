@@ -16,6 +16,12 @@
           "data": {
             "pathName": "New New Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
+          }
         }
       ]
     }
