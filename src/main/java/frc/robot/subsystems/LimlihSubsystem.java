@@ -8,6 +8,7 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -132,8 +133,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
             if (limlihLogAutoLogged.tvs[i]) {
                 limlihLogAutoLogged.tXs[i] = getTargetX(i);
-                limlihLogAutoLogged.tagPoses[i] = MathUtils.addPoses3D(getTargetPoseInRobotSpace(i), MathUtils.pose2DtoPose3D(getRobotPose()));
-            }else {
+                limlihLogAutoLogged.tagPoses[i] = MathUtils.addPoses3D(getTargetPoseInRobotSpace(i),
+                        MathUtils.pose2DtoPose3D(getRobotPose()));
+            } else {
                 limlihLogAutoLogged.tXs[i] = 0;
                 limlihLogAutoLogged.tagPoses[i] = new Pose3d();
             }
@@ -186,8 +188,15 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
     @Override
     public double faceTag(int id) {
-        Pose2d initialPose = getTargetSpacePose(id).toPose2d();
-        return Math.atan2(initialPose.getX(), initialPose.getY());
+        if (getTargetVisible(id)) {
+            Pose2d initialPose = getTargetSpacePose(id).toPose2d();
+            double rotation = Math.atan2(initialPose.getX(), initialPose.getY());
+            Pose2d robotPose = seeingAnything() ? getRobotPose() : new Pose2d();
+            Logger.recordOutput("Rot", new Pose2d(robotPose.getX() + 8, robotPose.getY() + 4, new Rotation2d(rotation)));
+            System.out.println("wfejasijlthewjaaoLQSDS");
+            return rotation;
+        }
+        return 0;
     }
 
 }
