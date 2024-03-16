@@ -26,5 +26,15 @@
     },
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
-  "wpilib.autoStartRioLog": true
+  "wpilib.autoStartRioLog": true,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3"
+    }
+  ],
+  "graalvm.home": "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3",
+  "graalvm.installations": [
+    "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3"
+  ]
 }

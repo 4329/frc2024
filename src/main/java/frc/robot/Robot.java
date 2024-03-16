@@ -51,16 +51,20 @@ public class Robot extends LoggedRobot {
     for (File kid : f.listFiles()) {
       File logs = new File(kid, "logs");
       if (logs.exists() && logs.canWrite()) {
+        Logger.recordMetadata("Logging On:", "Flash Drive");
         return logs;
       } else if (logs.mkdir()) {
+        Logger.recordMetadata("Logging On:", "Flash Drive");
         return logs;
       }
     }
 
     File homeDir = new File("/home/lvuser/logs");
     if (homeDir.exists() || homeDir.mkdir()) {
+      Logger.recordMetadata("Logging On:", "Robot");
       return homeDir;
     } else {
+      Logger.recordMetadata("Logging On:", "Nothing");
       return null;
     }
   }
