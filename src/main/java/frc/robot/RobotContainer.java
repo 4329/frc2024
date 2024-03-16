@@ -430,7 +430,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(new IntakeCommand(intakeSubsystem));
+    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
     // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was
     // here
