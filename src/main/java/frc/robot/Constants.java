@@ -177,10 +177,10 @@ public final class Constants {
     // but spinning fast is not particularly useful or driver
     // friendly
 
-    public static final double kPXController = 2;
-    public static final double kDxController = 0.00005;
+    public static final double kPXController = 1.5;
+    public static final double kDxController = 0.000075;
     // public static final double kPYController = 0.0000;
-    public static final double kPThetaController = 1.25;
+    public static final double kPThetaController = 2;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
