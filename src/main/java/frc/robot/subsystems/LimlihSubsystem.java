@@ -193,7 +193,6 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             double rotation = Math.atan2(initialPose.getX(), initialPose.getY());
             Pose2d robotPose = seeingAnything() ? getRobotPose() : new Pose2d();
             Logger.recordOutput("Rot", new Pose2d(robotPose.getX() + 8, robotPose.getY() + 4, new Rotation2d(rotation)));
-            System.out.println("wfejasijlthewjaaoLQSDS");
             return rotation;
         }
         return 0;

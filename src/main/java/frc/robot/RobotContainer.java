@@ -390,22 +390,14 @@ public class RobotContainer {
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
 
-    // swerveAutoBuilder = createAutoBuilder();
     File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
     pathPlannerDirectory = new File(pathPlannerDirectory, "autos");
 
     for (File pathFile : pathPlannerDirectory.listFiles()) {
 
-      // System.out.println(pathFile);
-
       if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
 
         String name = pathFile.getName().replace(".auto", "");
-
-        // List<PathConstraints> constraints = getPathConstraints(name);
-
-        // List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
-        // constraints);
         Command pathCommand = new PathPlannerAuto(name);
         Command autoCommand = new SequentialCommandGroup(
           //// CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
@@ -435,10 +427,6 @@ public class RobotContainer {
   public void robotInit() {
     //new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
     limDriveSetCommand.schedule();
-  }
-
-  private void getData(SysIdRoutineLog sysIdRoutineLog) {
-    sysIdRoutineLog.motor("Shoot");
   }
 
   public void autonomousInit() {

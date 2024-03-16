@@ -123,6 +123,7 @@ public class Robot extends LoggedRobot {
       case SIM -> new LightIOSim((SimAllocator)ledAllocator, 60);
       default -> new LightIO() {};
     });
+    LightSubsystem lightSubsystem = new LightSubsystem(new LightIOReal((RealAllocator)ledAllocator, 60));
 
     drivetrain = new Drivetrain();
     drivetrain.resetOdometry(new Pose2d());

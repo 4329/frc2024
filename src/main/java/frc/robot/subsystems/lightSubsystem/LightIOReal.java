@@ -30,7 +30,7 @@ public class LightIOReal implements LightIO {
 
     @Override
     public void setHSV(int index, int hue, int saturation, int lightness) {
-        lightIOReal.setHSV(index, hue, saturation, lightness);
+        lightIOReal.setHSV(startDex + index, hue, saturation, lightness);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LightIOReal implements LightIO {
 
     @Override
     public Color8Bit getLED8Bit(int index) {
-        return lightIOReal.getColor8Bit(index);
+        return lightIOReal.getColor8Bit(startDex + index);
     }
 
     @Override
