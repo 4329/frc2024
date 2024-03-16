@@ -5,25 +5,22 @@ import frc.robot.subsystems.swerve.Drivetrain;
 
 public class CoastCommand extends Command {
 
-    private Drivetrain drivetrain;
+  private Drivetrain drivetrain;
 
-    public CoastCommand(Drivetrain drivetrain) {
+  public CoastCommand(Drivetrain drivetrain) {
 
-        this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
+    this.drivetrain = drivetrain;
+    addRequirements(drivetrain);
+  }
 
-    }
+  @Override
+  public void initialize() {
 
-    @Override
-    public void initialize() {
+    drivetrain.coastMode();
+  }
 
-        drivetrain.coastMode();
-
-    }
-
-    @Override
-    public void execute() {
-        drivetrain.coastMode();
-
-    }
+  @Override
+  public void execute() {
+    drivetrain.coastMode();
+  }
 }

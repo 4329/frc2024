@@ -4,28 +4,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
 
 public class ArmUpCommand extends Command {
-    
-     public ArmAngleSubsystem armAngleSubsystem;
 
-    public ArmUpCommand(ArmAngleSubsystem armAngleSubsystem) {
-        this.armAngleSubsystem = armAngleSubsystem;
-        
-        addRequirements(armAngleSubsystem);
+  public ArmAngleSubsystem armAngleSubsystem;
 
-    }
+  public ArmUpCommand(ArmAngleSubsystem armAngleSubsystem) {
+    this.armAngleSubsystem = armAngleSubsystem;
 
-    @Override
-    public void execute() {
-      
-        armAngleSubsystem.armPositonUp();
-    }
+    addRequirements(armAngleSubsystem);
+  }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-    
-    
-    
+  @Override
+  public void execute() {
 
+    armAngleSubsystem.armPositonUp();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

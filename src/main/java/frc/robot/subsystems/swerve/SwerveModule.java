@@ -4,25 +4,21 @@
 
 package frc.robot.subsystems.swerve;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+// import com.ctre.phoenix.motorcontrol.NeutralMode;
+// import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
-//import com.ctre.phoenix.motorcontrol.NeutralMode;
-//import com.revrobotics.CANEncoder;
-
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.utilities.SparkFactory;
 
-/**
- * Implements a swerve module for the Robot
- */
+/** Implements a swerve module for the Robot */
 public class SwerveModule {
 
   // Our swerve modules use NEOs for both translation and rotation motors
@@ -55,50 +51,63 @@ public class SwerveModule {
 
   // Creates a PIDController for the control of the anglular position of the
   // swerve module
-  private final PIDController m_turningPIDController = new PIDController(ModuleConstants.kTurnPID[0],
-      ModuleConstants.kTurnPID[1], ModuleConstants.kTurnPID[2]);
+  private final PIDController m_turningPIDController =
+      new PIDController(
+          ModuleConstants.kTurnPID[0], ModuleConstants.kTurnPID[1], ModuleConstants.kTurnPID[2]);
 
   private double angularOffset;
 
   /**
-   * Constructs a SwerveModule with a drive motor, turning motor, and turning
-   * encoder.
+   * Constructs a SwerveModule with a drive motor, turning motor, and turning encoder.
    *
-   * @param driveMotorChannel     CAN ID for the drive motor.
-   * @param turningMotorChannel   CAN ID for the turning motor.
+   * @param driveMotorChannel CAN ID for the drive motor.
+   * @param turningMotorChannel CAN ID for the turning motor.
    * @param turningEncoderChannel analog input for turning absolute encoder
-   * @param angularOffset         module specific offset for the absolute encoder
-   * @param tuningVals            double array containing tuning values for
-   *                              translation in the following format {StaticGain,
-   *                              FeedForward, Prop Gain, ModuleID}
+   * @param angularOffset module specific offset for the absolute encoder
+   * @param tuningVals double array containing tuning values for translation in the following format
+   *     {StaticGain, FeedForward, Prop Gain, ModuleID}
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoderChannel, double angularOffset,
+  public SwerveModule(
+      int driveMotorChannel,
+      int turningMotorChannel,
+      int turningEncoderChannel,
+      double angularOffset,
       double[] tuningVals) {
 
-    m_driveMotor = SparkFactory.createCANSparkMax(driveMotorChannel, false); // Define the drive motor as the SparkMAX
+    m_driveMotor =
+        SparkFactory.createCANSparkMax(
+            driveMotorChannel, false); // Define the drive motor as the SparkMAX
     // with the input driveMotorChannel
-    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive motor
-    m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation); // Enable voltage compensation so
+    m_driveMotor.setSmartCurrentLimit(
+        ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive motor
+    m_driveMotor.enableVoltageCompensation(
+        DriveConstants.kVoltCompensation); // Enable voltage compensation so
     // feedforward and gains scale with bus
     // voltage
     // Motor direction is not inverted
     m_driveEncoder = m_driveMotor.getEncoder(); // Obtain the driveEncoder from the drive SparkMAX
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kPositionFactor);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kVelocityFactor); // Set velocity conversion factor so
-                                                                                 // that encoder and PID control is in
-                                                                                 // terms of velocity in m/s
-    m_driveMotor.burnFlash(); // Write these parameters to the SparkMAX so we can be sure the values are
-                              // correct
+    m_driveEncoder.setVelocityConversionFactor(
+        ModuleConstants.kVelocityFactor); // Set velocity conversion factor so
+    // that encoder and PID control is in
+    // terms of velocity in m/s
+    m_driveMotor
+        .burnFlash(); // Write these parameters to the SparkMAX so we can be sure the values are
+    // correct
 
-    m_turningMotor = SparkFactory.createCANSparkMax(turningMotorChannel, false); // Define the drive motor as the
-                                                                                 // SparkMAX with the input
-                                                                                 // driveMotorChannel
-    m_turningMotor.setSmartCurrentLimit(ModuleConstants.kTurnCurrentLimit); // Set current limit for the drive motor
-    m_turningMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation); // Enable voltage compensation so gains
-                                                                                 // scale with bus voltage
+    m_turningMotor =
+        SparkFactory.createCANSparkMax(turningMotorChannel, false); // Define the drive motor as the
+    // SparkMAX with the input
+    // driveMotorChannel
+    m_turningMotor.setSmartCurrentLimit(
+        ModuleConstants.kTurnCurrentLimit); // Set current limit for the drive motor
+    m_turningMotor.enableVoltageCompensation(
+        DriveConstants.kVoltCompensation); // Enable voltage compensation so gains
+    // scale with bus voltage
     // Motor direction is not inverted
-    m_turningMotor.burnFlash(); // Write these parameters to the SparkMAX so we can be sure the values are
-                                // correct
+    m_turningMotor
+        .burnFlash(); // Write these parameters to the SparkMAX so we can be sure the values are
+    // correct
 
     // Creates the analog potentiometer for the tracking of the swerve module
     // position converted to the range of 0-2*PI in radians offset by the tuned
@@ -132,7 +141,8 @@ public class SwerveModule {
   }
 
   public SwerveModuleState getStateNoOffset() {
-    return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder() - angularOffset));
+    return new SwerveModuleState(
+        m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder() - angularOffset));
   }
 
   /**
@@ -142,9 +152,11 @@ public class SwerveModule {
    */
   public void setDesiredState(SwerveModuleState desiredState) {
     // Optimize the reference state to avoid spinning further than 90 degrees
-    SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getTurnEncoder()));
+    SwerveModuleState state =
+        SwerveModuleState.optimize(desiredState, new Rotation2d(getTurnEncoder()));
     // Calculate the drive output from the drive PID controller.
-    final double driveOutput = m_drivePIDController.calculate(m_driveEncoder.getVelocity(), state.speedMetersPerSecond);
+    final double driveOutput =
+        m_drivePIDController.calculate(m_driveEncoder.getVelocity(), state.speedMetersPerSecond);
     // Calculates the desired feedForward motor % from the current desired velocity
     // and the static and feedforward gains
     final double driveFF = driveFeedForward.calculate(state.speedMetersPerSecond);
@@ -153,7 +165,8 @@ public class SwerveModule {
     final double finalDriveOutput = driveOutput + driveFF;
     m_driveMotor.set(finalDriveOutput);
     // Calculate the turning motor output from the turning PID controller.
-    final double turnOutput = m_turningPIDController.calculate(getTurnEncoder(), state.angle.getRadians());
+    final double turnOutput =
+        m_turningPIDController.calculate(getTurnEncoder(), state.angle.getRadians());
     // Set the turning motor to this output value
     m_turningMotor.set(-turnOutput);
   }
@@ -164,9 +177,8 @@ public class SwerveModule {
   }
 
   /**
-   * Obtains the negative of the turning absolute encoder value as this encoder
-   * reads opposite of the module rotation on
-   * 2910 MK2 swerve.
+   * Obtains the negative of the turning absolute encoder value as this encoder reads opposite of
+   * the module rotation on 2910 MK2 swerve.
    *
    * @return the modified absolute encoder value.
    */

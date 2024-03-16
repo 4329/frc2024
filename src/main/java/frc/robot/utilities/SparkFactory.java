@@ -1,21 +1,19 @@
 package frc.robot.utilities;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.ExternalFollower;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import frc.robot.Constants;
+import com.revrobotics.CANSparkMax;
 
 public class SparkFactory {
 
   /**
-   * The default method to be used when creating a new CANSparkMax, which gives it
-   * basic settings for ease of use.
+   * The default method to be used when creating a new CANSparkMax, which gives it basic settings
+   * for ease of use.
    *
-   * MAKE SURE TO BURN FLASH!!!
-   * 
+   * <p>MAKE SURE TO BURN FLASH!!!
+   *
    * @param id
    * @param flipSparkMax
    * @return a new CAN object
@@ -33,17 +31,19 @@ public class SparkFactory {
     if (canToMake.isFollower()) {
 
       System.out.println(
-          "CAN ID" + id + " is following somebody WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+          "CAN ID"
+              + id
+              + " is following somebody WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
     }
     return canToMake;
   }
 
   /**
-   * The default method to be used when creating a new CANSparkMax, which gives it
-   * basic settings for ease of use.
+   * The default method to be used when creating a new CANSparkMax, which gives it basic settings
+   * for ease of use.
    *
-   * MAKE SURE TO BURN FLASH!!!
-   * 
+   * <p>MAKE SURE TO BURN FLASH!!!
+   *
    * @param id
    * @return a new CAN object
    */

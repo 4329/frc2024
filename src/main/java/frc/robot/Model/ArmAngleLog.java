@@ -4,8 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
 public class ArmAngleLog {
-    public double setpoint;
-    public double position;
-    public double radians;
-    
+  public double setpoint;
+  public double position;
+  public double radians;
 }

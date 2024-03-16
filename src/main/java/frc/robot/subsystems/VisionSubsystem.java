@@ -7,36 +7,36 @@ import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
 
 public interface VisionSubsystem extends Subsystem {
 
-    boolean CameraConnected();
+  boolean CameraConnected();
 
-    boolean getTargetVisible(int id);
+  boolean getTargetVisible(int id);
 
-    double getTargetX(int id);
+  double getTargetX(int id);
 
-    /**
-     * Pose calculated with a single marker
-     * 
-     * @param id
-     * @return Pose
-     */
-    Pose2d getRobotFieldPoseByTag(int id);
+  /**
+   * Pose calculated with a single marker
+   *
+   * @param id
+   * @return Pose
+   */
+  Pose2d getRobotFieldPoseByTag(int id);
 
-    /**
-     * Pose calculated with all markers
-     * 
-     * @return Pose
-     */
-    Pose2d getRobotPose();
+  /**
+   * Pose calculated with all markers
+   *
+   * @return Pose
+   */
+  Pose2d getRobotPose();
 
-    Pose3d getTargetPoseInRobotSpace(int id);
+  Pose3d getTargetPoseInRobotSpace(int id);
 
-    public Pose3d getTargetSpacePose(int id);
+  public Pose3d getTargetSpacePose(int id);
 
-    void switchPipeline(int pipeline);
+  void switchPipeline(int pipeline);
 
-    boolean seeingAnything();
+  boolean seeingAnything();
 
-    LimelightTarget_Fiducial limelightTarget_Fiducial(int id);
+  LimelightTarget_Fiducial limelightTarget_Fiducial(int id);
 
-    double faceTag(int id);
+  double faceTag(int id);
 }
