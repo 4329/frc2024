@@ -92,6 +92,6 @@ public class DriveByController extends Command {
    * @return the transformed input value
    */
   private double inputTransform(double input) {
-    return MathUtils.singedPow(MathUtils.applyDeadband(input), 1);
+    return MathUtils.singedPow(MathUtils.applyDeadband(input), 2);
   }
 }

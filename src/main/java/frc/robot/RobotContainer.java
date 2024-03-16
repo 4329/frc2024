@@ -51,6 +51,7 @@ import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
+import frc.robot.commands.intakeOuttakeCommands.IntakeCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
@@ -429,7 +430,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.b().whileTrue(new IntakeCommand(intakeSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
     // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was
     // here
