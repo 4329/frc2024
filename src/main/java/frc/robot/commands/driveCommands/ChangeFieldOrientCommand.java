@@ -2,25 +2,24 @@ package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ChangeFieldOrientCommand extends Command{
+public class ChangeFieldOrientCommand extends Command {
 
-    DriveByController driveByController;
+  DriveByController driveByController;
 
-    public ChangeFieldOrientCommand(DriveByController driveByController) {
+  public ChangeFieldOrientCommand(DriveByController driveByController) {
 
-        this.driveByController = driveByController;
-    }
+    this.driveByController = driveByController;
+  }
 
-    @Override
-    public void initialize() {
+  @Override
+  public void initialize() {
 
-        driveByController.changeFieldOrient();
-    }
+    driveByController.changeFieldOrient();
+  }
 
-    @Override
-    public boolean isFinished() {
+  @Override
+  public boolean isFinished() {
 
-        return true;
-    }
-
+    return true;
+  }
 }

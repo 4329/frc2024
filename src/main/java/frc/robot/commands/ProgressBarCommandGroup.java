@@ -1,7 +1,3 @@
 package frc.robot.commands;
 
-public class ProgressBarCommandGroup {
-    
-
-    
-}
+public class ProgressBarCommandGroup {}

@@ -6,32 +6,27 @@ import frc.robot.utilities.ArmAngle;
 
 public class ArmAngleCommand extends Command {
 
-    private ArmAngleSubsystem armAngleSubsystem;
-    private ArmAngle armAngle;
+  private ArmAngleSubsystem armAngleSubsystem;
+  private ArmAngle armAngle;
 
-    public ArmAngleCommand(ArmAngleSubsystem armAngleSubsystem, ArmAngle armAngle) {
-        this.armAngleSubsystem = armAngleSubsystem;
-        this.armAngle = armAngle;
-        addRequirements(armAngleSubsystem);
+  public ArmAngleCommand(ArmAngleSubsystem armAngleSubsystem, ArmAngle armAngle) {
+    this.armAngleSubsystem = armAngleSubsystem;
+    this.armAngle = armAngle;
+    addRequirements(armAngleSubsystem);
+  }
 
-    }
+  // @Override
+  // public void initialize() {
 
-    // @Override
-    // public void initialize() {
+  // }
 
+  @Override
+  public void execute() {
+    armAngleSubsystem.setArmAngle(armAngle);
+  }
 
-    // }
-
-    
-
-    @Override
-    public void execute() {
-                armAngleSubsystem.setArmAngle(armAngle);
-
-    }
-
-    @Override
-    public boolean isFinished() {
-        return armAngleSubsystem.atSetpoint();
-    }
+  @Override
+  public boolean isFinished() {
+    return armAngleSubsystem.atSetpoint();
+  }
 }

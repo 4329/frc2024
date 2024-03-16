@@ -6,45 +6,42 @@ import frc.robot.subsystems.LineBreakSensorSubsystem;
 
 public class IndexReverseForShotCommand extends Command {
 
-    private LineBreakSensorSubsystem lineBreakSensorSubsystem;
-    private IndexSubsystem indexSubsystem;
-    private boolean isBroken;
+  private LineBreakSensorSubsystem lineBreakSensorSubsystem;
+  private IndexSubsystem indexSubsystem;
+  private boolean isBroken;
 
-    public IndexReverseForShotCommand(LineBreakSensorSubsystem lineBreakSensorSubsystem,
-            IndexSubsystem indexSubsystem) {
-        this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
-        this.indexSubsystem = indexSubsystem;
-        addRequirements(lineBreakSensorSubsystem, indexSubsystem);
-    }
-
-  @Override
-    public void initialize() {
-
-        this.isBroken = lineBreakSensorSubsystem.isNotBroken();
-    }
+  public IndexReverseForShotCommand(
+      LineBreakSensorSubsystem lineBreakSensorSubsystem, IndexSubsystem indexSubsystem) {
+    this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
+    this.indexSubsystem = indexSubsystem;
+    addRequirements(lineBreakSensorSubsystem, indexSubsystem);
+  }
 
   @Override
-    public void execute() {
+  public void initialize() {
 
-        if (lineBreakSensorSubsystem.isNotBroken()){
-            indexSubsystem.stop();
-        }
+    this.isBroken = lineBreakSensorSubsystem.isNotBroken();
+  }
 
-        else {
-            indexSubsystem.slowOut();
-        }
-    }
+  @Override
+  public void execute() {
 
-     @Override
-    public boolean isFinished() {
-        System.out.println("aoiwndoawindoawindoawindoiawndoiawndoiawnodinawodinawoindoawindoawindoaiwndoiawnd");
-        return lineBreakSensorSubsystem.isNotBroken();
-        
-    }
-
-    @Override
-    public void end(boolean interrupted) {
+    if (lineBreakSensorSubsystem.isNotBroken()) {
       indexSubsystem.stop();
+    } else {
+      indexSubsystem.slowOut();
     }
+  }
 
+  @Override
+  public boolean isFinished() {
+    System.out.println(
+        "aoiwndoawindoawindoawindoiawndoiawndoiawnodinawodinawoindoawindoawindoaiwndoiawnd");
+    return lineBreakSensorSubsystem.isNotBroken();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    indexSubsystem.stop();
+  }
 }

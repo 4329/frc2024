@@ -1,20 +1,20 @@
 package frc.robot.utilities;
 
 public enum ElevatorSetpoints {
+  ZERO(0),
+  AMPPOINT(228),
+  FULL(230),
+  HIGHLIMIT(231);
 
-    ZERO(0), AMPPOINT(228), FULL(230), HIGHLIMIT(231);
+  private float value;
 
-    private float value;
+  private ElevatorSetpoints(float jim) {
 
-    private ElevatorSetpoints(float jim) {
+    this.value = jim;
+  }
 
-        this.value = jim;
+  public float getValue() {
 
-    }
-
-    public float getValue() {
-
-        return value;
-
-    }
+    return value;
+  }
 }

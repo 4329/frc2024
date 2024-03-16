@@ -4,9 +4,27 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.Mode;
+import frc.robot.commands.visionCommands.CheckLimelightCommand;
+import frc.robot.subsystems.lightSubsystem.LightIO;
+import frc.robot.subsystems.lightSubsystem.LightIOReal;
+import frc.robot.subsystems.lightSubsystem.LightIOSim;
+import frc.robot.subsystems.lightSubsystem.LightSubsystem;
+import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.HoorayConfig;
+import frc.robot.utilities.LEDAllocator.LEDAllocator;
+import frc.robot.utilities.LEDAllocator.RealAllocator;
+import frc.robot.utilities.LEDAllocator.SimAllocator;
+import frc.robot.utilities.SwerveAlignment;
 import java.io.File;
-import java.io.IOException;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -14,39 +32,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Watchdog;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import frc.robot.commands.visionCommands.CheckLimelightCommand;
-import frc.robot.commands.visionCommands.LimDriveSetCommand;
-import frc.robot.subsystems.LimlihSubsystem;
-import frc.robot.subsystems.PoseEstimationSubsystem;
-import frc.robot.subsystems.lightSubsystem.LightIO;
-import frc.robot.subsystems.lightSubsystem.LightIOReal;
-import frc.robot.subsystems.lightSubsystem.LightIOSim;
-import frc.robot.subsystems.lightSubsystem.LightSubsystem;
-import frc.robot.commands.BeforeMatchCommand;
-import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.HoorayConfig;
-import frc.robot.utilities.SwerveAlignment;
-import frc.robot.utilities.LEDAllocator.LEDAllocator;
-import frc.robot.utilities.LEDAllocator.RealAllocator;
-import frc.robot.utilities.LEDAllocator.SimAllocator;
-import frc.robot.Constants.Mode;
-
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -56,29 +41,26 @@ public class Robot extends LoggedRobot {
   private CheckLimelightCommand checkLimelightCommand;
   Timer timer = new Timer();
 
-  public Robot() {
+  public Robot() {}
 
-  }
-  
   private LightSubsystem lightSubsystem;
   private LEDAllocator ledAllocator;
 
   private File findThumbDir() {
-     File f = new File("/media");
-     for (File kid : f.listFiles()) {
-        File logs = new File(kid, "logs");
-        if (logs.exists() && logs.canWrite()) {
-          return logs;
-        }
-        else if (logs.mkdir()) {
-          return logs;
-        }
-     }
+    File f = new File("/media");
+    for (File kid : f.listFiles()) {
+      File logs = new File(kid, "logs");
+      if (logs.exists() && logs.canWrite()) {
+        return logs;
+      } else if (logs.mkdir()) {
+        return logs;
+      }
+    }
 
-     File homeDir = new File("/home/lvuser/logs");
-     if (homeDir.exists() || homeDir.mkdir()) {
+    File homeDir = new File("/home/lvuser/logs");
+    if (homeDir.exists() || homeDir.mkdir()) {
       return homeDir;
-     } else {
+    } else {
       return null;
     }
   }
@@ -90,7 +72,8 @@ public class Robot extends LoggedRobot {
     if (isReal()) {
       File logFolder = findThumbDir();
       if (logFolder != null) {
-        Logger.addDataReceiver(new WPILOGWriter(logFolder.getAbsolutePath()));// Log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(
+            new WPILOGWriter(logFolder.getAbsolutePath())); // Log to a USB stick ("/U/logs")
       }
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       // new PowerDistribution(1, ModuleType.kRev); // Enables power distribution
@@ -105,9 +88,13 @@ public class Robot extends LoggedRobot {
       ledAllocator = new SimAllocator();
     } else {
       setUseTiming(false); // Run as fast as possible
-      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      String logPath =
+          LogFileUtil
+              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      Logger.addDataReceiver(
+          new WPILOGWriter(
+              LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
       Constants.robotMode = Mode.REPLAY;
     }
 
@@ -122,11 +109,13 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
 
-    lightSubsystem = new LightSubsystem(switch (Constants.robotMode) {
-      case REAL -> new LightIOReal((RealAllocator)ledAllocator, 60);
-      case SIM -> new LightIOSim((SimAllocator)ledAllocator, 60);
-      default -> new LightIO() {};
-    });
+    lightSubsystem =
+        new LightSubsystem(
+            switch (Constants.robotMode) {
+              case REAL -> new LightIOReal((RealAllocator) ledAllocator, 60);
+              case SIM -> new LightIOSim((SimAllocator) ledAllocator, 60);
+              default -> new LightIO() {};
+            });
 
     drivetrain = new Drivetrain();
     drivetrain.resetOdometry(new Pose2d());
@@ -136,7 +125,7 @@ public class Robot extends LoggedRobot {
 
     drivetrain.resetOdometry(new Pose2d());
     m_robotContainer.robotInit();
-    
+
     checkLimelightCommand.schedule();
   }
 
@@ -159,20 +148,18 @@ public class Robot extends LoggedRobot {
     // beforeMatchCommand.schedule();
     drivetrain.brakeMode();
   }
-  
+
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAuto();
     Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
 
-    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      
+
       m_autonomousCommand.schedule();
     }
     m_robotContainer.autonomousInit();
@@ -187,8 +174,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousExit() {
 
-    Command resetForTeliOp = new InstantCommand(
-        () -> drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
+    Command resetForTeliOp =
+        new InstantCommand(
+            () -> drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
     resetForTeliOp.schedule();
   }
 
@@ -205,8 +193,6 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
-    
   }
 
   @Override
