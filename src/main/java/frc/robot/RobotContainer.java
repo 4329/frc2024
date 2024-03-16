@@ -467,12 +467,11 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".auto", "");
         Command pathCommand = new PathPlannerAuto(name);
-        Command autoCommand =
-            new SequentialCommandGroup(
-                //// CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem,
-                // lineBreakSensorSubsystem, armAngleSubsystem),
-                pathCommand, new InstantCommand(drivetrain::stop));
-        m_chooser.addOption(name, autoCommand);
+        Command autoCommand = new SequentialCommandGroup(
+          CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+          pathCommand,
+          new InstantCommand(drivetrain::stop));
+          m_chooser.addOption(name, autoCommand);
 
         autoName.put(autoCommand, name);
       }

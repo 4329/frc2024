@@ -22,5 +22,10 @@
 
     "extraShuffleBoardToggle": false,
     "limelighturl": "http://10.43.29.11:5800",
-    "rollDirection": 1
+    "rollDirection": 1,
+
+    "kPTranslation": 1.5,
+    "kDTranslation": 0.000075,
+
+    "kPTheta": 2.0
 }
