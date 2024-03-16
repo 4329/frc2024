@@ -2,6 +2,9 @@ package frc.robot;
 
 
 import frc.robot.utilities.HoorayConfig;
+
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -161,10 +164,9 @@ public final class Constants {
                                                            // but spinning fast is not particularly useful or driver
                                                            // friendly
 
-    public static final double kPXController = 1.5;
-    public static final double kDxController = 0.000075;
+    public static final PIDConstants kTranslationController = new PIDConstants(1.5, 0, 0.000075);
     // public static final double kPYController = 0.0000;
-    public static final double kPThetaController = 2;
+    public static final PIDConstants kThetaController = new PIDConstants(2);
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands
