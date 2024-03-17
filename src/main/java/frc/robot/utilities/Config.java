@@ -43,6 +43,14 @@ public class Config {
 
   private double kPTheta = 0;
 
+  public boolean getUsesPhotonVision() {
+    return usesPhotonVision;
+  }
+
+  public void setUsesPhotonVision(boolean usesPhotonVision) {
+    this.usesPhotonVision = usesPhotonVision;
+  }
+
   public void setkPTranslation(double kPTranslation) {
     this.kPTranslation = kPTranslation;
   }
@@ -57,6 +65,10 @@ public class Config {
 
   public PIDConstants getkTranslationController() {
     return new PIDConstants(kPTranslation, kDTranslation);
+  }
+
+  public PIDConstants getkThetaController() {
+    return new PIDConstants(kPTheta);
   }
 
   public double getShooterkV() {

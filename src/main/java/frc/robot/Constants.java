@@ -177,10 +177,6 @@ public final class Constants {
     // but spinning fast is not particularly useful or driver
     // friendly
 
-    public static final PIDConstants kTranslationController = new PIDConstants(1.5, 0, 0.000075);
-    // public static final double kPYController = 0.0000;
-    public static final PIDConstants kThetaController = new PIDConstants(2);
-
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeed,

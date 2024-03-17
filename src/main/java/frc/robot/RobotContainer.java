@@ -302,9 +302,8 @@ public class RobotContainer {
         m_robotDrive::getChassisSpeed,
         m_robotDrive::setModuleStates,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(
-                Constants.AutoConstants.kPXController, Constants.AutoConstants.kDxController),
-            new PIDConstants(Constants.AutoConstants.kPThetaController),
+            HoorayConfig.gimmeConfig().getkTranslationController(),
+            HoorayConfig.gimmeConfig().getkThetaController(),
             Constants.AutoConstants.kMaxSpeed,
             Math.sqrt(
                     Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2)
