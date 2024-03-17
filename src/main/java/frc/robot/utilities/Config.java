@@ -38,34 +38,26 @@ public class Config {
   private double shooterkS = 0;
   private double shooterkV = 0;
 
-    private double kPTranslation = 0;
-    private double kDTranslation = 0;
-    
-    private double kPTheta = 0;
-    
-    public void setkPTranslation(double kPTranslation) {
-        this.kPTranslation = kPTranslation;
-    }
+  private double kPTranslation = 0;
+  private double kDTranslation = 0;
 
-    public void setkDTranslation(double kDTranslation) {
-        this.kDTranslation = kDTranslation;
-    }
+  private double kPTheta = 0;
 
-    public void setkPTheta(double kPTheta) {
-        this.kPTheta = kPTheta;
-    }
+  public void setkPTranslation(double kPTranslation) {
+    this.kPTranslation = kPTranslation;
+  }
 
-    public PIDConstants getkTranslationController() {
-        return new PIDConstants(kPTranslation, kDTranslation);
-    }
+  public void setkDTranslation(double kDTranslation) {
+    this.kDTranslation = kDTranslation;
+  }
 
-    public PIDConstants getkThetaController() {
-        return new PIDConstants(kPTheta);
-    }
+  public void setkPTheta(double kPTheta) {
+    this.kPTheta = kPTheta;
+  }
 
-    public boolean getUsesPhotonVision() {
-        return usesPhotonVision;
-    }
+  public PIDConstants getkTranslationController() {
+    return new PIDConstants(kPTranslation, kDTranslation);
+  }
 
   public double getShooterkV() {
     return shooterkV;

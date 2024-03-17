@@ -1,15 +1,9 @@
 package frc.robot;
 
-import java.io.File;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
@@ -22,7 +16,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -54,9 +47,9 @@ import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
+import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
-import frc.robot.commands.intakeOuttakeCommands.IntakeCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
@@ -184,6 +177,8 @@ public class RobotContainer {
     // commands for auto
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+    NamedCommands.registerCommand(
+        "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
     NamedCommands.registerCommand(
         "speakershoot",
         CommandGroups.autoShoot(
@@ -473,11 +468,13 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".auto", "");
         Command pathCommand = new PathPlannerAuto(name);
-        Command autoCommand = new SequentialCommandGroup(
-          CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
-          pathCommand,
-          new InstantCommand(drivetrain::stop));
-          m_chooser.addOption(name, autoCommand);
+        Command autoCommand =
+            new SequentialCommandGroup(
+                CommandGroups.intakeWithLineBreakSensor(
+                    intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+                pathCommand,
+                new InstantCommand(drivetrain::stop));
+        m_chooser.addOption(name, autoCommand);
 
         autoName.put(autoCommand, name);
       }
