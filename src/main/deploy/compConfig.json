@@ -25,5 +25,10 @@
     "rollDirection": 1,
 
     "shooterkS": 0.23951,
-    "shooterkV": 0.13541
+    "shooterkV": 0.13541,
+
+    "kPTranslation": 2.0,
+    "kDTranslation": 0.00005,
+
+    "kPTheta": 1.25
 }

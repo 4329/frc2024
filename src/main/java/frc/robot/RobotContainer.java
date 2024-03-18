@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -49,6 +47,7 @@ import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
+import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
@@ -179,6 +178,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
     NamedCommands.registerCommand(
+        "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
+    NamedCommands.registerCommand(
         "speakershoot",
         CommandGroups.autoShoot(
                 shootSubsystem,
@@ -301,9 +302,8 @@ public class RobotContainer {
         m_robotDrive::getChassisSpeed,
         m_robotDrive::setModuleStates,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(
-                Constants.AutoConstants.kPXController, Constants.AutoConstants.kDxController),
-            new PIDConstants(Constants.AutoConstants.kPThetaController),
+            HoorayConfig.gimmeConfig().getkTranslationController(),
+            HoorayConfig.gimmeConfig().getkThetaController(),
             Constants.AutoConstants.kMaxSpeed,
             Math.sqrt(
                     Math.pow(Constants.DriveConstants.kWheelBaseWidth, 2)
@@ -429,7 +429,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
     // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was
     // here
@@ -458,28 +458,21 @@ public class RobotContainer {
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
 
-    // swerveAutoBuilder = createAutoBuilder();
     File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
     pathPlannerDirectory = new File(pathPlannerDirectory, "autos");
 
     for (File pathFile : pathPlannerDirectory.listFiles()) {
 
-      // System.out.println(pathFile);
-
       if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
 
         String name = pathFile.getName().replace(".auto", "");
-
-        // List<PathConstraints> constraints = getPathConstraints(name);
-
-        // List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
-        // constraints);
         Command pathCommand = new PathPlannerAuto(name);
         Command autoCommand =
             new SequentialCommandGroup(
-                //// CommandGroups.intakeWithLineBreakSensor(intakeSubsystem, indexSubsystem,
-                // lineBreakSensorSubsystem, armAngleSubsystem),
-                pathCommand, new InstantCommand(drivetrain::stop));
+                CommandGroups.intakeWithLineBreakSensor(
+                    intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+                pathCommand,
+                new InstantCommand(drivetrain::stop));
         m_chooser.addOption(name, autoCommand);
 
         autoName.put(autoCommand, name);
@@ -509,10 +502,6 @@ public class RobotContainer {
   public void robotInit() {
     // new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
     limDriveSetCommand.schedule();
-  }
-
-  private void getData(SysIdRoutineLog sysIdRoutineLog) {
-    sysIdRoutineLog.motor("Shoot");
   }
 
   public void autonomousInit() {

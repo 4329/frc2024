@@ -69,6 +69,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "revenald"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -83,7 +100,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4PieceClosePaths",
+  "folder": null,
   "previewStartingState": {
     "rotation": -121.36094794762796,
     "velocity": 0

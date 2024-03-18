@@ -83,10 +83,9 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
 
   private void updateEstimation() {
     estimator.update(drivetrain.getGyro(), drivetrain.getModulePositions());
-    if (visionSubsystem.seeingAnything()) {
-      //    estimator.addVisionMeasurement(visionSubsystem.getRobotPose(),
-      // Timer.getFPGATimestamp());
-    }
+    // if (visionSubsystem.seeingAnything()) {
+    //   estimator.addVisionMeasurement(visionSubsystem.getRobotPose(), Timer.getFPGATimestamp());
+    // }
   }
 
   @Override

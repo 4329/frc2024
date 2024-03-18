@@ -27,8 +27,8 @@ public class CenterOnTargetCommand extends Command {
     this.targetId = targetId;
     this.xboxController = xboxController;
 
-    rotationPID = new PIDController(0.03975, 0, 0); // 0.75, 0, 0
-    rotationPID.setTolerance(0.1);
+    rotationPID = new PIDController(0.033, 0, 0); // 0.75, 0, 0
+    rotationPID.setTolerance(1);
     rotationPID.setSetpoint(0);
 
     // rotationPID.enableContinuousInput(0, 2 * Math.PI);

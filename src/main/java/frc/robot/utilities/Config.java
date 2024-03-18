@@ -1,5 +1,7 @@
 package frc.robot.utilities;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 public class Config {
 
   private int frontLeftDriveMotorPort = 3;
@@ -36,8 +38,37 @@ public class Config {
   private double shooterkS = 0;
   private double shooterkV = 0;
 
+  private double kPTranslation = 0;
+  private double kDTranslation = 0;
+
+  private double kPTheta = 0;
+
   public boolean getUsesPhotonVision() {
     return usesPhotonVision;
+  }
+
+  public void setUsesPhotonVision(boolean usesPhotonVision) {
+    this.usesPhotonVision = usesPhotonVision;
+  }
+
+  public void setkPTranslation(double kPTranslation) {
+    this.kPTranslation = kPTranslation;
+  }
+
+  public void setkDTranslation(double kDTranslation) {
+    this.kDTranslation = kDTranslation;
+  }
+
+  public void setkPTheta(double kPTheta) {
+    this.kPTheta = kPTheta;
+  }
+
+  public PIDConstants getkTranslationController() {
+    return new PIDConstants(kPTranslation, kDTranslation);
+  }
+
+  public PIDConstants getkThetaController() {
+    return new PIDConstants(kPTheta);
   }
 
   public double getShooterkV() {

@@ -13,7 +13,7 @@ public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSub
 
   public LineBreakSensorSubsystem() {
 
-    this.lineBreak = new DigitalInput(0);
+    this.lineBreak = new DigitalInput(1);
     lineBreakAutoLogged = new LineBreakAutoLogged();
   }
 

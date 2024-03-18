@@ -103,7 +103,7 @@ public final class Constants {
             new Translation2d(-kWheelBaseLength / 2, -kWheelBaseWidth / 2));
 
     // public static final double kMaxAcceleration = 3.0;
-    public static final double kMaxSpeedMetersPerSecond = 4.0; // 5.25
+    public static final double kMaxSpeedMetersPerSecond = 4.0;
     public static final double kMaxAngularSpeed = Math.PI;
     public static final double kMaxAngularAccel = Math.PI;
 
@@ -176,11 +176,6 @@ public final class Constants {
         Math.PI; // Maximum Angular Speed desired. NOTE: Robot can exceed this
     // but spinning fast is not particularly useful or driver
     // friendly
-
-    public static final double kPXController = 2;
-    public static final double kDxController = 0.00005;
-    // public static final double kPYController = 0.0000;
-    public static final double kPThetaController = 1.25;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
