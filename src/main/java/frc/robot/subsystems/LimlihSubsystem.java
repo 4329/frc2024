@@ -192,14 +192,12 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
   @Override
   public double faceTag(int id) {
-    if (getTargetVisible(id)) {
-      Pose2d initialPose = getTargetSpacePose(id).toPose2d();
-      double rotation = Math.atan2(initialPose.getX(), initialPose.getY());
-      Pose2d robotPose = seeingAnything() ? getRobotPose() : new Pose2d();
-      Logger.recordOutput(
-          "Rot", new Pose2d(robotPose.getX() + 8, robotPose.getY() + 4, new Rotation2d(rotation)));
-      return rotation;
-    }
-    return 0;
+
+    Pose2d initialPose = getTargetSpacePose(id).toPose2d();
+    double rotation = Math.atan2(initialPose.getX(), initialPose.getY());
+    Pose2d robotPose = seeingAnything() ? getRobotPose() : new Pose2d();
+    Logger.recordOutput(
+        "Rot", new Pose2d(robotPose.getX() + 8, robotPose.getY() + 4, new Rotation2d(rotation)));
+    return rotation;
   }
 }

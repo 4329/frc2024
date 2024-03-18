@@ -17,7 +17,8 @@ public class PPCenterOnTarget extends Command {
   }
 
   public Optional<Rotation2d> overrideRotation() {
-    if (endlessStupidity) {
+    if (endlessStupidity
+        && visionSubsystem.getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker())) {
       Rotation2d a =
           new Rotation2d(
               visionSubsystem.faceTag(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
