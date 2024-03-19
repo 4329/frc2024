@@ -31,6 +31,7 @@ import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
 import frc.robot.commands.LightCommands.LightProgressCommand;
 import frc.robot.commands.LightCommands.LightRambowCommand;
+import frc.robot.commands.LightCommands.LightSinCommand;
 // import frc.robot.commands.LightCommands.LightIndividualCommand;
 import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -54,7 +55,6 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
-import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -252,6 +252,8 @@ public class RobotContainer {
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
 
+    lightSubsystem.setDefaultCommand(new LightSinCommand(lightSubsystem));
+
     m_chooser = new SendableChooser<>();
     initializeCamera();
     configureButtonBindings();
@@ -430,9 +432,10 @@ public class RobotContainer {
 
     operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
-    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    operatorController.x().whileTrue(lightFastProgressCommand);
     // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was
     // here
+    operatorController.y().whileTrue(new LightSinCommand(lightSubsystem));
 
     operatorController
         .povUp()

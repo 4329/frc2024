@@ -28,7 +28,7 @@ public class LightIOSim implements LightIO {
 
   @Override
   public void setHSV(int index, int hue, int saturation, int lightness) {
-    simAllocator.setHSV(startDex + index, hue, saturation, hue);
+    simAllocator.setHSV(startDex + index, hue, saturation, lightness);
   }
 
   @Override
