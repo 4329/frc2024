@@ -112,10 +112,18 @@ public class LightSubsystem extends SubsystemBase {
     hue %= 180;
   }
 
+  public int getLength() {
+    return lightIO.getLength();
+  }
+
+  public void setHSV(int index, int hue, int saturation, int lightness) {
+    lightIO.setHSV(index, hue, saturation, lightness);
+  }
+
   @Override
   public void periodic() {
     lightIO.periodic();
 
-    rainbow();
+    // rainbow();
   }
 }

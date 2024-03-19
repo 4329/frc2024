@@ -33,6 +33,8 @@ import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
 import frc.robot.commands.LightCommands.LightProgressCommand;
 import frc.robot.commands.LightCommands.LightRambowCommand;
+import frc.robot.commands.LightCommands.LightSinCommand;
+// import frc.robot.commands.LightCommands.LightIndividualCommand;
 import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmCommand;
@@ -284,6 +286,8 @@ public class RobotContainer {
     // driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
     // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
     // armAngleSubsystem));
+
+    lightSubsystem.setDefaultCommand(new LightSinCommand(lightSubsystem));
 
     m_chooser = new SendableChooser<>();
     initializeCamera();
