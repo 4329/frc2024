@@ -373,7 +373,7 @@ public class RobotContainer {
                     m_robotDrive,
                     AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                     driverController)
-                .withTimeout(0.75));
+                .withTimeout(1.5));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);

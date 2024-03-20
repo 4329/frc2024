@@ -69,23 +69,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "revenald"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {

@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -31,7 +30,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.littletonrobotics.urcl.URCL;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -104,8 +102,8 @@ public class Robot extends LoggedRobot {
 
     // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
     // the "Understanding Data Flow" page
-    DataLogManager.start();
-    Logger.registerURCL(URCL.startExternal());
+    // DataLogManager.start();
+    // Logger.registerURCL(URCL.startExternal());
     Logger.start();
 
     HoorayConfig.gimmeConfig();
