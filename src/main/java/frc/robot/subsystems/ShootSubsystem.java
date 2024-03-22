@@ -151,8 +151,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   @Override
   public LoggableInputs log() {
     shootLogAutoLogged.setpoint = setpoint;
-    shootLogAutoLogged.rightPIDOutput = rightMotor.get();
-    shootLogAutoLogged.leftPIDOutput = leftMotor.get();
+    shootLogAutoLogged.rightPIDOutput = rightMotor.getAppliedOutput();
+    shootLogAutoLogged.leftPIDOutput = leftMotor.getAppliedOutput();
     shootLogAutoLogged.leftVel = leftEncoder.getVelocity();
     shootLogAutoLogged.rightVel = rightEncoder.getVelocity();
     return shootLogAutoLogged;

@@ -41,7 +41,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         Shuffleboard.getTab("RobotData")
             .add("Seeing Speaker", false)
             .withPosition(3, 0)
-            .withSize(10, 5)
+            .withSize(10, 4)
             .withProperties(Map.of("Color when true", "#0000FF", "Color when false", "#000000"))
             .getEntry();
 
