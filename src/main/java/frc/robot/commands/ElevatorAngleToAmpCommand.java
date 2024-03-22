@@ -11,7 +11,7 @@ import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.utilities.ArmAngle;
 
 public class ElevatorAngleToAmpCommand extends SequentialCommandGroup {
-    
+
   public ElevatorAngleToAmpCommand(
       ShootSubsystem shootSubsystem,
       IndexSubsystem indexSubsystem,

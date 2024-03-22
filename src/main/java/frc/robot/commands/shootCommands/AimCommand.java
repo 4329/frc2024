@@ -9,7 +9,7 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 
 public class AimCommand extends ParallelCommandGroup {
-    
+
   public AimCommand(
       Drivetrain m_robotDrive,
       VisionSubsystem visionSubsystem,

@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 
 public class CenterAndFireCommand extends SequentialCommandGroup {
-    
+
   public CenterAndFireCommand(
       VisionSubsystem visionSubsystem,
       Drivetrain drivetrain,

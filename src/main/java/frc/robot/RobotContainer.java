@@ -1,15 +1,10 @@
 package frc.robot;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -84,6 +79,9 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -417,15 +415,11 @@ public class RobotContainer {
         .onTrue(
             new ElevatorAngleToAmpCommand(
                 shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
-    driverController
-        .povRight()
-        .onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
+    driverController.povRight().onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     driverController
         .povLeft()
         .onTrue(new ArmToHorizontalComand(armAngleSubsystem, elevatorSubsystem));
-    driverController
-        .povDown()
-        .onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
@@ -466,9 +460,7 @@ public class RobotContainer {
         .onTrue(
             new ElevatorAngleToAmpCommand(
                 shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
-    operatorController
-        .povRight()
-        .onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
+    operatorController.povRight().onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     operatorController
         .povLeft()
         .onTrue(new DriveByController(m_robotDrive, operatorController, false));

@@ -21,7 +21,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
       CommandXboxController commandXboxController,
       ArmAngleSubsystem armAngleSubsystem) {
 
-   super( 
+    super(
         new ParallelRaceGroup(
             new ShotRevCommand(shootSubsystem, visionSubsystem).withTimeout(3),
             //  new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,

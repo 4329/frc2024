@@ -9,9 +9,8 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 
 public class FullZeroCommand extends SequentialCommandGroup {
-    
-  public FullZeroCommand(
-      ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
+
+  public FullZeroCommand(ElevatorSubsystem elevatorSubsystem, ArmAngleSubsystem armAngleSubsystem) {
 
     super(
         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO),

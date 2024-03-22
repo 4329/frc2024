@@ -6,7 +6,7 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeFull extends ParallelCommandGroup {
-    public IntakeFull(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem) {
-        super(new IntakeCommand(intakeSubsystem), new IndexCommand(indexSubsystem));
-    }
+  public IntakeFull(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem) {
+    super(new IntakeCommand(intakeSubsystem), new IndexCommand(indexSubsystem));
+  }
 }

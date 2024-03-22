@@ -6,9 +6,8 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 
 public class ReleaseToShoot extends ParallelCommandGroup {
-    
-  public ReleaseToShoot(
-      ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem) {
+
+  public ReleaseToShoot(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem) {
 
     super(
         new IndexCommand(indexSubsystem).withTimeout(3),

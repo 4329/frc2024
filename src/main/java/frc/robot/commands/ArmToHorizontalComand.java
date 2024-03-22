@@ -9,7 +9,7 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 
 public class ArmToHorizontalComand extends SequentialCommandGroup {
-    
+
   public ArmToHorizontalComand(
       ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
     super(

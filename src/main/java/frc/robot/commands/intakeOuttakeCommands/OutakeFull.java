@@ -7,8 +7,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class OutakeFull extends ParallelCommandGroup {
   public OutakeFull(IntakeSubsystem intakeSubsystem, IndexSubsystem indexSubsystem) {
-    super(
-        new OutakeCommand(intakeSubsystem),
-        new OutdexCommand(indexSubsystem));
+    super(new OutakeCommand(intakeSubsystem), new OutdexCommand(indexSubsystem));
   }
 }
