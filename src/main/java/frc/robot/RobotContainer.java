@@ -1,10 +1,15 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,8 +30,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.CommandGroups;
+import frc.robot.commands.ArmToHorizontalComand;
+import frc.robot.commands.ArmToIntakeCommand;
+import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FullZeroCommand;
 import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
 import frc.robot.commands.LightCommands.LightProgressCommand;
@@ -51,6 +60,8 @@ import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
+import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
+import frc.robot.commands.intakeOuttakeCommands.OutakeFull;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
@@ -73,9 +84,6 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -191,7 +199,7 @@ public class RobotContainer {
         "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
     NamedCommands.registerCommand(
         "speakershoot",
-        CommandGroups.autoShoot(
+        new AutoShootCommand(
                 shootSubsystem,
                 indexSubsystem,
                 visionSubsystem,
@@ -200,7 +208,7 @@ public class RobotContainer {
             .withTimeout(2.75));
     NamedCommands.registerCommand(
         "intake",
-        CommandGroups.intakeWithLineBreakSensor(
+        new IntakeWithLineBreakSensor(
             intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
     alliance = Shuffleboard.getTab("Config").add("Alliance", "aaaanoalliance").getEntry();
 
@@ -388,7 +396,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(toggleIntakeCommand);
 
-    driverController.b().whileTrue(CommandGroups.outakeFull(intakeSubsystem, indexSubsystem));
+    driverController.b().whileTrue(new OutakeFull(intakeSubsystem, indexSubsystem));
     driverController
         .x()
         .onTrue(
@@ -407,17 +415,17 @@ public class RobotContainer {
     driverController
         .povUp()
         .onTrue(
-            CommandGroups.elevatorAndAngleToAmp(
+            new ElevatorAngleToAmpCommand(
                 shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController
         .povRight()
-        .onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
+        .onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     driverController
         .povLeft()
-        .onTrue(CommandGroups.armToHorizonalCommandGroup(armAngleSubsystem, elevatorSubsystem));
+        .onTrue(new ArmToHorizontalComand(armAngleSubsystem, elevatorSubsystem));
     driverController
         .povDown()
-        .onTrue(CommandGroups.armToIntakeCommandGroup(armAngleSubsystem, elevatorSubsystem));
+        .onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
@@ -456,17 +464,17 @@ public class RobotContainer {
     operatorController
         .povUp()
         .onTrue(
-            CommandGroups.elevatorAndAngleToAmp(
+            new ElevatorAngleToAmpCommand(
                 shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     operatorController
         .povRight()
-        .onTrue(CommandGroups.FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
+        .onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
     operatorController
         .povLeft()
         .onTrue(new DriveByController(m_robotDrive, operatorController, false));
     operatorController
         .povDown()
-        .onTrue(CommandGroups.armToIntakeCommandGroup(armAngleSubsystem, elevatorSubsystem));
+        .onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
   }
 
   // jonathan was here today 2/3/2023
@@ -488,7 +496,7 @@ public class RobotContainer {
         Command pathCommand = new PathPlannerAuto(name);
         Command autoCommand =
             new SequentialCommandGroup(
-                CommandGroups.intakeWithLineBreakSensor(
+                new IntakeWithLineBreakSensor(
                     intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
                 pathCommand,
                 new InstantCommand(drivetrain::stop));
