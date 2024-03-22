@@ -17,8 +17,8 @@ public class CommandLoginator {
     CommandScheduler.getInstance()
         .onCommandExecute(new CommandConsumingLogger("execute()", commandLogEntry));
     CommandScheduler.getInstance()
-        .onCommandFinish(new CommandConsumingLogger("end(true)", commandLogEntry));
+        .onCommandFinish(new CommandConsumingLogger("end(false)", commandLogEntry));
     CommandScheduler.getInstance()
-        .onCommandInterrupt(new CommandConsumingLogger("end(false)", commandLogEntry));
+        .onCommandInterrupt(new CommandConsumingLogger("end(true)", commandLogEntry));
   }
 }
