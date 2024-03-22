@@ -37,7 +37,7 @@ public class DriveByController extends Command {
         Shuffleboard.getTab("RobotData")
             .add("Field Orient On", true)
             .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000"))
-            .withSize(3, 3)
+            .withSize(3, 4)
             .withPosition(0, 2)
             .getEntry();
     logStuff = true;
@@ -92,6 +92,6 @@ public class DriveByController extends Command {
    * @return the transformed input value
    */
   private double inputTransform(double input) {
-    return MathUtils.singedPow(MathUtils.applyDeadband(input), 2);
+    return MathUtils.singedPow(MathUtils.applyDeadband(input), 1);
   }
 }

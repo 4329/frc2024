@@ -52,6 +52,7 @@ import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
+import frc.robot.commands.shootCommands.AutoSideShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
@@ -177,6 +178,8 @@ public class RobotContainer {
     // commands for auto
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+    NamedCommands.registerCommand(
+        "closeShot", new AutoSideShotCommand(shootSubsystem, indexSubsystem));
     NamedCommands.registerCommand(
         "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
     NamedCommands.registerCommand(
@@ -382,9 +385,10 @@ public class RobotContainer {
     driverController
         .x()
         .onTrue(
-            CommandGroups.autoShoot(
+            CommandGroups.teleOpShoot(
                 shootSubsystem,
                 indexSubsystem,
+                m_robotDrive,
                 visionSubsystem,
                 driverController,
                 armAngleSubsystem));
