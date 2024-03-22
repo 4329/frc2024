@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Model.LimlihLogAutoLogged;
+import frc.robot.Model.LimlihLog;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
@@ -28,7 +28,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   private Timer timer;
   private CheckLimelightCommand checkLimelightCommand;
 
-  private LimlihLogAutoLogged limlihLogAutoLogged;
+  private LimlihLog limlihLog;
 
   public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
     timer = new Timer();
@@ -44,7 +44,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             .withProperties(Map.of("Color when true", "#0000FF", "Color when false", "#000000"))
             .getEntry();
 
-    limlihLogAutoLogged = new LimlihLogAutoLogged();
+    limlihLog = new LimlihLog();
   }
 
   public boolean CameraConnected() {
@@ -129,21 +129,21 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   private void updateInputs() {
 
     for (int i = 0; i < 16; i++) {
-      limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
-      if (limlihLogAutoLogged.tvs[i]) {
+      limlihLog.tags[i].tV = getTargetVisible(i);
+      if (limlihLog.tags[i].tV) {
         LimelightTarget_Fiducial fiducial = getFiducial(i);
-        limlihLogAutoLogged.tXs[i] = fiducial.tx;
-        limlihLogAutoLogged.tYs[i] = fiducial.ty;
-        limlihLogAutoLogged.tagPoses[i] = getTargetPoseInRobotSpace(i);
+        limlihLog.tags[i].tX = fiducial.tx;
+        limlihLog.tags[i].tY = fiducial.ty;
+        limlihLog.tags[i].relativePose = getTargetPoseInRobotSpace(i);
       } else {
-        limlihLogAutoLogged.tXs[i] = 0;
-        limlihLogAutoLogged.tYs[i] = 0;
-        limlihLogAutoLogged.tagPoses[i] = new Pose3d();
+        limlihLog.tags[i].tX = 0;
+        limlihLog.tags[i].tY = 0;
+        limlihLog.tags[i].relativePose = new Pose3d();
       }
     }
-    limlihLogAutoLogged.limlihconnected = CameraConnected();
+    limlihLog.limlihConnected = CameraConnected();
 
-    Logger.processInputs("LimlihSubsystem", limlihLogAutoLogged);
+    Logger.processInputs("Limlihsubsystem", limlihLog);
   }
 
   public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
