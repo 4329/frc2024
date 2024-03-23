@@ -520,17 +520,17 @@ public class RobotContainer {
 
   public void robotInit() {
     // new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
   }
 
   public void autonomousInit() {
 
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
   }
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
     // autoZero.schedule();
   }
 

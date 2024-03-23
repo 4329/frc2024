@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.AutoLog;
 public class LimlihLog {
   public boolean[] tvs = new boolean[16];
   public double[] tXs = new double[16];
+  public double[] tYs = new double[16];
   public boolean limlihconnected;
   public Pose3d[] tagPoses = new Pose3d[16];
 
