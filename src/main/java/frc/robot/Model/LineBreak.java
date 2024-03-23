@@ -5,5 +5,5 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class LineBreak {
 
-  public boolean notBroken;
+  public boolean broken;
 }

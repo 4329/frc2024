@@ -123,8 +123,8 @@ public class PoseEstimationSubsystem extends SubsystemBase implements LoggedSubs
 
   private Pose2d transformFieldToAdvantageKit(Pose2d pose) {
     return new Pose2d(
-        pose.getX() + (Constants.FieldConstants.fieldWidth / 2),
-        pose.getY() + (Constants.FieldConstants.fieldLength / 2),
+        pose.getX() + (pathPlannerFieldWidth / 2),
+        pose.getY() + (pathPlannerFieldLength / 2),
         pose.getRotation());
   }
 

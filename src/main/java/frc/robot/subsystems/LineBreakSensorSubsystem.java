@@ -20,7 +20,7 @@ public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSub
   @Override
   public LoggableInputs log() {
 
-    lineBreakAutoLogged.notBroken = isNotBroken();
+    lineBreakAutoLogged.broken = !isNotBroken();
     return lineBreakAutoLogged;
   }
 
