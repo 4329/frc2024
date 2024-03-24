@@ -2,19 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7812469471092803,
-      "y": 4.4795920361071495
+      "x": 1.45,
+      "y": 4.528926750161193
     },
-    "rotation": 120.4
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "2NoteMoveandRot"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "closeShot"
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "speakershoot"
           }
         },
         {

@@ -8,7 +8,7 @@ import frc.robot.subsystems.ShootSubsystem;
 public class ShootAmpCommand extends Command {
   private ShootSubsystem shootSubsystem;
   private IndexSubsystem indexSubsystem;
-  private double setPoint = 3000;
+  private double setPoint = 4000;
   private Timer timer = new Timer();
   private boolean reachedSetpoint = false;
 
@@ -27,7 +27,7 @@ public class ShootAmpCommand extends Command {
 
   @Override
   public void execute() {
-    if (shootSubsystem.atSetpoint() && !reachedSetpoint) {
+    if (shootSubsystem.aboveSetpoint() && !reachedSetpoint) {
       indexSubsystem.inForShot();
       timer.start();
       reachedSetpoint = true;
