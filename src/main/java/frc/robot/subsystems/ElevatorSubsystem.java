@@ -65,7 +65,7 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
     elevatorPID.setI(0);
     elevatorPID.setD(0);
     elevatorPID.setFF(0);
-    elevatorPID.setOutputRange(-1, 1);
+    elevatorPID.setOutputRange(-0.75, 1);
 
     // elevatorEncoder.setPositionConversionFactor(1 /
     // Constants.ArmAngleSubsystemConstants.armGearRatio);

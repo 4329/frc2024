@@ -109,7 +109,7 @@ public class CommandGroups {
       ElevatorSubsystem elevatorSubsystem) {
     return new SequentialCommandGroup(
         new ParallelCommandGroup(
-            new UnInstantCommand(() -> shootSubsystem.changeSetpoint(3000)),
+            // new UnInstantCommand(() -> shootSubsystem.changeSetpoint(3000)),
             new ElevatorToAmpCommand(elevatorSubsystem),
             new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
   }
@@ -196,7 +196,7 @@ public class CommandGroups {
   public static Command armToIntakeCommandGroup(
       ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
 
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).withTimeout(3),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }

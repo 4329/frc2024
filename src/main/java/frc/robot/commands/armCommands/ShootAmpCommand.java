@@ -8,7 +8,7 @@ import frc.robot.subsystems.ShootSubsystem;
 public class ShootAmpCommand extends Command {
   private ShootSubsystem shootSubsystem;
   private IndexSubsystem indexSubsystem;
-  private double setPoint = 4000;
+  private double setPoint = 1500;
   private Timer timer = new Timer();
   private boolean reachedSetpoint = false;
 

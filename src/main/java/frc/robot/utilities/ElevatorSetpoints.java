@@ -2,9 +2,9 @@ package frc.robot.utilities;
 
 public enum ElevatorSetpoints {
   ZERO(0),
-  AMPPOINT(225),
-  FULL(226),
-  HIGHLIMIT(227);
+  AMPPOINT(108),
+  FULL(109),
+  HIGHLIMIT(110);
 
   private float value;
 
