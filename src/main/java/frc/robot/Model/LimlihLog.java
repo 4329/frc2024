@@ -1,11 +1,10 @@
 package frc.robot.Model;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 
 public class LimlihLog implements LoggableInputs, Cloneable {
 
@@ -52,11 +51,12 @@ public class LimlihLog implements LoggableInputs, Cloneable {
     limlihConnected = table.get("Limlihconnected", limlihConnected);
     for (int i = 0; i < numTags; i++) {
       LogTable sub = table.getSubtable("" + i);
-      tags[i] = new Fiducial(
-          sub.get("tV").getBoolean(),
-          sub.get("tX").getDouble(),
-          sub.get("tY").getDouble(),
-          sub.get("relativePose", new Pose3d()));
+      tags[i] =
+          new Fiducial(
+              sub.get("tV").getBoolean(),
+              sub.get("tX").getDouble(),
+              sub.get("tY").getDouble(),
+              sub.get("relativePose", new Pose3d()));
     }
   }
 
