@@ -36,7 +36,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
   private final double speakerHeight = 2.15;
   private double speakerMod = 0;
-  private double rateOfChange = 0.05;
+  private double rateOfChange = 0.3;
   private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
   private GenericEntry setpointGE;
   private GenericEntry positionGE;
@@ -62,11 +62,11 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     armMotor.enableVoltageCompensation(Constants.voltageCompensation);
 
     armEncoder.setPosition(0);
-    armPID.setP(0.5);
+    armPID.setP(0.15);
     armPID.setI(0);
-    armPID.setD(1.75);
+    armPID.setD(0.5);
     armPID.setFF(0);
-    armPID.setOutputRange(-0.1, 0.15);
+    armPID.setOutputRange(-0.2, 0.60);
 
     armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
@@ -118,14 +118,14 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
             new Point2D.Double(0, 0),
             new Point2D.Double(1.0, 0),
             new Point2D.Double(1.2, 0),
-            new Point2D.Double(1.4, 0.4),
-            new Point2D.Double(1.6, 0.49),
-            new Point2D.Double(1.8, 0.69),
-            new Point2D.Double(2, 0.85),
-            new Point2D.Double(2.2, 1.05),
-            new Point2D.Double(2.4, 1.1),
-            new Point2D.Double(2.6, 1.1),
-            new Point2D.Double(2.8, 1.27));
+            new Point2D.Double(1.4, 1.32),
+            new Point2D.Double(1.6, 1.6317),
+            new Point2D.Double(1.8, 2.2977),
+            new Point2D.Double(2, 2.8305),
+            new Point2D.Double(2.2, 3.4965),
+            new Point2D.Double(2.4, 3.663),
+            new Point2D.Double(2.6, 3.663),
+            new Point2D.Double(2.8, 4.2291));
     // new Point2D.Double(2.87, 1.85));
     // new Point2D.Double(3, 1.59));
     // new Point2D.Double(3.2, 1.48),

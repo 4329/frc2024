@@ -18,6 +18,7 @@ import frc.robot.commands.indexCommands.OutdexCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.OutakeCommand;
+import frc.robot.commands.shootCommands.AutoSideShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShootFireCommand;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
@@ -35,6 +36,7 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
+import frc.robot.utilities.UnInstantCommand;
 
 public class CommandGroups {
 
@@ -99,7 +101,6 @@ public class CommandGroups {
         new ShooterAimCommand(visionSubsystem, armAngleSubsystem),
         new ShootFireCommand(shootSubsystem));
   }
-  ;
 
   public static Command elevatorAndAngleToAmp(
       ShootSubsystem shootSubsystem,
@@ -108,6 +109,7 @@ public class CommandGroups {
       ElevatorSubsystem elevatorSubsystem) {
     return new SequentialCommandGroup(
         new ParallelCommandGroup(
+            // new UnInstantCommand(() -> shootSubsystem.changeSetpoint(3000)),
             new ElevatorToAmpCommand(elevatorSubsystem),
             new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
   }
@@ -180,12 +182,12 @@ public class CommandGroups {
     return new SequentialCommandGroup(
         new ParallelRaceGroup(
             new ShotRevCommand(shootSubsystem, visionSubsystem).withTimeout(3),
-            //  new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
+            // new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
             // AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
             new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
-            //   new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
+            // new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
             // AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
             new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
@@ -194,7 +196,7 @@ public class CommandGroups {
   public static Command armToIntakeCommandGroup(
       ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
 
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).withTimeout(3),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
@@ -205,5 +207,29 @@ public class CommandGroups {
     return new SequentialCommandGroup(
         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).withTimeout(3),
         new ArmCommand(armAngleSubsystem, ArmAngle.HORIZONTAL));
+  }
+
+  public static Command closeShot(
+      ArmAngleSubsystem armAngleSubsystem,
+      ShootSubsystem shootSubsystem,
+      IndexSubsystem indexSubsystem) {
+
+    return new ParallelCommandGroup(
+        new AutoSideShotCommand(shootSubsystem, indexSubsystem),
+        new ArmCommand(armAngleSubsystem, ArmAngle.ZERO));
+  }
+
+  public static Command intakeRev(
+      IntakeSubsystem intakeSubsystem,
+      IndexSubsystem indexSubsystem,
+      LineBreakSensorSubsystem lineBreakSensorSubsystem,
+      ArmAngleSubsystem armAngleSubsystem,
+      ShootSubsystem shootSubsystem) {
+
+    return new SequentialCommandGroup(
+        CommandGroups.intakeWithLineBreakSensor(
+            intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+        // new WaitCommand(0.),
+        new UnInstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
   }
 }

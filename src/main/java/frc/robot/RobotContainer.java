@@ -176,7 +176,17 @@ public class RobotContainer {
 
     // commands for auto
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
+    NamedCommands.registerCommand(
+        "intakeRev",
+        CommandGroups.intakeRev(
+            intakeSubsystem,
+            indexSubsystem,
+            lineBreakSensorSubsystem,
+            armAngleSubsystem,
+            shootSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
+    NamedCommands.registerCommand(
+        "closeShot", CommandGroups.closeShot(armAngleSubsystem, shootSubsystem, indexSubsystem));
     NamedCommands.registerCommand(
         "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
     NamedCommands.registerCommand(
@@ -382,9 +392,10 @@ public class RobotContainer {
     driverController
         .x()
         .onTrue(
-            CommandGroups.autoShoot(
+            CommandGroups.teleOpShoot(
                 shootSubsystem,
                 indexSubsystem,
+                m_robotDrive,
                 visionSubsystem,
                 driverController,
                 armAngleSubsystem));
@@ -431,7 +442,15 @@ public class RobotContainer {
     operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    // operatorController.y().whileTrue(new ElevatorUpCommand(elevatorSubsystem));// hi jonny was
+    operatorController
+        .y()
+        .whileTrue(
+            CommandGroups.intakeRev(
+                intakeSubsystem,
+                indexSubsystem,
+                lineBreakSensorSubsystem,
+                armAngleSubsystem,
+                shootSubsystem));
     // here
 
     operatorController
@@ -501,17 +520,17 @@ public class RobotContainer {
 
   public void robotInit() {
     // new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
   }
 
   public void autonomousInit() {
 
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
   }
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
-    limDriveSetCommand.schedule();
+    // limDriveSetCommand.schedule();
     // autoZero.schedule();
   }
 

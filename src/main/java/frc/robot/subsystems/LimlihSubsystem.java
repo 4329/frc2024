@@ -12,7 +12,6 @@ import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
-import frc.robot.utilities.MathUtils;
 import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
@@ -41,8 +40,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         Shuffleboard.getTab("RobotData")
             .add("Seeing Speaker", false)
             .withPosition(3, 0)
-            .withSize(2, 2)
-            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000"))
+            .withSize(10, 4)
+            .withProperties(Map.of("Color when true", "#0000FF", "Color when false", "#000000"))
             .getEntry();
 
     limlihLogAutoLogged = new LimlihLogAutoLogged();
@@ -132,12 +131,13 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     for (int i = 0; i < 16; i++) {
       limlihLogAutoLogged.tvs[i] = getTargetVisible(i);
       if (limlihLogAutoLogged.tvs[i]) {
-        limlihLogAutoLogged.tXs[i] = getTargetX(i);
-        limlihLogAutoLogged.tagPoses[i] =
-            MathUtils.addPoses3D(
-                getTargetPoseInRobotSpace(i), MathUtils.pose2DtoPose3D(getRobotPose()));
+        LimelightTarget_Fiducial fiducial = getFiducial(i);
+        limlihLogAutoLogged.tXs[i] = fiducial.tx;
+        limlihLogAutoLogged.tYs[i] = fiducial.ty;
+        limlihLogAutoLogged.tagPoses[i] = getTargetPoseInRobotSpace(i);
       } else {
         limlihLogAutoLogged.tXs[i] = 0;
+        limlihLogAutoLogged.tYs[i] = 0;
         limlihLogAutoLogged.tagPoses[i] = new Pose3d();
       }
     }

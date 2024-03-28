@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7086750578167359,
-        "y": 6.668650670579597
+        "x": 1.91,
+        "y": 6.46
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7957912382948074,
-        "y": 7.127990531282155
+        "x": 2.67569996678455,
+        "y": 6.887126081944472
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.695433852406168,
-        "y": 6.9956624528633675
+        "x": 2.912506594243959,
+        "y": 7.005529395674177
       },
       "prevControl": {
-        "x": 1.6954338524061678,
-        "y": 6.9956624528633675
+        "x": 2.9748573514026737,
+        "y": 7.084507021408549
       },
       "nextControl": {
-        "x": 3.195433852406168,
-        "y": 6.9956624528633675
+        "x": 2.616498309919698,
+        "y": 6.630585568863446
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 5.971721226755025
       },
       "prevControl": {
-        "x": 2.202086711865733,
-        "y": 6.196440085187864
+        "x": 2.5868974814872723,
+        "y": 6.660186397295872
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.7,
-      "rotationDegrees": 180.0,
+      "rotationDegrees": -147.26,
       "rotateFast": false
     }
   ],
@@ -63,7 +63,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intake"
+                "name": "intakeRev"
               }
             }
           ]
@@ -85,7 +85,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -121.36094794762796,
+    "rotation": -147.26,
     "velocity": 0
   },
   "useDefaultConstraints": true

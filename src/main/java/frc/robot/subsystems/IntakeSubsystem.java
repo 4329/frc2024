@@ -32,11 +32,11 @@ public class IntakeSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void in() {
-    topIntakeMotor.set(0.5);
+    topIntakeMotor.set(0.50);
   }
 
   public void out() {
-    topIntakeMotor.set(-0.5);
+    topIntakeMotor.set(-0.50);
   }
 
   public void stop() {

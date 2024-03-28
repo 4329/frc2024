@@ -119,7 +119,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   public boolean atSetpoint() {
 
     if (Math.abs(setpoint - getRightVelocity()) <= tolerance
-        && Math.abs(setpoint - getLeftVelocity()) <= tolerance) {
+        && Math.abs((setpoint * 0.90) - getLeftVelocity()) <= tolerance) {
       System.out.println("atsetpoint ----");
 
       return true;
@@ -134,7 +134,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public boolean aboveSetpoint() {
 
-    if (leftEncoder.getVelocity() >= (setpoint - tolerance)
+    if (leftEncoder.getVelocity() >= ((setpoint * 0.90) - tolerance)
         && rightEncoder.getVelocity() >= (setpoint - tolerance)) {
       return true;
     }
@@ -151,8 +151,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   @Override
   public LoggableInputs log() {
     shootLogAutoLogged.setpoint = setpoint;
-    shootLogAutoLogged.rightPIDOutput = rightMotor.get();
-    shootLogAutoLogged.leftPIDOutput = leftMotor.get();
+    shootLogAutoLogged.rightPIDOutput = rightMotor.getAppliedOutput();
+    shootLogAutoLogged.leftPIDOutput = leftMotor.getAppliedOutput();
     shootLogAutoLogged.leftVel = leftEncoder.getVelocity();
     shootLogAutoLogged.rightVel = rightEncoder.getVelocity();
     return shootLogAutoLogged;
@@ -173,7 +173,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
       leftMotor.stopMotor();
     } else {
       rm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
-      lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+      lm_aimBot.setReference(setpoint * 0.90, CANSparkMax.ControlType.kVelocity);
     }
   }
 

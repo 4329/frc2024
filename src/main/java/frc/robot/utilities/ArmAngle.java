@@ -3,10 +3,10 @@ package frc.robot.utilities;
 public enum ArmAngle {
   ZERO(0),
   SUB(0),
-  HORIZONTAL(3.65),
-  INTAKE(1.2),
-  ARMAMP(5.54),
-  FULL(6);
+  HORIZONTAL(14.2),
+  INTAKE(2.75),
+  ARMAMP(22),
+  FULL(22);
 
   private double value;
 
