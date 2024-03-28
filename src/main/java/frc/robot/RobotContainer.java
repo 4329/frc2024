@@ -28,7 +28,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmToHorizontalComand;
 import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FullZeroCommand;
@@ -451,7 +450,7 @@ public class RobotContainer {
     operatorController
         .y()
         .whileTrue(
-            CommandGroups.intakeRev(
+            new IntakeRevCommand(
                 intakeSubsystem,
                 indexSubsystem,
                 lineBreakSensorSubsystem,
