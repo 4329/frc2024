@@ -143,7 +143,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
     limlihLogAutoLogged.limlihconnected = CameraConnected();
 
-    Logger.processInputs("Limlihsubsystem", limlihLogAutoLogged);
+    Logger.processInputs("LimlihSubsystem", limlihLogAutoLogged);
   }
 
   public LimelightTarget_Fiducial limelightTarget_Fiducial(int id) {
