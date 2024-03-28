@@ -28,15 +28,18 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmToHorizontalComand;
 import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FullZeroCommand;
+import frc.robot.commands.IntakeRevCommand;
 import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
 import frc.robot.commands.LightCommands.LightProgressCommand;
 import frc.robot.commands.LightCommands.LightRambowCommand;
 // import frc.robot.commands.LightCommands.LightIndividualCommand;
 import frc.robot.commands.LightCommands.LightsOnCommand;
+import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
@@ -58,6 +61,7 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.OutakeFull;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
+import frc.robot.commands.shootCommands.CloseShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
@@ -184,7 +188,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
     NamedCommands.registerCommand(
         "intakeRev",
-        CommandGroups.intakeRev(
+        new IntakeRevCommand(
             intakeSubsystem,
             indexSubsystem,
             lineBreakSensorSubsystem,
@@ -192,7 +196,7 @@ public class RobotContainer {
             shootSubsystem));
     NamedCommands.registerCommand("stop", new InstantCommand(() -> drivetrain.stop()));
     NamedCommands.registerCommand(
-        "closeShot", CommandGroups.closeShot(armAngleSubsystem, shootSubsystem, indexSubsystem));
+        "closeShot", new CloseShotCommand(armAngleSubsystem, shootSubsystem, indexSubsystem));
     NamedCommands.registerCommand(
         "revenald", new InstantCommand(() -> shootSubsystem.changeSetpoint(2000)));
     NamedCommands.registerCommand(
@@ -398,7 +402,7 @@ public class RobotContainer {
     driverController
         .x()
         .onTrue(
-            CommandGroups.teleOpShoot(
+            new TeleopShootCommand(
                 shootSubsystem,
                 indexSubsystem,
                 m_robotDrive,
