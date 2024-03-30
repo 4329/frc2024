@@ -107,8 +107,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     shootLogAutoLogged = new ShootLogAutoLogged();
 
-    rpmActualGE = Shuffleboard.getTab("shoot").add("rpm actual 1", 0).getEntry();
-    rpmActual2GE = Shuffleboard.getTab("shoot").add("rpm actual 2", 0).getEntry();
+    rpmActualGE = Shuffleboard.getTab("shoot").add("right rpm actual", 0).getEntry();
+    rpmActual2GE = Shuffleboard.getTab("shoot").add("left rpm actual", 0).getEntry();
     rpmSetpointGE = Shuffleboard.getTab("shoot").add("current rpm setpoint", 0).getEntry();
   }
 
@@ -119,7 +119,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   public boolean atSetpoint() {
 
     if (Math.abs(setpoint - getRightVelocity()) <= tolerance
-        && Math.abs((setpoint * 0.90) - getLeftVelocity()) <= tolerance) {
+        && Math.abs(setpoint - getLeftVelocity()) <= tolerance) {
       System.out.println("atsetpoint ----");
 
       return true;
@@ -134,7 +134,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public boolean aboveSetpoint() {
 
-    if (leftEncoder.getVelocity() >= ((setpoint * 0.90) - tolerance)
+    if (leftEncoder.getVelocity() >= (setpoint - tolerance)
         && rightEncoder.getVelocity() >= (setpoint - tolerance)) {
       return true;
     }
@@ -146,6 +146,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     setpoint = 0;
     rightMotor.stopMotor();
+    leftMotor.stopMotor();
   }
 
   @Override
@@ -173,7 +174,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
       leftMotor.stopMotor();
     } else {
       rm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
-      lm_aimBot.setReference(setpoint * 0.90, CANSparkMax.ControlType.kVelocity);
+      lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
     }
   }
 

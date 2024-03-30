@@ -11,59 +11,64 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
 
-  private CANSparkMax topIndexMotor;
-  private CANSparkMax bottomIndexMotor;
+  private CANSparkMax backIndexMotor;
+  private CANSparkMax frontIndexMotor;
   private IndexLogAutoLogged indexLogAutoLogged;
 
   public IndexSubsystem() {
 
-    topIndexMotor = SparkFactory.createCANSparkMax(14);
-    bottomIndexMotor = SparkFactory.createCANSparkMax(15);
-    topIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
-    bottomIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
-    topIndexMotor.setIdleMode(IdleMode.kBrake);
-    bottomIndexMotor.setIdleMode(IdleMode.kBrake);
+    backIndexMotor = SparkFactory.createCANSparkMax(14);
+    frontIndexMotor = SparkFactory.createCANSparkMax(15);
+    backIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
+    frontIndexMotor.enableVoltageCompensation(Constants.voltageCompensation);
+    backIndexMotor.setIdleMode(IdleMode.kBrake);
+    frontIndexMotor.setIdleMode(IdleMode.kBrake);
     indexLogAutoLogged = new IndexLogAutoLogged();
 
-    topIndexMotor.setInverted(true);
-    bottomIndexMotor.setInverted(true);
+    backIndexMotor.setInverted(true);
+    frontIndexMotor.setInverted(true);
 
-    topIndexMotor.burnFlash();
-    bottomIndexMotor.burnFlash();
+    backIndexMotor.burnFlash();
+    frontIndexMotor.burnFlash();
 
     // bottomIndexMotor.follow(topIndexMotor, true);
 
   }
 
   public void in() {
-    topIndexMotor.set(0.8);
-    bottomIndexMotor.set(0.4);
+    backIndexMotor.set(0.8);
+    frontIndexMotor.set(0.8);
   }
 
   public void inForShot() {
-    topIndexMotor.set(1);
-    bottomIndexMotor.set(0.5);
+    backIndexMotor.set(1);
+    frontIndexMotor.set(0.1);
   }
 
   public void out() {
-    topIndexMotor.set(-0.8);
-    bottomIndexMotor.set(-0.4);
+    backIndexMotor.set(-0.8);
+    frontIndexMotor.set(-0.8);
+  }
+
+  public void ampOut() {
+    backIndexMotor.set(1);
+    frontIndexMotor.set(-1);
   }
 
   public void stop() {
-    topIndexMotor.set(0);
-    bottomIndexMotor.set(0);
+    backIndexMotor.set(0);
+    frontIndexMotor.set(0);
   }
 
   @Override
   public LoggableInputs log() {
-    indexLogAutoLogged.topIndexMotor = topIndexMotor.get();
-    indexLogAutoLogged.bottomIndexMotor = bottomIndexMotor.get();
+    indexLogAutoLogged.topIndexMotor = backIndexMotor.get();
+    indexLogAutoLogged.bottomIndexMotor = frontIndexMotor.get();
     return indexLogAutoLogged;
   }
 
   public void slowOut() {
-    topIndexMotor.set(-0.2);
-    bottomIndexMotor.set(-0.1);
+    backIndexMotor.set(-0.2);
+    frontIndexMotor.set(-0.1);
   }
 }

@@ -57,6 +57,7 @@ import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
+import frc.robot.commands.indexCommands.ampDexCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.OutakeFull;
@@ -385,15 +386,8 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController
-        .start()
-        .onTrue(
-            new CenterOnTargetCommand(
-                    visionSubsystem,
-                    m_robotDrive,
-                    AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
-                    driverController)
-                .withTimeout(1.5));
+    driverController.start().whileTrue(new ampDexCommand(indexSubsystem));
+        
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
