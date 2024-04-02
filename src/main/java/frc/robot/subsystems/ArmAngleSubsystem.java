@@ -57,7 +57,6 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
     armInterpolationTable();
     armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
     armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, false);
-    //armPID = armMotor.getPIDController();
     armEncoder = armMotor.getEncoder();
 
     armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -68,11 +67,6 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
     armMotor.enableVoltageCompensation(Constants.voltageCompensation);
 
     armEncoder.setPosition(0);
-    // armPID.setP(0.15);
-    // armPID.setI(0);
-    // armPID.setD(0.5);
-    // armPID.setFF(0);
-    // armPID.setOutputRange(-0.2, 0.60);
 
     armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
@@ -189,7 +183,6 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   public void periodic() {
     setpointGE.setDouble(setpoint);
     positionGE.setDouble(armEncoder.getPosition());
-    // armPID.setReference(setpoint, ControlType.kPosition);
     setGoal(setpoint);
   }
 
