@@ -9,6 +9,7 @@ import frc.robot.commands.shootCommands.ShooterAimCommandIndefinite;
 import frc.robot.commands.shootCommands.ShooterShotCommand;
 import frc.robot.commands.shootCommands.ShotRevCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -23,6 +24,7 @@ public class TeleopShootCommand extends SequentialCommandGroup {
       Drivetrain drivetrain,
       VisionSubsystem visionSubsystem,
       CommandXboxController commandXboxController,
+      ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
     super(
@@ -33,7 +35,7 @@ public class TeleopShootCommand extends SequentialCommandGroup {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
             new CenterOnTargetCommandIndefinite(
@@ -41,7 +43,7 @@ public class TeleopShootCommand extends SequentialCommandGroup {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
 }

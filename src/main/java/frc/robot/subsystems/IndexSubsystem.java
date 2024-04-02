@@ -25,8 +25,8 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
     frontIndexMotor.setIdleMode(IdleMode.kBrake);
     indexLogAutoLogged = new IndexLogAutoLogged();
 
-    backIndexMotor.setInverted(true);
-    frontIndexMotor.setInverted(true);
+    backIndexMotor.setInverted(false);
+    frontIndexMotor.setInverted(false);
 
     backIndexMotor.burnFlash();
     frontIndexMotor.burnFlash();
@@ -35,24 +35,29 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   }
 
-  public void in() {
+  public void bothIn() {
     backIndexMotor.set(0.8);
     frontIndexMotor.set(0.8);
   }
 
-  public void inForShot() {
-    backIndexMotor.set(1);
-    frontIndexMotor.set(0.1);
+  public void inShoot() {
+    backIndexMotor.set(0.5);
+    frontIndexMotor.set(0.5);
   }
 
-  public void out() {
+  public void bothOut() {
     backIndexMotor.set(-0.8);
     frontIndexMotor.set(-0.8);
   }
 
-  public void ampOut() {
-    backIndexMotor.set(1);
-    frontIndexMotor.set(-1);
+  public void backInFrontOut() {
+    backIndexMotor.set(0.8);
+    frontIndexMotor.set(-0.8);
+  }
+
+  public void backOutFrontIn() {
+    backIndexMotor.set(-0.8);
+    frontIndexMotor.set(0.8);
   }
 
   public void stop() {
@@ -68,7 +73,7 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void slowOut() {
-    backIndexMotor.set(-0.2);
+    backIndexMotor.set(-0.1);
     frontIndexMotor.set(-0.1);
   }
 }

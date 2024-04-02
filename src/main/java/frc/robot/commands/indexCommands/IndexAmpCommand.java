@@ -2,12 +2,13 @@ package frc.robot.commands.indexCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.LineBreakSensorSubsystem;
 
-public class ampDexCommand extends Command {
+public class IndexAmpCommand extends Command {
 
   private IndexSubsystem indexSubsystem;
 
-  public ampDexCommand(IndexSubsystem indexSubsystem) {
+  public IndexAmpCommand(IndexSubsystem indexSubsystem) {
     this.indexSubsystem = indexSubsystem;
     addRequirements(indexSubsystem);
   }
@@ -18,13 +19,12 @@ public class ampDexCommand extends Command {
   @Override
   public void execute() {
 
-    indexSubsystem.ampOut();
+    indexSubsystem.backInFrontOut();
   }
 
   @Override
   public void end(boolean interrupted) {
     indexSubsystem.stop();
-
   }
 
   @Override

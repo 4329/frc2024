@@ -1,10 +1,15 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,13 +38,13 @@ import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FullZeroCommand;
 import frc.robot.commands.IntakeRevCommand;
+import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
 import frc.robot.commands.LightCommands.LightProgressCommand;
 import frc.robot.commands.LightCommands.LightRambowCommand;
 // import frc.robot.commands.LightCommands.LightIndividualCommand;
 import frc.robot.commands.LightCommands.LightsOnCommand;
-import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
@@ -52,18 +57,21 @@ import frc.robot.commands.driveCommands.DriveByController;
 import frc.robot.commands.driveCommands.DriveToTargetCommand;
 import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
+import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
+import frc.robot.commands.indexCommands.AmpOutDexCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
-import frc.robot.commands.indexCommands.ampDexCommand;
+import frc.robot.commands.indexCommands.IndexSourceSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.OutakeFull;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.CloseShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
+import frc.robot.commands.shootCommands.ShooterSourceCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
@@ -83,10 +91,8 @@ import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.CommandLoginator;
+import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.HoorayConfig;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -207,6 +213,7 @@ public class RobotContainer {
                 indexSubsystem,
                 visionSubsystem,
                 driverController,
+                elevatorSubsystem,
                 armAngleSubsystem)
             .withTimeout(2.75));
     NamedCommands.registerCommand(
@@ -239,6 +246,7 @@ public class RobotContainer {
             new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
             new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem),
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
+            elevatorSubsystem,
             armAngleSubsystem);
 
     elevatorManualCommand =
@@ -386,13 +394,14 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(new ampDexCommand(indexSubsystem));
-        
+    driverController.start().onTrue(new AmpOutDexCommand(indexSubsystem, armAngleSubsystem));
+
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
 
-    driverController.b().whileTrue(new OutakeFull(intakeSubsystem, indexSubsystem));
+    // driverController.b().whileTrue(new OutakeFull(intakeSubsystem, indexSubsystem));
+    driverController.b().onTrue(new IndexSourceSensorCommand(indexSubsystem, armAngleSubsystem, lineBreakSensorSubsystem));
     driverController
         .x()
         .onTrue(
@@ -402,6 +411,7 @@ public class RobotContainer {
                 m_robotDrive,
                 visionSubsystem,
                 driverController,
+                elevatorSubsystem,
                 armAngleSubsystem));
 
     // driverController.b().whileTrue(new IndexCommand(indexSubsystem));
@@ -417,7 +427,8 @@ public class RobotContainer {
     driverController
         .povLeft()
         .onTrue(new ArmToHorizontalComand(armAngleSubsystem, elevatorSubsystem));
-    driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    // driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    driverController.povDown().onTrue(new ShooterSourceCommand(indexSubsystem, shootSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient

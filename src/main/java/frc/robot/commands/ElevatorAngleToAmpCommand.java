@@ -20,6 +20,6 @@ public class ElevatorAngleToAmpCommand extends SequentialCommandGroup {
     super(
         new ParallelCommandGroup(
             new ElevatorToAmpCommand(elevatorSubsystem),
-            new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
+            new ArmCommand(armAngleSubsystem, ArmAngle.SHOOTERARMAMP)));
   }
 }

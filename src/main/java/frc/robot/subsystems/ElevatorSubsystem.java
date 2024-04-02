@@ -93,6 +93,12 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
     setPoint = elevatorSetpoints.getValue();
   }
 
+  public double getElevatorSetpoint() {
+
+    return setPoint;
+
+
+  }
   public boolean atSetpoint() {
 
     System.out.println(elevatorEncoder.getPosition() - setPoint);

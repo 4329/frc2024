@@ -4,18 +4,22 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.ElevatorSetpoints;
 
 public class ShooterAimCommandIndefinite extends Command {
 
   public VisionSubsystem visionSubsystem;
   public ArmAngleSubsystem armAngleSubsystem;
+  public ElevatorSubsystem elevatorSubsystem;
 
   public ShooterAimCommandIndefinite(
-      VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem) {
+      VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
     this.visionSubsystem = visionSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
+    this.elevatorSubsystem = elevatorSubsystem;
     addRequirements(armAngleSubsystem);
   }
 
@@ -40,10 +44,12 @@ public class ShooterAimCommandIndefinite extends Command {
 
         armAngleSubsystem.setArmAngle(pose3d);
       }
-    } else {
+    } else if (elevatorSubsystem.getElevatorSetpoint() < ElevatorSetpoints.AMPPOINT.getValue()) {
 
       armAngleSubsystem.setArmAngle(ArmAngle.ZERO);
-    }
+
+    };
+
   }
 
   @Override
@@ -51,4 +57,5 @@ public class ShooterAimCommandIndefinite extends Command {
 
     return false;
   }
+
 }

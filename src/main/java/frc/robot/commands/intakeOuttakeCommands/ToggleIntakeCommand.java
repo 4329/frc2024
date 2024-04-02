@@ -1,19 +1,24 @@
 package frc.robot.commands.intakeOuttakeCommands;
 
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.armCommands.ArmAngleCommand;
+import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
-import java.util.Map;
 
 public class ToggleIntakeCommand extends ReInitCommand {
   SequentialCommandGroup intakeSensorGroup;
   IndexReverseForShotCommand indexReverseForShotCommand;
+  ElevatorSubsystem elevatorSubsystem;
 
   // private boolean toggled;
   private GenericEntry toggleEntry;
@@ -22,12 +27,12 @@ public class ToggleIntakeCommand extends ReInitCommand {
       IntakeSensorCommand intakeSensorCommand,
       IndexSensorCommand indexSensorCommand,
       IndexReverseForShotCommand indexReverseForShotCommand,
+      ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
     intakeSensorGroup =
-        intakeSensorCommand
-            .alongWith(indexSensorCommand)
-            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE));
+        intakeSensorCommand.alongWith(indexSensorCommand).beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE).beforeStarting(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.INTAKE)));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
+    this.elevatorSubsystem = elevatorSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
@@ -68,5 +73,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
     if (!interrupted) {
       indexReverseForShotCommand.schedule();
     }
+
+    new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
   }
 }

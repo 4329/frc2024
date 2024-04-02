@@ -16,7 +16,7 @@ public class IndexHoldCommand extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    indexSubsystem.in();
+    indexSubsystem.bothIn();
   }
 
   @Override

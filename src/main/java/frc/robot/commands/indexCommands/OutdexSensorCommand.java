@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 
-public class IndexSensorCommand extends Command {
+public class OutdexSensorCommand extends Command {
 
   private LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private IndexSubsystem indexSubsystem;
   private boolean isBroken;
 
-  public IndexSensorCommand(
+  public OutdexSensorCommand(
       LineBreakSensorSubsystem lineBreakSensorSubsystem, IndexSubsystem indexSubsystem) {
     this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
     this.indexSubsystem = indexSubsystem;
@@ -27,7 +27,7 @@ public class IndexSensorCommand extends Command {
   public void execute() {
 
     if (lineBreakSensorSubsystem.isNotBroken()) {
-      indexSubsystem.bothIn();
+      indexSubsystem.bothOut();
     } else {
       indexSubsystem.stop();
     }

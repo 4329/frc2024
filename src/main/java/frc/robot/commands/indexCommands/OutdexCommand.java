@@ -19,7 +19,7 @@ public class OutdexCommand extends Command {
   public void execute() {
 
     System.out.println("index out");
-    indexSubsystem.out();
+    indexSubsystem.bothOut();
   }
 
   @Override

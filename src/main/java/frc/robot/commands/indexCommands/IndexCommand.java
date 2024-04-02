@@ -20,7 +20,7 @@ public class IndexCommand extends Command {
   public void execute() {
 
     System.out.println("index in");
-    indexSubsystem.in();
+    indexSubsystem.bothIn();
   }
 
   @Override

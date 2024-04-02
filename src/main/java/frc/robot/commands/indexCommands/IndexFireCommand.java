@@ -23,7 +23,7 @@ public class IndexFireCommand extends Command {
   public void initialize() {
 
     System.out.println("index fire init");
-    indexSubsystem.in();
+    indexSubsystem.bothIn();
     timer.reset();
     timer.start();
   }

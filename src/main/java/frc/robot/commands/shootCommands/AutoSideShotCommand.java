@@ -28,7 +28,7 @@ public class AutoSideShotCommand extends Command {
   @Override
   public void execute() {
     if (shootSubsystem.atSetpoint() && !reachedSetpoint) {
-      indexSubsystem.inForShot();
+      indexSubsystem.bothIn();
       timer.start();
       reachedSetpoint = true;
     }

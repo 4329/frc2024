@@ -146,8 +146,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
   }
 
   public void armPositonUp() {
-    if (setpoint < ArmAngle.ARMAMP.getValue() - rateOfChange) {
-      setpoint = Math.min(setpoint + rateOfChange, ArmAngle.ARMAMP.getValue());
+    if (setpoint < ArmAngle.SHOOTERARMAMP.getValue() - rateOfChange) {
+      setpoint = Math.min(setpoint + rateOfChange, ArmAngle.SHOOTERARMAMP.getValue());
     } else {
       setpoint = ArmAngle.FULL.getValue();
     }
@@ -164,7 +164,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
   public void changeArmPosition(double moveAmount) {
     setpoint =
         Math.min(
-            Math.max(setpoint + moveAmount, ArmAngle.ZERO.getValue()), ArmAngle.ARMAMP.getValue());
+            Math.max(setpoint + moveAmount, ArmAngle.ZERO.getValue()),
+            ArmAngle.SHOOTERARMAMP.getValue());
   }
 
   @Override

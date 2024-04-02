@@ -5,7 +5,10 @@ public enum ArmAngle {
   SUB(0),
   HORIZONTAL(14.2),
   INTAKE(2.75),
-  ARMAMP(22),
+  INDEXSOURCE(14.2),
+  SHOOTERSOURCE(4),
+  AMPDEX(14.2),
+  SHOOTERARMAMP(22),
   FULL(22);
 
   private double value;
