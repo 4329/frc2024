@@ -7,9 +7,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ArmAngleLogAutoLogged;
@@ -20,12 +25,12 @@ import frc.robot.utilities.SparkFactory;
 import java.awt.geom.Point2D;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem {
+public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSubsystem {
 
   private CANSparkMax armMotor;
 
   private RelativeEncoder armEncoder;
-  private SparkPIDController armPID;
+  //private SparkPIDController armPID;
 
   private boolean brake;
 
@@ -47,11 +52,12 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
   private LinearInterpolationTable armTable;
 
   public ArmAngleSubsystem() {
+    super(new ProfiledPIDController(0.15, 0, 0.5, new Constraints(1, 1)));
 
     armInterpolationTable();
     armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
     armMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, false);
-    armPID = armMotor.getPIDController();
+    //armPID = armMotor.getPIDController();
     armEncoder = armMotor.getEncoder();
 
     armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -62,11 +68,11 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     armMotor.enableVoltageCompensation(Constants.voltageCompensation);
 
     armEncoder.setPosition(0);
-    armPID.setP(0.38);
-    armPID.setI(0);
-    armPID.setD(0.9);
-    armPID.setFF(0);
-    armPID.setOutputRange(-0.2, 0.20);
+    // armPID.setP(0.15);
+    // armPID.setI(0);
+    // armPID.setD(0.5);
+    // armPID.setFF(0);
+    // armPID.setOutputRange(-0.2, 0.60);
 
     armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
@@ -183,7 +189,8 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
   public void periodic() {
     setpointGE.setDouble(setpoint);
     positionGE.setDouble(armEncoder.getPosition());
-    armPID.setReference(setpoint, ControlType.kPosition);
+    // armPID.setReference(setpoint, ControlType.kPosition);
+    setGoal(setpoint);
   }
 
   public void setArmAngle(ArmAngle armAngle) {
@@ -193,5 +200,15 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
   public double getAngleRadians() {
     return setpoint / ticksPerRad;
+  }
+
+  @Override
+  protected void useOutput(double output, State setpoint) {
+    armMotor.setVoltage(output);
+  }
+
+  @Override
+  protected double getMeasurement() {
+    return armEncoder.getPosition();
   }
 }
