@@ -25,13 +25,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmToHorizontalComand;
 import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.CommandGroups;
-import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.FullZeroCommand;
 import frc.robot.commands.IntakeRevCommand;
 import frc.robot.commands.LightCommands.LightBlankCommand;
 import frc.robot.commands.LightCommands.LightFastProgressCommand;
@@ -40,6 +36,7 @@ import frc.robot.commands.LightCommands.LightRambowCommand;
 // import frc.robot.commands.LightCommands.LightIndividualCommand;
 import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.TeleopShootCommand;
+import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
@@ -54,19 +51,20 @@ import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
-import frc.robot.commands.indexCommands.AmpOutDexCommand;
+import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
-import frc.robot.commands.indexCommands.IndexSourceSensorCommand;
+import frc.robot.commands.indexCommands.OutdexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.CloseShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
-import frc.robot.commands.shootCommands.ShooterSourceCommand;
+import frc.robot.commands.shootCommands.ShootRevAndAngleCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
+import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -83,6 +81,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
+import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
 import java.io.File;
@@ -126,6 +125,7 @@ public class RobotContainer {
   private final AutoZero autoZero;
   private final ElevatorManualCommand elevatorManualCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
+  private final ToggleShooterSourceCommand toggleShooterSourceCommand;
 
   private final LightProgressCommand lightProgressCommand;
   private final LightBlankCommand lightBlankCommand;
@@ -240,6 +240,13 @@ public class RobotContainer {
         new ToggleIntakeCommand(
             new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
             new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem),
+            new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
+            elevatorSubsystem,
+            armAngleSubsystem);
+
+    toggleShooterSourceCommand =
+        new ToggleShooterSourceCommand(
+            new OutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem),
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             armAngleSubsystem);
@@ -380,7 +387,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  // format:off
+  // spotless:off
 
   private void configureButtonBindings() {
 
@@ -391,53 +398,21 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(new AmpOutDexCommand(indexSubsystem, armAngleSubsystem));
+    driverController.start().whileTrue(new ShootRevAndAngleCommand(armAngleSubsystem, shootSubsystem, visionSubsystem, elevatorSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
+    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem));
+    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem));
+    driverController.y().onTrue(toggleShooterSourceCommand);
 
-    // driverController.b().whileTrue(new OutakeFull(intakeSubsystem, indexSubsystem));
-    driverController
-        .b()
-        .whileTrue(
-            new IndexSourceSensorCommand(
-                indexSubsystem, armAngleSubsystem, lineBreakSensorSubsystem));
-    driverController
-        .x()
-        .onTrue(
-            new TeleopShootCommand(
-                shootSubsystem,
-                indexSubsystem,
-                m_robotDrive,
-                visionSubsystem,
-                driverController,
-                elevatorSubsystem,
-                armAngleSubsystem));
-    // driverController.b().whileTrue(new IndexCommand(indexSubsystem));
-    // driverController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    driverController.y().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
-
-    driverController
-        .povUp()
-        .onTrue(
-            new ElevatorAngleToAmpCommand(
-                shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
-    driverController
-        .povRight()
-        .onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
-    driverController
-        .povLeft()
-        .onTrue(new ArmToHorizontalComand(armAngleSubsystem, elevatorSubsystem));
-    // driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem,
-    // elevatorSubsystem));
-    driverController
-        .povDown()
-        .onTrue(
-            new ShooterSourceCommand(
-                indexSubsystem, shootSubsystem, lineBreakSensorSubsystem, armAngleSubsystem));
+    driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
+    driverController.povRight().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
+    driverController.povLeft().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+    driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandForward); // field orient
+    driverController.leftStick().whileTrue(resetOdometryCommandForward);
 
     // Operator Controller
     operatorController.rightTrigger().whileTrue(elevatorManualCommand);
@@ -446,45 +421,23 @@ public class RobotContainer {
     operatorController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.01));
     operatorController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.01));
 
-    operatorController
-        .start()
-        .whileTrue(
-            new CenterOnTargetCommand(
-                visionSubsystem,
-                m_robotDrive,
-                AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
-                driverController));
+    operatorController.start().whileTrue(new CenterOnTargetCommand(visionSubsystem, m_robotDrive, AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), driverController));
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    operatorController
-        .y()
-        .whileTrue(
-            CommandGroups.intakeRev(
-                intakeSubsystem,
-                indexSubsystem,
-                lineBreakSensorSubsystem,
-                armAngleSubsystem,
-                shootSubsystem));
-    // here
+    operatorController.y().whileTrue(toggleShooterSourceCommand);
 
-    operatorController
-        .povUp()
-        .onTrue(
-            new ElevatorAngleToAmpCommand(
-                shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
-    operatorController.povRight().onTrue(new FullZeroCommand(elevatorSubsystem, armAngleSubsystem));
-    operatorController
-        .povLeft()
-        .onTrue(new DriveByController(m_robotDrive, operatorController, false));
-    operatorController
-        .povDown()
-        .onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    operatorController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
+    operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
+    operatorController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+    
+    
   }
 
-  // format:on
+  // spotless:on
 
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */

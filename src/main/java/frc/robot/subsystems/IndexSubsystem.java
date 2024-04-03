@@ -55,8 +55,10 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
   GenericEntry sspeed = Shuffleboard.getTab("Adsf").add("dsf", 0.4).getEntry();
 
   public void backInFrontOut() {
-    backIndexMotor.set(sspeed.getDouble(0)); // 0.6
-    frontIndexMotor.set(-sspeed.getDouble(0)); // 0.6
+    // backIndexMotor.set(sspeed.getDouble(0)); // 0.6
+    // frontIndexMotor.set(-sspeed.getDouble(0)); // -0.6
+    backIndexMotor.set(0.6);
+    frontIndexMotor.set(-0.6);
   }
 
   public void backOutFrontIn() {
