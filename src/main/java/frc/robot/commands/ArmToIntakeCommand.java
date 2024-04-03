@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
@@ -8,7 +8,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 
-public class ArmToIntakeCommand extends SequentialCommandGroup {
+public class ArmToIntakeCommand extends ParallelCommandGroup {
   public ArmToIntakeCommand(
       ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
 

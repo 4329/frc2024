@@ -1,7 +1,5 @@
 package frc.robot.commands.intakeOuttakeCommands;
 
-import java.util.Map;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,6 +12,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
+import java.util.Map;
 
 public class ToggleIntakeCommand extends ReInitCommand {
   SequentialCommandGroup intakeSensorGroup;
@@ -30,7 +29,9 @@ public class ToggleIntakeCommand extends ReInitCommand {
       ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
     intakeSensorGroup =
-        intakeSensorCommand.alongWith(indexSensorCommand).beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE).beforeStarting(new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.INTAKE)));
+        intakeSensorCommand
+            .alongWith(indexSensorCommand)
+            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
 

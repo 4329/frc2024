@@ -58,17 +58,23 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   private ShootLogAutoLogged shootLogAutoLogged;
 
-  private double lP = 0.00025;
+  private double lP = 0.000059;
   private double lI = 0.000001;
-  private double lD = 0.01;
-  private double lFF = 0.000185;
-  private double lIZ = 43;
+  private double lD = 0.1;
+  private double lFF = 0.0001736;
+  private double lIZ = 30;
 
-  private double rP = 0.0002;
+  private double rP = 0.00006;
   private double rI = 0.000001;
-  private double rD = 0.1;
-  private double rFF = 0.0001811;
-  private double rIZ = 43;
+  private double rD = 0.005;
+  private double rFF = 0.0001725;
+  private double rIZ = 30;
+
+  // private double rP = 0.0000785;
+  // private double rI = 0.000001;
+  // private double rD = 0.01;
+  // private double rFF = 0.000182;
+  // private double rIZ = 43;
 
   // 240 inches is the theroetical max shot for the shooter
   public ShootSubsystem() {
@@ -86,6 +92,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     rightMotor.setIdleMode(IdleMode.kCoast);
     leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setInverted(true);
     leftMotor.setInverted(true);
 
     rm_aimBot.setP(rP);

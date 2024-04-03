@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 
 public class ShooterAimCommandIndefinite extends Command {
@@ -16,7 +15,9 @@ public class ShooterAimCommandIndefinite extends Command {
   public ElevatorSubsystem elevatorSubsystem;
 
   public ShooterAimCommandIndefinite(
-      VisionSubsystem visionSubsystem, ArmAngleSubsystem armAngleSubsystem, ElevatorSubsystem elevatorSubsystem) {
+      VisionSubsystem visionSubsystem,
+      ArmAngleSubsystem armAngleSubsystem,
+      ElevatorSubsystem elevatorSubsystem) {
     this.visionSubsystem = visionSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
@@ -46,10 +47,9 @@ public class ShooterAimCommandIndefinite extends Command {
       }
     } else if (elevatorSubsystem.getElevatorSetpoint() < ElevatorSetpoints.AMPPOINT.getValue()) {
 
-      armAngleSubsystem.setArmAngle(ArmAngle.ZERO);
-
-    };
-
+      // armAngleSubsystem.setArmAngle(ArmAngle.ZERO);
+    }
+    ;
   }
 
   @Override
@@ -57,5 +57,4 @@ public class ShooterAimCommandIndefinite extends Command {
 
     return false;
   }
-
 }

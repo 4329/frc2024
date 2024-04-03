@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.IndexLogAutoLogged;
@@ -25,8 +27,8 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
     frontIndexMotor.setIdleMode(IdleMode.kBrake);
     indexLogAutoLogged = new IndexLogAutoLogged();
 
-    backIndexMotor.setInverted(false);
-    frontIndexMotor.setInverted(false);
+    backIndexMotor.setInverted(true);
+    frontIndexMotor.setInverted(true);
 
     backIndexMotor.burnFlash();
     frontIndexMotor.burnFlash();
@@ -50,9 +52,11 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
     frontIndexMotor.set(-0.8);
   }
 
+  GenericEntry sspeed = Shuffleboard.getTab("Adsf").add("dsf", 0.4).getEntry();
+
   public void backInFrontOut() {
-    backIndexMotor.set(0.8);
-    frontIndexMotor.set(-0.8);
+    backIndexMotor.set(sspeed.getDouble(0)); // 0.6
+    frontIndexMotor.set(-sspeed.getDouble(0)); // 0.6
   }
 
   public void backOutFrontIn() {
@@ -73,7 +77,7 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void slowOut() {
-    backIndexMotor.set(-0.1);
-    frontIndexMotor.set(-0.1);
+    backIndexMotor.set(-0.075);
+    frontIndexMotor.set(-0.075);
   }
 }

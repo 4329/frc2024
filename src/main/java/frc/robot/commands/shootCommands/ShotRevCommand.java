@@ -11,7 +11,7 @@ public class ShotRevCommand extends Command {
   private ShootSubsystem shootSubsystem;
   private VisionSubsystem visionSubsystem;
   private int checks = 0;
-  private double setpoint = 2800;
+  private double setpoint = 1000;
 
   public ShotRevCommand(ShootSubsystem shootSubsystem, VisionSubsystem visionSubsystem) {
     this.shootSubsystem = shootSubsystem;

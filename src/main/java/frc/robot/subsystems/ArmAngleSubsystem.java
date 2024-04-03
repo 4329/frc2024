@@ -36,7 +36,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
   private final double speakerHeight = 2.15;
   private double speakerMod = 0;
-  private double rateOfChange = 0.3;
+  private double rateOfChange = 0.2;
   private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
   private GenericEntry setpointGE;
   private GenericEntry positionGE;
@@ -62,9 +62,9 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     armMotor.enableVoltageCompensation(Constants.voltageCompensation);
 
     armEncoder.setPosition(0);
-    armPID.setP(0.15);
+    armPID.setP(0.38);
     armPID.setI(0);
-    armPID.setD(0.5);
+    armPID.setD(0.9);
     armPID.setFF(0);
     armPID.setOutputRange(-0.2, 0.60);
 

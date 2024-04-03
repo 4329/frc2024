@@ -1,10 +1,8 @@
 package frc.robot.commands.indexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
-import frc.robot.utilities.ArmAngle;
 
 public class AmpOutDexCommand extends SequentialCommandGroup {
 
