@@ -1,5 +1,7 @@
 package frc.robot.commands.shootCommands;
 
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -12,7 +14,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
-import java.util.Map;
 
 public class ToggleShooterSourceCommand extends ReInitCommand {
   SequentialCommandGroup indexShooterSensorGroup;
@@ -23,14 +24,14 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   private GenericEntry toggleEntry;
 
   public ToggleShooterSourceCommand(
-      OutdexSensorCommand outdexSensorCommand,
+      ShooterSourceCommand shooterSourceCommand,
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
     indexShooterSensorGroup =
         new SequentialCommandGroup()
-            .alongWith(outdexSensorCommand)
+            .alongWith(shooterSourceCommand)
             .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
@@ -68,9 +69,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     indexShooterSensorGroup.cancel();
     // toggled = false;
     toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
-    if (!interrupted) {
-      indexReverseForShotCommand.schedule();
-    }
+   
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
   }
