@@ -61,7 +61,6 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.CloseShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
-import frc.robot.commands.shootCommands.ShootRevAndAngleCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
 import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
@@ -398,7 +397,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().whileTrue(new ShootRevAndAngleCommand(armAngleSubsystem, shootSubsystem, visionSubsystem, elevatorSubsystem));
+    driverController.start().onTrue(new InstantCommand(() -> shootSubsystem.changeSetpoint(2800)));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);

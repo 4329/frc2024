@@ -66,6 +66,9 @@ public class CenterOnTargetCommand extends Command {
                   / Constants.DriveConstants.kMaxAngularSpeed)
               * 0.5;
 
+      // drivetrain.drive(xboxController.getLeftX() * 0.10, xboxController.getLeftY() * 0.10,
+      // rotationCalc, true);
+
       drivetrain.drive(0, 0, rotationCalc, true);
       System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
       System.out.println("rotation output is --> " + rotationCalc);

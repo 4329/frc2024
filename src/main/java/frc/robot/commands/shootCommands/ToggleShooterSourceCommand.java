@@ -27,10 +27,11 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
+
     indexShooterSensorGroup =
-        indexShooterSensorGroup
+        new SequentialCommandGroup()
             .alongWith(outdexSensorCommand)
-            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE));
+            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
 

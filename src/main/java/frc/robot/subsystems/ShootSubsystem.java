@@ -37,18 +37,30 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   private GenericEntry rpmActual2GE;
   private LinearInterpolationTable shotTable =
       new LinearInterpolationTable(
-          new Point2D.Double(0, 2500),
-          new Point2D.Double(1.1, 2500),
-          new Point2D.Double(1.2, 2550),
-          new Point2D.Double(1.4, 2650),
-          new Point2D.Double(1.6, 2700),
-          new Point2D.Double(1.8, 2750),
-          new Point2D.Double(2, 2800),
-          new Point2D.Double(2.2, 2950),
-          new Point2D.Double(2.4, 3050),
-          new Point2D.Double(2.6, 3150),
-          new Point2D.Double(2.8, 3750),
-          new Point2D.Double(10, 3800));
+          new Point2D.Double(0.0, 3500),
+          new Point2D.Double(1.7, 3500),
+          new Point2D.Double(1.9, 3700),
+          new Point2D.Double(2.1, 3750),
+          new Point2D.Double(2.3, 3800),
+          new Point2D.Double(2.5, 3900),
+          new Point2D.Double(2.7, 4050),
+          new Point2D.Double(2.9, 4150),
+          new Point2D.Double(3.1, 4300),
+          new Point2D.Double(3.3, 4450),
+          new Point2D.Double(3.5, 4500),
+          new Point2D.Double(3.7, 4650),
+          new Point2D.Double(3.9, 4750),
+          new Point2D.Double(4.1, 4850),
+          new Point2D.Double(4.3, 5000),
+          new Point2D.Double(4.5, 5050),
+          new Point2D.Double(4.7, 5100),
+          new Point2D.Double(4.9, 5125),
+          new Point2D.Double(5.1, 5150),
+          new Point2D.Double(5.3, 5175),
+          new Point2D.Double(5.5, 5200),
+
+
+          new Point2D.Double(10, 5300));
   // new Point2D.Double(3, 3300));
   // new Point2D.Double(3.2, 3600),
   // new Point2D.Double(4, 3700));
@@ -180,7 +192,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
       rightMotor.stopMotor();
       leftMotor.stopMotor();
     } else {
-      rm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+      rm_aimBot.setReference(setpoint * 0.90, CANSparkMax.ControlType.kVelocity);
       lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
     }
   }

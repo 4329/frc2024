@@ -115,17 +115,30 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     armTable =
         new LinearInterpolationTable(
-            new Point2D.Double(0, 0),
-            new Point2D.Double(1.0, 0),
-            new Point2D.Double(1.2, 0),
-            new Point2D.Double(1.4, 1.32),
-            new Point2D.Double(1.6, 1.6317),
-            new Point2D.Double(1.8, 2.2977),
-            new Point2D.Double(2, 2.8305),
-            new Point2D.Double(2.2, 3.4965),
-            new Point2D.Double(2.4, 3.663),
-            new Point2D.Double(2.6, 3.663),
-            new Point2D.Double(2.8, 4.2291));
+          new Point2D.Double(0.0, 1),
+          new Point2D.Double(1.7, 1),
+          new Point2D.Double(1.9, 1.1),
+          new Point2D.Double(2.1, 1.75),
+          new Point2D.Double(2.3, 2.55),
+          new Point2D.Double(2.5, 3.5),
+          new Point2D.Double(2.7, 4.05),
+          new Point2D.Double(2.9, 4.52),
+          new Point2D.Double(3.1, 4.9),
+          new Point2D.Double(3.3, 5.15),
+          new Point2D.Double(3.5, 5.2),
+          new Point2D.Double(3.7, 5.45),
+          new Point2D.Double(3.9, 5.6),
+          new Point2D.Double(4.1, 5.8),
+          new Point2D.Double(4.3, 5.86),
+          new Point2D.Double(4.5, 5.95),
+          new Point2D.Double(4.7, 6),
+          // new Point2D.Double(4.9, 6.1),
+          // new Point2D.Double(5.1, 6.2),
+          // new Point2D.Double(5.3, 6.2),
+          new Point2D.Double(5.5, 6.3),
+
+
+          new Point2D.Double(10, 7));
     // new Point2D.Double(2.87, 1.85));
     // new Point2D.Double(3, 1.59));
     // new Point2D.Double(3.2, 1.48),
