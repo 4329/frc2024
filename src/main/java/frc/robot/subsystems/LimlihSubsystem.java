@@ -13,7 +13,7 @@ import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
 // import frc.robot.utilities.SocketEndpoint;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
-import frc.robot.utilities.SocketEndpoint;
+import frc.robot.utilities.LimlihSocket;
 import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
@@ -31,7 +31,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   private CheckLimelightCommand checkLimelightCommand;
 
   private LimlihLog limlihLog;
-  SocketEndpoint a;
+  LimlihSocket limlihsocket;
 
   public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
     timer = new Timer();
@@ -48,7 +48,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
             .getEntry();
 
     limlihLog = new LimlihLog();
-    a = new SocketEndpoint();
+    limlihsocket = new LimlihSocket();
   }
 
   public boolean CameraConnected() {
@@ -162,10 +162,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   @Override
   public void periodic() {
     if (checkLimelightCommand.isConnected()) {
-      limelightResults =
-          LimelightHelpers.getLatestResults(limelightHelpNetworkTableName)
-              .targetingResults
-              .targets_Fiducials;
+      limelightResults = limlihsocket.getResults().targetingResults.targets_Fiducials;
       Pose3d pose3d =
           getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
       if (pose3d != null) {
