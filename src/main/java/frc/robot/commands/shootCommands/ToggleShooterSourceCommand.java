@@ -3,13 +3,11 @@ package frc.robot.commands.shootCommands;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
-import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
 import java.util.Map;
@@ -30,10 +28,9 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
       ShootSubsystem shootSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
-    indexShooterSensorGroup =
-        new SequentialCommandGroup()
-            .alongWith(shooterSourceCommand)
-            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
+    indexShooterSensorGroup = new SequentialCommandGroup(shooterSourceCommand);
+    // .alongWith(shooterSourceCommand);
+    // .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
     this.shootSubsystem = shootSubsystem;

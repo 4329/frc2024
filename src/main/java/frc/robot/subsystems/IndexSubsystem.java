@@ -57,8 +57,8 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
   public void backInFrontOut() {
     // backIndexMotor.set(sspeed.getDouble(0)); // 0.6
     // frontIndexMotor.set(-sspeed.getDouble(0)); // -0.6
-    backIndexMotor.set(0.6);
-    frontIndexMotor.set(-0.6);
+    backIndexMotor.set(0.65);
+    frontIndexMotor.set(-0.55);
   }
 
   public void backOutFrontIn() {
