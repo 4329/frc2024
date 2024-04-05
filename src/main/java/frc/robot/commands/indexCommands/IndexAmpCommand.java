@@ -3,11 +3,11 @@ package frc.robot.commands.indexCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 
-public class OutdexCommand extends Command {
+public class IndexAmpCommand extends Command {
 
   private IndexSubsystem indexSubsystem;
 
-  public OutdexCommand(IndexSubsystem indexSubsystem) {
+  public IndexAmpCommand(IndexSubsystem indexSubsystem) {
     this.indexSubsystem = indexSubsystem;
     addRequirements(indexSubsystem);
   }
@@ -18,15 +18,12 @@ public class OutdexCommand extends Command {
   @Override
   public void execute() {
 
-    System.out.println("index out");
-    indexSubsystem.bothOut();
+    indexSubsystem.backInFrontOut();
   }
 
   @Override
   public void end(boolean interrupted) {
     indexSubsystem.stop();
-
-    System.out.println("index out stop");
   }
 
   @Override

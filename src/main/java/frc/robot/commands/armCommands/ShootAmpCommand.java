@@ -28,7 +28,7 @@ public class ShootAmpCommand extends Command {
   @Override
   public void execute() {
     if (shootSubsystem.aboveSetpoint() && !reachedSetpoint) {
-      indexSubsystem.inForShot();
+      indexSubsystem.inShoot();
       timer.start();
       reachedSetpoint = true;
     }

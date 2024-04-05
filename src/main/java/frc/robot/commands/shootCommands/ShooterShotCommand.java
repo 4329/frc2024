@@ -50,7 +50,7 @@ public class ShooterShotCommand extends Command {
     if (!shot && shootSubsystem.aboveSetpoint() == true) {
 
       timer.start();
-      indexSubsystem.in();
+      indexSubsystem.inShoot();
       shot = true;
     }
   }

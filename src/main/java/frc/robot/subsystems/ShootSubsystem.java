@@ -33,42 +33,60 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   public final SparkPIDController rm_aimBot;
   public final SparkPIDController lm_aimBot;
   private GenericEntry rpmSetpointGE;
+  private GenericEntry rpmSetpoint2GE;
   private GenericEntry rpmActualGE;
   private GenericEntry rpmActual2GE;
   private LinearInterpolationTable shotTable =
       new LinearInterpolationTable(
-          new Point2D.Double(0, 2500),
-          new Point2D.Double(1.1, 2500),
-          new Point2D.Double(1.2, 2550),
-          new Point2D.Double(1.4, 2650),
-          new Point2D.Double(1.6, 2700),
-          new Point2D.Double(1.8, 2750),
-          new Point2D.Double(2, 2800),
-          new Point2D.Double(2.2, 2950),
-          new Point2D.Double(2.4, 3050),
-          new Point2D.Double(2.6, 3150),
-          new Point2D.Double(2.8, 3750),
-          new Point2D.Double(10, 3800));
+          new Point2D.Double(0.0, 3300),
+          new Point2D.Double(1.7, 3500),
+          new Point2D.Double(1.9, 3700),
+          new Point2D.Double(2.1, 3750),
+          new Point2D.Double(2.3, 3800),
+          new Point2D.Double(2.5, 3900),
+          new Point2D.Double(2.7, 4050),
+          new Point2D.Double(2.9, 4150),
+          new Point2D.Double(3.1, 4300),
+          new Point2D.Double(3.3, 4450),
+          new Point2D.Double(3.5, 4500),
+          new Point2D.Double(3.7, 4650),
+          new Point2D.Double(3.9, 4750),
+          new Point2D.Double(4.1, 4850),
+          new Point2D.Double(4.3, 5000),
+          new Point2D.Double(4.5, 5050),
+          new Point2D.Double(4.7, 5100),
+          new Point2D.Double(4.9, 5125),
+          new Point2D.Double(5.1, 5150),
+          new Point2D.Double(5.35, 5175),
+          new Point2D.Double(5.5, 5200),
+          new Point2D.Double(10, 5300));
   // new Point2D.Double(3, 3300));
   // new Point2D.Double(3.2, 3600),
   // new Point2D.Double(4, 3700));
 
   private double setpoint = 0;
   private double tolerance = 40; // arbitrary
+  private double speedPercent = 0.90;
 
   private ShootLogAutoLogged shootLogAutoLogged;
 
-  private double lP = 0.00025;
+  private double lP = 0.000059;
   private double lI = 0.000001;
-  private double lD = 0.01;
-  private double lFF = 0.000185;
-  private double lIZ = 43;
+  private double lD = 0.1;
+  private double lFF = 0.0001736;
+  private double lIZ = 30;
 
-  private double rP = 0.0002;
+  private double rP = 0.00006;
   private double rI = 0.000001;
-  private double rD = 0.1;
-  private double rFF = 0.0001811;
-  private double rIZ = 43;
+  private double rD = 0.005;
+  private double rFF = 0.0001725;
+  private double rIZ = 30;
+
+  // private double rP = 0.0000785;
+  // private double rI = 0.000001;
+  // private double rD = 0.01;
+  // private double rFF = 0.000182;
+  // private double rIZ = 43;
 
   // 240 inches is the theroetical max shot for the shooter
   public ShootSubsystem() {
@@ -86,6 +104,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     rightMotor.setIdleMode(IdleMode.kCoast);
     leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setInverted(true);
     leftMotor.setInverted(true);
 
     rm_aimBot.setP(rP);
@@ -107,9 +126,10 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     shootLogAutoLogged = new ShootLogAutoLogged();
 
-    rpmActualGE = Shuffleboard.getTab("shoot").add("rpm actual 1", 0).getEntry();
-    rpmActual2GE = Shuffleboard.getTab("shoot").add("rpm actual 2", 0).getEntry();
-    rpmSetpointGE = Shuffleboard.getTab("shoot").add("current rpm setpoint", 0).getEntry();
+    rpmActualGE = Shuffleboard.getTab("shoot").add("right rpm actual", 0).getEntry();
+    rpmActual2GE = Shuffleboard.getTab("shoot").add("left rpm actual", 0).getEntry();
+    rpmSetpointGE = Shuffleboard.getTab("shoot").add("current left rpm setpoint", 0).getEntry();
+    rpmSetpoint2GE = Shuffleboard.getTab("shoot").add("current right rpm setpoint", 0).getEntry();
   }
 
   public void changeSetpoint(double set) {
@@ -118,8 +138,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public boolean atSetpoint() {
 
-    if (Math.abs(setpoint - getRightVelocity()) <= tolerance
-        && Math.abs((setpoint * 0.90) - getLeftVelocity()) <= tolerance) {
+    if (Math.abs(setpoint * speedPercent - getRightVelocity()) <= tolerance
+        && Math.abs(setpoint - getLeftVelocity()) <= tolerance) {
       System.out.println("atsetpoint ----");
 
       return true;
@@ -134,8 +154,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public boolean aboveSetpoint() {
 
-    if (leftEncoder.getVelocity() >= ((setpoint * 0.90) - tolerance)
-        && rightEncoder.getVelocity() >= (setpoint - tolerance)) {
+    if (leftEncoder.getVelocity() >= (setpoint - tolerance)
+        && rightEncoder.getVelocity() >= ((setpoint * speedPercent) - tolerance)) {
       return true;
     }
     return false;
@@ -146,6 +166,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     setpoint = 0;
     rightMotor.stopMotor();
+    leftMotor.stopMotor();
   }
 
   @Override
@@ -166,14 +187,15 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     rpmActualGE.setDouble(rightEncoder.getVelocity());
     rpmActual2GE.setDouble(leftEncoder.getVelocity());
     rpmSetpointGE.setDouble(setpoint);
+    rpmSetpoint2GE.setDouble(setpoint * speedPercent);
 
     if (setpoint == 0) {
 
       rightMotor.stopMotor();
       leftMotor.stopMotor();
     } else {
-      rm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
-      lm_aimBot.setReference(setpoint * 0.90, CANSparkMax.ControlType.kVelocity);
+      rm_aimBot.setReference(setpoint * speedPercent, CANSparkMax.ControlType.kVelocity);
+      lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
     }
   }
 

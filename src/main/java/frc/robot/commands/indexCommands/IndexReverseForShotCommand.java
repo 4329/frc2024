@@ -35,8 +35,6 @@ public class IndexReverseForShotCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    System.out.println(
-        "aoiwndoawindoawindoawindoiawndoiawndoiawnodinawodinawoindoawindoawindoaiwndoiawnd");
     return lineBreakSensorSubsystem.isNotBroken();
   }
 

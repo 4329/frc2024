@@ -8,12 +8,13 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSubsystem {
 
-  private DigitalInput lineBreak;
+  private DigitalInput shooterLineBreak;
+  private DigitalInput telemetryLineBreak;
   private LineBreakAutoLogged lineBreakAutoLogged;
 
   public LineBreakSensorSubsystem() {
 
-    this.lineBreak = new DigitalInput(1);
+    this.shooterLineBreak = new DigitalInput(1);
     lineBreakAutoLogged = new LineBreakAutoLogged();
   }
 
@@ -26,6 +27,6 @@ public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSub
 
   public Boolean isNotBroken() {
 
-    return lineBreak.get();
+    return shooterLineBreak.get();
   }
 }

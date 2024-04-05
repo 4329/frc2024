@@ -111,7 +111,7 @@ public class CommandGroups {
         new ParallelCommandGroup(
             // new UnInstantCommand(() -> shootSubsystem.changeSetpoint(3000)),
             new ElevatorToAmpCommand(elevatorSubsystem),
-            new ArmCommand(armAngleSubsystem, ArmAngle.ARMAMP)));
+            new ArmCommand(armAngleSubsystem, ArmAngle.SHOOTERARMAMP)));
   }
 
   public static Command FullZeroCommand(
@@ -146,6 +146,7 @@ public class CommandGroups {
       Drivetrain drivetrain,
       VisionSubsystem visionSubsystem,
       CommandXboxController commandXboxController,
+      ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
     System.out.println("shoot1");
@@ -158,7 +159,7 @@ public class CommandGroups {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
             new CenterOnTargetCommandIndefinite(
@@ -166,7 +167,7 @@ public class CommandGroups {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
 
@@ -175,6 +176,7 @@ public class CommandGroups {
       IndexSubsystem indexSubsystem,
       VisionSubsystem visionSubsystem,
       CommandXboxController commandXboxController,
+      ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
     System.out.println("shoot1");
@@ -184,12 +186,12 @@ public class CommandGroups {
             new ShotRevCommand(shootSubsystem, visionSubsystem).withTimeout(3),
             // new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
             // AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
             // new CenterOnTargetCommandIndefinite(visionSubsystem, drivetrain,
             // AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(), commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
         new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
 

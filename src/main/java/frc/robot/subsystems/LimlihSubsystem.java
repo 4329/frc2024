@@ -24,6 +24,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   LimelightTarget_Fiducial[] limelightResults;
   private GenericEntry zGE;
   private GenericEntry sight;
+  private GenericEntry sighttwo;
+  private Boolean elevator;
 
   private Timer timer;
   private CheckLimelightCommand checkLimelightCommand;
@@ -40,8 +42,16 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
         Shuffleboard.getTab("RobotData")
             .add("Seeing Speaker", false)
             .withPosition(3, 0)
-            .withSize(10, 4)
+            .withSize(10, 2)
             .withProperties(Map.of("Color when true", "#0000FF", "Color when false", "#000000"))
+            .getEntry();
+
+    sighttwo =
+        Shuffleboard.getTab("RobotData")
+            .add("Need Elevator?", false)
+            .withPosition(3, 2)
+            .withSize(10, 1)
+            .withProperties(Map.of("Color when true", "#00FFFF", "Color when false", "#000000"))
             .getEntry();
 
     limlihLog = new LimlihLog();
@@ -155,9 +165,34 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     return null;
   }
 
+  private Boolean elevatorYes() {
+
+    if (getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker())
+        && getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()).getZ()
+            < 1.6) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //     private Boolean elevatorYes() {
+
+  //     if (getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()).getZ()
+  // = null) {
+  //       return false;
+  //     } else if
+  // (getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()).getZ() < 1.6)
+  // {
+  //       return true;
+  //     }
+  // else{
+  //       return false;
+  //     }
+  //   }
+
   @Override
   public void periodic() {
-
     if (checkLimelightCommand.isConnected()) {
       limelightResults =
           LimelightHelpers.getLatestResults(limelightHelpNetworkTableName)
@@ -167,11 +202,13 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
           getTargetPoseInRobotSpace(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
       if (pose3d != null) {
 
+        elevatorYes();
         zGE.setDouble(pose3d.getZ());
       }
     }
 
     sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
+    sighttwo.setBoolean(elevatorYes());
 
     updateInputs();
 
