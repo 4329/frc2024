@@ -55,7 +55,6 @@ import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
-import frc.robot.commands.indexCommands.OutdexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
@@ -246,9 +245,11 @@ public class RobotContainer {
 
     toggleShooterSourceCommand =
         new ToggleShooterSourceCommand(
-            new ShooterSourceCommand(indexSubsystem, shootSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+            new ShooterSourceCommand(
+                indexSubsystem, shootSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
+            shootSubsystem,
             armAngleSubsystem);
 
     elevatorManualCommand =

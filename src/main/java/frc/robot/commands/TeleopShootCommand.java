@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.driveCommands.CenterOnTargetCommandIndefinite;
+import frc.robot.commands.elevatorCommands.ElevatorShootCommandIndefinite;
 import frc.robot.commands.shootCommands.ShooterAimCommandIndefinite;
 import frc.robot.commands.shootCommands.ShooterShotCommand;
 import frc.robot.commands.shootCommands.ShotRevCommand;
@@ -33,7 +34,8 @@ public class TeleopShootCommand extends SequentialCommandGroup {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem)),
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem),
+            new ElevatorShootCommandIndefinite(elevatorSubsystem, visionSubsystem)),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem),
             new CenterOnTargetCommandIndefinite(
@@ -41,8 +43,8 @@ public class TeleopShootCommand extends SequentialCommandGroup {
                 drivetrain,
                 AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
                 commandXboxController),
-            new ShooterAimCommandIndefinite(
-                visionSubsystem, armAngleSubsystem, elevatorSubsystem)));
+            new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem),
+            new ElevatorShootCommandIndefinite(elevatorSubsystem, visionSubsystem)));
     // new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
 }

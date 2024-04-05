@@ -1,23 +1,23 @@
 package frc.robot.commands.shootCommands;
 
-import java.util.Map;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
-import frc.robot.commands.indexCommands.OutdexSensorCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
+import java.util.Map;
 
 public class ToggleShooterSourceCommand extends ReInitCommand {
   SequentialCommandGroup indexShooterSensorGroup;
   IndexReverseForShotCommand indexReverseForShotCommand;
+  ShootSubsystem shootSubsystem;
   ElevatorSubsystem elevatorSubsystem;
 
   // private boolean toggled;
@@ -27,6 +27,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
       ShooterSourceCommand shooterSourceCommand,
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
+      ShootSubsystem shootSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
 
     indexShooterSensorGroup =
@@ -35,13 +36,14 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
             .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
+    this.shootSubsystem = shootSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
-            .add("Shoot Intake Toggled", false)
-            .withPosition(3, 4)
-            .withSize(10, 1)
-            .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#000000"))
+            .add("Source Intake Toggled", false)
+            .withPosition(3, 3)
+            .withSize(3, 1)
+            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#000000"))
             .getEntry();
   }
 
@@ -69,8 +71,8 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     indexShooterSensorGroup.cancel();
     // toggled = false;
     toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
-   
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
+    shootSubsystem.changeSetpoint(0);
   }
 }

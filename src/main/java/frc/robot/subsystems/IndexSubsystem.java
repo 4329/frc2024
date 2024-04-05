@@ -38,8 +38,8 @@ public class IndexSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void bothIn() {
-    backIndexMotor.set(0.33);
-    frontIndexMotor.set(0.33);
+    backIndexMotor.set(0.2);
+    frontIndexMotor.set(0.2);
   }
 
   public void inShoot() {

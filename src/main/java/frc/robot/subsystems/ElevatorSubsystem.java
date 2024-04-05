@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,7 +14,9 @@ import frc.robot.Constants;
 import frc.robot.Model.ElevatorAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.ElevatorSetpoints;
+import frc.robot.utilities.LinearInterpolationTable;
 import frc.robot.utilities.SparkFactory;
+import java.awt.geom.Point2D;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem {
@@ -98,6 +101,16 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
     return setPoint;
   }
 
+  private LinearInterpolationTable elevatorTable =
+      new LinearInterpolationTable(
+          new Point2D.Double(0.0, 106),
+          new Point2D.Double(1.1, 106),
+          new Point2D.Double(1.3, 75),
+          new Point2D.Double(1.5, 51),
+          new Point2D.Double(1.6, 0),
+          new Point2D.Double(1.7, 0),
+          new Point2D.Double(10, 0));
+
   public boolean atSetpoint() {
 
     System.out.println(elevatorEncoder.getPosition() - setPoint);
@@ -121,6 +134,12 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
     } else {
       setPoint = ElevatorSetpoints.ZERO.getValue();
     }
+  }
+
+  public void elevatorDistance(Pose3d pose) {
+
+    setPoint =
+        elevatorTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
   }
 
   public void elevatorMove(double lkajfds) {

@@ -66,7 +66,7 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
     armPID.setI(0);
     armPID.setD(0.9);
     armPID.setFF(0);
-    armPID.setOutputRange(-0.2, 0.60);
+    armPID.setOutputRange(-0.2, 0.20);
 
     armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
@@ -115,30 +115,28 @@ public class ArmAngleSubsystem extends SubsystemBase implements LoggedSubsystem 
 
     armTable =
         new LinearInterpolationTable(
-          new Point2D.Double(0.0, 1),
-          new Point2D.Double(1.7, 1),
-          new Point2D.Double(1.9, 1.1),
-          new Point2D.Double(2.1, 1.75),
-          new Point2D.Double(2.3, 2.55),
-          new Point2D.Double(2.5, 3.5),
-          new Point2D.Double(2.7, 4.05),
-          new Point2D.Double(2.9, 4.52),
-          new Point2D.Double(3.1, 4.9),
-          new Point2D.Double(3.3, 5.15),
-          new Point2D.Double(3.5, 5.2),
-          new Point2D.Double(3.7, 5.45),
-          new Point2D.Double(3.9, 5.6),
-          new Point2D.Double(4.1, 5.8),
-          new Point2D.Double(4.3, 5.86),
-          new Point2D.Double(4.5, 5.95),
-          new Point2D.Double(4.7, 6),
-          // new Point2D.Double(4.9, 6.1),
-          // new Point2D.Double(5.1, 6.2),
-          // new Point2D.Double(5.3, 6.2),
-          new Point2D.Double(5.5, 6.3),
-
-
-          new Point2D.Double(10, 7));
+            new Point2D.Double(0.0, 1),
+            new Point2D.Double(1.7, 1),
+            new Point2D.Double(1.9, 1.1),
+            new Point2D.Double(2.1, 1.75),
+            new Point2D.Double(2.3, 2.55),
+            new Point2D.Double(2.5, 3.5),
+            new Point2D.Double(2.7, 4.05),
+            new Point2D.Double(2.9, 4.52),
+            new Point2D.Double(3.1, 4.9),
+            new Point2D.Double(3.3, 5.15),
+            new Point2D.Double(3.5, 5.2),
+            new Point2D.Double(3.7, 5.45),
+            new Point2D.Double(3.9, 5.6),
+            new Point2D.Double(4.1, 6.24),
+            new Point2D.Double(4.3, 6.35),
+            new Point2D.Double(4.5, 6.5),
+            new Point2D.Double(4.7, 6.6),
+            new Point2D.Double(4.9, 6.69),
+            new Point2D.Double(5.1, 6.78),
+            new Point2D.Double(5.3, 6.82),
+            new Point2D.Double(5.5, 6.88),
+            new Point2D.Double(10, 7));
     // new Point2D.Double(2.87, 1.85));
     // new Point2D.Double(3, 1.59));
     // new Point2D.Double(3.2, 1.48),
