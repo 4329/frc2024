@@ -103,4 +103,9 @@ public class MathUtils {
     Rotation3d rotation3d = one.getRotation().plus(two.getRotation());
     return new Pose3d(translation3d, rotation3d);
   }
+
+  public static String getCallerClassName() {
+    StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+    return stElements[2].getClassName();
+  }
 }

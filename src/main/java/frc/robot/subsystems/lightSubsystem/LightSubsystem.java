@@ -3,13 +3,17 @@ package frc.robot.subsystems.lightSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.LightCommandScheduler;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class LightSubsystem extends SubsystemBase {
+
+  public LightCommandScheduler lightCommandScheduler;
 
   private LightIO lightIO;
 
@@ -38,6 +42,7 @@ public class LightSubsystem extends SubsystemBase {
       hue = 60;
       System.out.println("60%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
+    lightCommandScheduler = new LightCommandScheduler();
   }
 
   public void beforeMatchColors() {
@@ -121,9 +126,14 @@ public class LightSubsystem extends SubsystemBase {
   }
 
   @Override
+  public void setDefaultCommand(Command defaultCommand) {
+    lightCommandScheduler.setDefaultCommand(defaultCommand);
+  }
+
+  @Override
   public void periodic() {
     lightIO.periodic();
-
+    // System.out.println(MathUtils.getCallerCallerClassName());
     // rainbow();
   }
 }
