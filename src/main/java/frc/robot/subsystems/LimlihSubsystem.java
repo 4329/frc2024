@@ -161,7 +161,6 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
   @Override
   public void periodic() {
-    System.out.println(a.getResults().targetingResults.latency_capture);
     if (checkLimelightCommand.isConnected()) {
       limelightResults =
           LimelightHelpers.getLatestResults(limelightHelpNetworkTableName)
