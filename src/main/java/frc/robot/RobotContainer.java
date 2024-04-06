@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -288,6 +289,18 @@ public class RobotContainer {
     // armAngleSubsystem));
 
     lightSubsystem.setDefaultCommand(new LightSinCommand(lightSubsystem));
+    LightRambowCommand lightRambowCommand = new LightRambowCommand(lightSubsystem);
+    new Thread(
+            () -> {
+              lightRambowCommand.schedule();
+              double startTime = Timer.getFPGATimestamp();
+              while (startTime + 3.0 > Timer.getFPGATimestamp())
+                ;
+              lightRambowCommand.cancel();
+              // new LightSinCommand(lightSubsystem).schedule();
+            })
+        .start();
+    // new LightSinCommand(lightSubsystem).schedule();
 
     m_chooser = new SendableChooser<>();
     initializeCamera();

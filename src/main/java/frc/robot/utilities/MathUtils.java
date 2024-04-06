@@ -106,6 +106,6 @@ public class MathUtils {
 
   public static String getCallerClassName() {
     StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-    return stElements[2].getClassName();
+    return stElements[4].getClassName();
   }
 }

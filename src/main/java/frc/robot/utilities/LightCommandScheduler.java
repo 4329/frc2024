@@ -33,9 +33,14 @@ public class LightCommandScheduler {
   }
 
   public void scheduleCommand(Command command) {
-    command.initialize();
+    if (currentCommand == command) return;
     if (currentCommand != null) currentCommand.end(true);
     else if (defaultCommand != null) defaultCommand.end(true);
+
+    command.initialize();
+
+    System.out.println(
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp");
     currentCommand = command;
   }
 

@@ -1,11 +1,11 @@
 package frc.robot.commands.LightCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lightSubsystem.LightSubsystem;
+import frc.robot.utilities.LightCommand;
 import org.littletonrobotics.junction.Logger;
 
-public class LightSinCommand extends Command {
+public class LightSinCommand extends LightCommand {
   private LightSubsystem lightSubsystem;
   private double offset;
   private double lastTime;
@@ -19,16 +19,21 @@ public class LightSinCommand extends Command {
   private final double scaleFactor = 0.8;
 
   public LightSinCommand(LightSubsystem lightSubsystem) {
+    super(lightSubsystem);
     this.lightSubsystem = lightSubsystem;
 
     addRequirements(lightSubsystem);
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    super.initialize();
+  }
 
   @Override
   public void execute() {
+    super.execute();
+
     double[] a = new double[lightSubsystem.getLength()];
     for (int i = 0; i < lightSubsystem.getLength(); i++) {
       double initialI = ((double) i) / (double) lightSubsystem.getLength();
