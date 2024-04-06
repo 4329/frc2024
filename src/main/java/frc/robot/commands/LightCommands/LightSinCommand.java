@@ -26,14 +26,7 @@ public class LightSinCommand extends LightCommand {
   }
 
   @Override
-  public void initialize() {
-    super.initialize();
-  }
-
-  @Override
-  public void execute() {
-    super.execute();
-
+  public void lightExecute() {
     double[] a = new double[lightSubsystem.getLength()];
     for (int i = 0; i < lightSubsystem.getLength(); i++) {
       double initialI = ((double) i) / (double) lightSubsystem.getLength();

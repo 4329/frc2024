@@ -1,64 +1,65 @@
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lightSubsystem.LightSubsystem;
+import org.littletonrobotics.junction.Logger;
 
-public class LightCommandScheduler {
-  private Command currentCommand;
-  private Command defaultCommand;
+public class LightCommandScheduler implements Runnable {
+  private LightCommand currentLightCommand;
+  private LightCommand defaultLightCommand;
+  private LightSubsystem lightSubsystem;
 
   public LightCommandScheduler(LightSubsystem lightSubsystem) {
-    defaultCommand = new Command() {};
-
-    new Thread(
-            () -> {
-              while (true) {
-                if (currentCommand != null) {
-                  currentCommand.execute();
-                  if (currentCommand.isFinished()) {
-                    currentCommand.end(false);
-                    currentCommand = null;
-
-                    if (defaultCommand != null) defaultCommand.initialize();
-                  }
-                } else if (defaultCommand != null) {
-                  defaultCommand.execute();
-                }
-
-                lightSubsystem.noIWantMyPeriodic();
-              }
-            },
-            "Light Command Thread")
-        .start();
+    this.lightSubsystem = lightSubsystem;
   }
 
-  public void scheduleCommand(Command command) {
-    if (currentCommand == command) return;
-    if (currentCommand != null) currentCommand.end(true);
-    else if (defaultCommand != null) defaultCommand.end(true);
+  @Override
+  public void run() {
+    while (true) {
+      if (currentLightCommand != null) {
+        currentLightCommand.lightExecute();
 
-    command.initialize();
+        if (currentLightCommand.isFinished()) {
+          currentLightCommand.end(false);
+          currentLightCommand = defaultLightCommand;
 
-    System.out.println(
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp");
-    currentCommand = command;
+          if (defaultLightCommand != null) defaultLightCommand.lightInitialize();
+        }
+      }
+
+      lightSubsystem.noIWantMyPeriodic();
+    }
   }
 
-  public void cancelCommand(Command command) {
-    if (currentCommand == command) {
-      currentCommand.end(true);
-      currentCommand = null;
+  public void scheduleCommand(LightCommand command) {
+    if (currentLightCommand == command) return;
+    if (currentLightCommand != null) currentLightCommand.end(true);
+
+    command.lightInitialize();
+
+    currentLightCommand = command;
+  }
+
+  public void cancelCommand(LightCommand command) {
+    if (currentLightCommand == command) {
+      currentLightCommand = defaultLightCommand;
     } else {
       System.out.println("That wasn't even scheduled in the first place, idiot");
     }
   }
 
-  public void setDefaultCommand(Command command) {
-    command.initialize();
-    defaultCommand = command;
+  public void setDefaultCommand(LightCommand command) {
+    command.lightInitialize();
+    defaultLightCommand = command;
   }
 
-  public boolean isScheduled(Command command) {
-    return currentCommand != null ? currentCommand == command : defaultCommand == command;
+  public boolean isScheduled(LightCommand command) {
+    return currentLightCommand != null && currentLightCommand == command;
+  }
+
+  public void logPlease() {
+    String a = currentLightCommand != null ? currentLightCommand.getName() : "";
+    String b = defaultLightCommand != null ? defaultLightCommand.getName() : "";
+    Logger.recordOutput("currentCommand", a);
+    Logger.recordOutput("defaultCommand", b);
   }
 }

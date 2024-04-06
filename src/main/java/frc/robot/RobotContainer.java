@@ -13,12 +13,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -289,17 +289,7 @@ public class RobotContainer {
     // armAngleSubsystem));
 
     lightSubsystem.setDefaultCommand(new LightSinCommand(lightSubsystem));
-    LightRambowCommand lightRambowCommand = new LightRambowCommand(lightSubsystem);
-    new Thread(
-            () -> {
-              lightRambowCommand.schedule();
-              double startTime = Timer.getFPGATimestamp();
-              while (startTime + 3.0 > Timer.getFPGATimestamp())
-                ;
-              lightRambowCommand.cancel();
-              // new LightSinCommand(lightSubsystem).schedule();
-            })
-        .start();
+    // LightRambowCommand lightRambowCommand = new LightRambowCommand(lightSubsystem);
     // new LightSinCommand(lightSubsystem).schedule();
 
     m_chooser = new SendableChooser<>();

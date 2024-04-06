@@ -20,15 +20,13 @@ public class LightRambowCommand extends LightCommand {
   }
 
   @Override
-  public void initialize() {
-    super.initialize();
+  public void lightInitialize() {
     hue = 0;
     startTime = Timer.getFPGATimestamp();
   }
 
   @Override
-  public void execute() {
-    super.execute();
+  public void lightExecute() {
     // For every pixel
     for (var i = 0; i < lightSubsystem.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -49,6 +47,6 @@ public class LightRambowCommand extends LightCommand {
 
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp() > startTime + 5.0;
+    return false;
   }
 }

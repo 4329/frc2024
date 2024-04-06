@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.LightCommand;
 import frc.robot.utilities.LightCommandScheduler;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class LightSubsystem extends SubsystemBase {
       System.out.println("60%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
     lightCommandScheduler = new LightCommandScheduler(this);
+    new Thread(lightCommandScheduler).start();
   }
 
   public void beforeMatchColors() {
@@ -126,8 +128,17 @@ public class LightSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void setDefaultCommand(Command defaultCommand) {
-    lightCommandScheduler.setDefaultCommand(defaultCommand);
+  public void setDefaultCommand(Command defaultCommand) throws IllegalArgumentException {
+    throw new IllegalArgumentException();
+  }
+
+  public void setDefaultCommand(LightCommand defaultCommand) {
+    lightCommandScheduler.setDefaultCommand((LightCommand) defaultCommand);
+  }
+
+  @Override
+  public void periodic() {
+    lightCommandScheduler.logPlease();
   }
 
   public void noIWantMyPeriodic() {
