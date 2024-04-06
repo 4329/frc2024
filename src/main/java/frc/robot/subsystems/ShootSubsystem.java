@@ -19,6 +19,7 @@ import frc.robot.Model.ShootLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.LinearInterpolationTable;
+import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.SparkFactory;
 import java.awt.geom.Point2D;
 import org.littletonrobotics.junction.Logger;
@@ -68,6 +69,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   private double tolerance = 40; // arbitrary
   private double speedPercent = 0.90;
 
+  public static final double MAX_SHOT_DISTANCE = 5.7;
   private ShootLogAutoLogged shootLogAutoLogged;
 
   private double lP = 0.000059;
@@ -149,7 +151,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public void shooterDistance(Pose3d pose) {
 
-    setpoint = shotTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
+    setpoint = shotTable.getOutput(MathUtils.getActualDistanceFromPose(pose));
   }
 
   public boolean aboveSetpoint() {

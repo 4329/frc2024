@@ -1,0 +1,180 @@
+package frc.robot.subsystems;
+
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Model.ClimberLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
+import frc.robot.utilities.ClimberSetpoints;
+import frc.robot.utilities.SparkFactory;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
+public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
+
+  private CANSparkMax climberMotor1;
+  private CANSparkMax climberMotor2;
+  private RelativeEncoder climberEncoder;
+  private SparkPIDController climberPID;
+  private GenericEntry climberPositionGenericEntry;
+  private GenericEntry climberActualPositionGenericEntry;
+  private double maxVel = 1;
+  private double maxAccel = 1;
+  private double minVel = 1;
+
+  ClimberLogAutoLogged climberLogAutoLogged;
+  private final double tolerance = 0.1;
+  private double setPoint = 0;
+  private double climberPositionalRateOfChange = 2;
+
+  // private SparkAnalogSensor sparkAnalogSensor;
+  // GenericEntry digiput;
+  // GenericEntry digiputLimit;
+
+  // private SparkLimitSwitch m_reverseLimit;
+
+  public ClimberSubsystem() {
+    climberLogAutoLogged = new ClimberLogAutoLogged();
+
+    climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, true);
+    climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, true);
+    climberMotor1.setInverted(true);
+    climberPID = climberMotor1.getPIDController();
+
+    climberPID.setSmartMotionMaxVelocity(maxVel, 0);
+    climberPID.setSmartMotionMaxAccel(maxAccel, 0);
+    climberPID.setSmartMotionAllowedClosedLoopError(0.5, 0);
+    // climberPID.setSmartMotionMinOutputVelocity(1, 0);
+
+    climberEncoder = climberMotor1.getEncoder();
+    climberMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
+    climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    climberMotor1.setIdleMode(IdleMode.kBrake);
+    climberMotor2.setIdleMode(IdleMode.kBrake);
+    climberMotor1.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.MAX.getValue());
+    climberMotor1.setSoftLimit(SoftLimitDirection.kReverse, ClimberSetpoints.ZERO.getValue());
+    climberMotor1.enableVoltageCompensation(Constants.voltageCompensation);
+    climberMotor2.enableVoltageCompensation(Constants.voltageCompensation);
+    climberMotor1.setSmartCurrentLimit(30);
+    climberMotor2.setSmartCurrentLimit(30);
+    climberPositionGenericEntry =
+        Shuffleboard.getTab("Arm Angle").add("Climber desired pos", 0).getEntry();
+    climberActualPositionGenericEntry =
+        Shuffleboard.getTab("Arm Angle").add("Climber Actual pos", 0).getEntry();
+
+    climberMotor2.follow(climberMotor1, false);
+
+    climberEncoder.setPosition(0);
+
+    climberPID.setP(0.5);
+    climberPID.setI(0);
+    climberPID.setD(0);
+    climberPID.setFF(0);
+    climberPID.setOutputRange(-0.1, 0.1);
+
+    // elevatorEncoder.setPositionConversionFactor(1 /
+    // Constants.ArmAngleSubsystemConstants.armGearRatio);
+    climberMotor1.burnFlash();
+    climberMotor2.burnFlash();
+
+    /*
+     * digitalInput = new DigitalInput(0);
+     * digiput = Shuffleboard
+     * .getTab("MagenetSensor")
+     * .add("MagnetSensor", 1)
+     * .withWidget(BuiltInWidgets.kGraph)
+     * .getEntry();
+     */
+
+    // m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    // m_reverseLimit.enableLimitSwitch(false);
+    // digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus",
+    // false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
+  }
+
+  public void setClimberPose(ClimberSetpoints climberSetpoints) {
+
+    setPoint = climberSetpoints.getValue();
+  }
+
+  public double getClimberSetpoint() {
+
+    return setPoint;
+  }
+
+  public boolean atSetpoint() {
+
+    System.out.println(climberEncoder.getPosition() - setPoint);
+    return Math.abs(climberEncoder.getPosition() - setPoint) <= tolerance;
+  }
+
+  public void climberUp() {
+
+    if (setPoint < ClimberSetpoints.MAX.getValue() - climberPositionalRateOfChange) {
+
+      setPoint =
+          Math.min(setPoint + climberPositionalRateOfChange, ClimberSetpoints.MAX.getValue());
+    } else {
+      setPoint = ClimberSetpoints.MAX.getValue();
+    }
+  }
+
+  public void climberDown() {
+
+    if (setPoint > ClimberSetpoints.ZERO.getValue() + climberPositionalRateOfChange) {
+      setPoint =
+          Math.max(setPoint - climberPositionalRateOfChange, ClimberSetpoints.ZERO.getValue());
+    } else {
+      setPoint = ClimberSetpoints.ZERO.getValue();
+    }
+  }
+
+  public void climberMove(double lkajfds) {
+
+    double newSetPoint = setPoint + lkajfds;
+
+    if (newSetPoint > ClimberSetpoints.ZERO.getValue()
+        && newSetPoint < ClimberSetpoints.MAX.getValue()) {
+
+      setPoint = newSetPoint;
+    }
+  }
+
+  @Override
+  public LoggableInputs log() {
+    climberLogAutoLogged.position = climberEncoder.getPosition();
+    climberLogAutoLogged.setpoint = setPoint;
+    return climberLogAutoLogged;
+  }
+
+  @Override
+  public void periodic() {
+    climberPositionGenericEntry.setDouble(setPoint);
+    climberActualPositionGenericEntry.setDouble(climberEncoder.getPosition());
+
+    climberPID.setReference(setPoint, ControlType.kSmartMotion);
+
+    /*
+     * digiput.setDouble(digitalInput.get()?1:0);
+     * digiputLimit.setBoolean(m_reverseLimit.isPressed());
+     */
+
+  }
+
+  public void zeroClimber() {
+    climberMotor1.set(-0.1);
+  }
+
+  public void stop() {
+    double climberSpeed = 0.0;
+    climberMotor1.set(climberSpeed);
+    climberMotor2.set(climberSpeed);
+  }
+}

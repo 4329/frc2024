@@ -42,6 +42,7 @@ import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.MoveArmCommand;
 import frc.robot.commands.armCommands.ShootAmpCommand;
+import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
@@ -68,6 +69,7 @@ import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -115,6 +117,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem;
   private final LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private final LoggingSubsystem loggingSubsystem;
+  private final ClimberSubsystem climberSubsystem;
   private final LightSubsystem lightSubsystem;
 
   // Command Declarations
@@ -124,6 +127,7 @@ public class RobotContainer {
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final AutoZero autoZero;
   private final ElevatorManualCommand elevatorManualCommand;
+  private final ClimberManualCommand climberManualCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
   private final ToggleShooterSourceCommand toggleShooterSourceCommand;
 
@@ -168,6 +172,7 @@ public class RobotContainer {
       Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
     shootSubsystem = new ShootSubsystem();
+    climberSubsystem = new ClimberSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
@@ -256,6 +261,11 @@ public class RobotContainer {
     elevatorManualCommand =
         new ElevatorManualCommand(
             elevatorSubsystem,
+            () -> operatorController.getLeftTriggerAxis(),
+            () -> operatorController.getRightTriggerAxis());
+    climberManualCommand =
+        new ClimberManualCommand(
+            climberSubsystem,
             () -> driverController.getLeftTriggerAxis(),
             () -> driverController.getRightTriggerAxis());
     limDriveSetCommand =
@@ -394,8 +404,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(elevatorManualCommand);
-    driverController.leftTrigger().whileTrue(elevatorManualCommand);
+    driverController.rightTrigger().whileTrue(climberManualCommand);
+    driverController.leftTrigger().whileTrue(climberManualCommand);
 
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
