@@ -42,7 +42,7 @@ public class LightSubsystem extends SubsystemBase {
       hue = 60;
       System.out.println("60%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
-    lightCommandScheduler = new LightCommandScheduler();
+    lightCommandScheduler = new LightCommandScheduler(this);
   }
 
   public void beforeMatchColors() {
@@ -130,8 +130,7 @@ public class LightSubsystem extends SubsystemBase {
     lightCommandScheduler.setDefaultCommand(defaultCommand);
   }
 
-  @Override
-  public void periodic() {
+  public void noIWantMyPeriodic() {
     lightIO.periodic();
     // System.out.println(MathUtils.getCallerCallerClassName());
     // rainbow();
