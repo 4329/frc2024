@@ -50,7 +50,7 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   private LinearInterpolationTable armTable;
 
   public ArmAngleSubsystem() {
-    super(new ProfiledPIDController(2.5, 0, 0, new Constraints(100, 150)));
+    super(new ProfiledPIDController(3, 0, 0.005, new Constraints(100, 75)));
 
     armInterpolationTable();
     armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
