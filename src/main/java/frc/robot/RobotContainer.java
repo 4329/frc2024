@@ -38,6 +38,7 @@ import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
+import frc.robot.commands.armCommands.ArmElevatorSourceCommand;
 import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.MoveArmCommand;
@@ -49,6 +50,7 @@ import frc.robot.commands.driveCommands.DriveByController;
 import frc.robot.commands.driveCommands.DriveToTargetCommand;
 import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
+import frc.robot.commands.elevatorCommands.ElevatorArmSubwoofCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
@@ -408,8 +410,8 @@ public class RobotContainer {
     driverController.y().onTrue(toggleShooterSourceCommand);
 
     driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
-    driverController.povRight().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
-    driverController.povLeft().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+    driverController.povRight().onTrue(new ArmElevatorSourceCommand(armAngleSubsystem, elevatorSubsystem));
+    driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
@@ -431,8 +433,8 @@ public class RobotContainer {
     operatorController.y().whileTrue(toggleShooterSourceCommand);
 
     operatorController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
-    operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
     operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
+    operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
     operatorController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
     
     

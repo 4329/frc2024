@@ -56,6 +56,7 @@ public class AmpOutdexSensorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    armAngleSubsystem.setArmAngle(ArmAngle.INDEXSOURCE);
     indexSubsystem.stop();
   }
 }
