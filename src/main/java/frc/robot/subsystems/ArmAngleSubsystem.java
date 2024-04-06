@@ -1,13 +1,10 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch.Type;
-import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -15,7 +12,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Model.ArmAngleLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
@@ -30,7 +26,7 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   private CANSparkMax armMotor;
 
   private RelativeEncoder armEncoder;
-  //private SparkPIDController armPID;
+  // private SparkPIDController armPID;
 
   private boolean brake;
 
@@ -45,14 +41,16 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
   private GenericEntry setpointGE;
   private GenericEntry positionGE;
-  private GenericEntry radiansRotatedGE;
+  private GenericEntry velocity;
   private GenericEntry radians2RotatedGE;
   private GenericEntry speakerModGE;
+  private GenericEntry armpidthing;
+  private GenericEntry armpidthingagain;
   private ArmAngleLogAutoLogged armAngleLogAutoLogged;
   private LinearInterpolationTable armTable;
 
   public ArmAngleSubsystem() {
-    super(new ProfiledPIDController(0.15, 0, 0.5, new Constraints(1, 1)));
+    super(new ProfiledPIDController(2.5, 0, 0, new Constraints(100, 150)));
 
     armInterpolationTable();
     armAngleLogAutoLogged = new ArmAngleLogAutoLogged();
@@ -70,13 +68,16 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
 
     armEncoder.setPositionConversionFactor(1 / Constants.ArmAngleSubsystemConstants.armGearRatio);
 
-    setpointGE = Shuffleboard.getTab("shoot").add("arm setpoint", 0).getEntry();
+    setpointGE = Shuffleboard.getTab("Arm Angle").add("arm setpoint", 0).getEntry();
     positionGE = Shuffleboard.getTab("Arm Angle").add("arm position", 0).getEntry();
-    radiansRotatedGE = Shuffleboard.getTab("Arm Angle").add("RadiansRotated", 0).getEntry();
-    speakerModGE = Shuffleboard.getTab("Arm Angle").add("speakerMod", 0).getEntry();
-    radians2RotatedGE = Shuffleboard.getTab("Arm Angle").add("Radians2Rotated", 0).getEntry();
+    velocity = Shuffleboard.getTab("Arm Angle").add("velocity", 0).getEntry();
+    armpidthing = Shuffleboard.getTab("Arm Angle").add("pidthing POSITION", 0).getEntry();
+    armpidthingagain = Shuffleboard.getTab("Arm Angle").add("pidthing VELOCITY", 0).getEntry();
+    // speakerModGE = Shuffleboard.getTab("Arm Angle").add("speakerMod", 0).getEntry();
+    // radians2RotatedGE = Shuffleboard.getTab("Arm Angle").add("Radians2Rotated", 0).getEntry();
 
     armMotor.burnFlash();
+    enable();
   }
 
   public void incrementSetpoint(double increment) {
@@ -183,7 +184,12 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   public void periodic() {
     setpointGE.setDouble(setpoint);
     positionGE.setDouble(armEncoder.getPosition());
+    velocity.setDouble(armEncoder.getVelocity());
+    armpidthing.setDouble(getController().getPositionError());
+    armpidthingagain.setDouble(getController().getVelocityError());
     setGoal(setpoint);
+
+    super.periodic();
   }
 
   public void setArmAngle(ArmAngle armAngle) {
