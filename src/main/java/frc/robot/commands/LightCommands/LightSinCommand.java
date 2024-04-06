@@ -32,7 +32,7 @@ public class LightSinCommand extends Command {
     double[] a = new double[lightSubsystem.getLength()];
     for (int i = 0; i < lightSubsystem.getLength(); i++) {
       double initialI = ((double) i) / (double) lightSubsystem.getLength();
-      double sin = Math.sin((Math.pow(initialI, 1) + offset) * (2 * Math.PI) * period);
+      double sin = Math.sin((initialI + offset) * (2 * Math.PI) * period);
       int saturation = (int) Math.round((sin + 1.0) * (amplitude / 2.0));
       saturation = (int) Math.max(saturation, baseLine);
       int pulseI =
