@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.88,
-        "y": 5.97
+        "x": 2.91,
+        "y": 5.56
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.60663136710889,
-        "y": 7.57781207870108
+        "x": 3.5242570485140985,
+        "y": 7.449541822160567
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.764053066567673,
+        "x": 8.289990426134699,
         "y": 7.439674879349759
       },
       "prevControl": {
-        "x": 5.240732892587569,
+        "x": 7.4907071537254275,
         "y": 7.439674879349759
       },
       "nextControl": {
-        "x": 6.267267149918917,
+        "x": 9.08927369854397,
         "y": 7.439674879349759
       },
       "isLocked": false,
@@ -32,46 +32,24 @@
     },
     {
       "anchor": {
-        "x": 8.270256540513081,
-        "y": 7.439674879349759
+        "x": 4.688556300189524,
+        "y": 6.699654168539107
       },
       "prevControl": {
-        "x": 7.67823997186456,
-        "y": 7.439674879349759
-      },
-      "nextControl": {
-        "x": 8.862273109161602,
-        "y": 7.439674879349759
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.88,
-        "y": 5.97
-      },
-      "prevControl": {
-        "x": 2.014614798460368,
-        "y": 7.715949278052403
+        "x": 5.053633184189446,
+        "y": 6.778589711025576
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 2.0999999999999996,
-      "rotationDegrees": 180.0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -79,7 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intake"
+                "name": "intakeRev"
               }
             }
           ]
@@ -95,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -166.23542283290988,
-    "rotateFast": true
+    "rotation": -165.81305782773103,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3CloseAndMore",
   "previewStartingState": {
-    "rotation": -167.28,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

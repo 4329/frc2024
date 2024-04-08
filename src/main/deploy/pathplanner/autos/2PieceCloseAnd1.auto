@@ -46,6 +46,24 @@
           "data": {
             "name": "speakershoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BAnd1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "speakershoot"
+          }
         }
       ]
     }

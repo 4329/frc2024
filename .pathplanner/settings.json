@@ -3,13 +3,14 @@
   "robotLength": 0.85,
   "holonomicMode": true,
   "pathFolders": [
-    "teststuffpathstufftest test",
-    "lajdsvoiaewr"
+    "2NoteFar",
+    "2PieceBottom",
+    "3CloseAndMore",
+    "3Note",
+    "4Note",
+    "2CloseAndMore"
   ],
-  "autoFolders": [
-    "ActualAutos",
-    "NotActualAutos"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
