@@ -1,15 +1,21 @@
 package frc.robot.utilities;
 
+import frc.robot.Model.CommandLogEntry;
 import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class LightCommandScheduler implements Runnable {
+
+  private CommandLogEntry commandLogEntry;
+  private String stage;
+
   private LightCommand currentLightCommand;
   private LightCommand defaultLightCommand;
   private LightSubsystem lightSubsystem;
 
   public LightCommandScheduler(LightSubsystem lightSubsystem) {
     this.lightSubsystem = lightSubsystem;
+    commandLogEntry = new CommandLogEntry();
   }
 
   @Override
@@ -17,9 +23,11 @@ public class LightCommandScheduler implements Runnable {
     while (true) {
       if (currentLightCommand != null) {
         currentLightCommand.lightExecute();
+        stage = "execute";
 
         if (currentLightCommand.isFinished()) {
           currentLightCommand.end(false);
+          stage = "end";
           currentLightCommand = defaultLightCommand;
 
           if (defaultLightCommand != null) defaultLightCommand.lightInitialize();
@@ -35,6 +43,7 @@ public class LightCommandScheduler implements Runnable {
     if (currentLightCommand != null) currentLightCommand.end(true);
 
     command.lightInitialize();
+    stage = "initialize";
 
     currentLightCommand = command;
   }
@@ -57,9 +66,7 @@ public class LightCommandScheduler implements Runnable {
   }
 
   public void logPlease() {
-    String a = currentLightCommand != null ? currentLightCommand.getName() : "";
-    String b = defaultLightCommand != null ? defaultLightCommand.getName() : "";
-    Logger.recordOutput("currentCommand", a);
-    Logger.recordOutput("defaultCommand", b);
+    commandLogEntry.set(currentLightCommand.getName(), stage);
+    Logger.processInputs("LightCommand", commandLogEntry);
   }
 }
