@@ -19,6 +19,6 @@ public class IntakeRevCommand extends SequentialCommandGroup {
     super(
         new IntakeWithLineBreakSensor(
             intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
-        new UnInstantCommand((/*portal thingy*/ ) -> shootSubsystem.changeSetpoint(2000)));
+        new UnInstantCommand((/*portal thingy*/ ) -> shootSubsystem.changeSetpoint(3500)));
   }
 }
