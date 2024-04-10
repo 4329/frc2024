@@ -24,9 +24,7 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   private SparkPIDController climberPID;
   private GenericEntry climberPositionGenericEntry;
   private GenericEntry climberActualPositionGenericEntry;
-  private double maxVel = 1;
-  private double maxAccel = 1;
-  private double minVel = 1;
+  private ClimberSetpoints targetClimb = null;
 
   ClimberLogAutoLogged climberLogAutoLogged;
   private final double tolerance = 0.1;
@@ -46,25 +44,20 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, true);
     climberMotor1.setInverted(true);
     climberPID = climberMotor1.getPIDController();
-
-    climberPID.setSmartMotionMaxVelocity(maxVel, 0);
-    climberPID.setSmartMotionMaxAccel(maxAccel, 0);
-    climberPID.setSmartMotionAllowedClosedLoopError(0.5, 0);
     // climberPID.setSmartMotionMinOutputVelocity(1, 0);
-
     climberEncoder = climberMotor1.getEncoder();
     climberMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
     climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
     climberMotor1.setIdleMode(IdleMode.kBrake);
     climberMotor2.setIdleMode(IdleMode.kBrake);
     climberMotor1.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.LEFTMAX.getValue());
-    climberMotor2.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.LEFTMAX.getValue());
+    climberMotor2.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.RIGHTMAX.getValue());
     climberMotor1.setSoftLimit(SoftLimitDirection.kReverse, ClimberSetpoints.ZERO.getValue());
     climberMotor2.setSoftLimit(SoftLimitDirection.kReverse, ClimberSetpoints.ZERO.getValue());
     climberMotor1.enableVoltageCompensation(Constants.voltageCompensation);
     climberMotor2.enableVoltageCompensation(Constants.voltageCompensation);
-    climberMotor1.setSmartCurrentLimit(30);
-    climberMotor2.setSmartCurrentLimit(30);
+    climberMotor1.setSmartCurrentLimit(40);
+    climberMotor2.setSmartCurrentLimit(40);
     climberPositionGenericEntry =
         Shuffleboard.getTab("Arm Angle").add("Climber desired pos", 0).getEntry();
     climberActualPositionGenericEntry =
@@ -78,7 +71,7 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberPID.setI(0);
     climberPID.setD(0);
     climberPID.setFF(0);
-    climberPID.setOutputRange(-0.1, 0.1);
+    climberPID.setOutputRange(-1, 1);
 
     // elevatorEncoder.setPositionConversionFactor(1 /
     // Constants.ArmAngleSubsystemConstants.armGearRatio);
@@ -119,12 +112,12 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public void climberUp() {
 
-    if (setPoint < ClimberSetpoints.LEFTMAX.getValue() - climberPositionalRateOfChange) {
+    if (setPoint < ClimberSetpoints.UPMAX.getValue() - climberPositionalRateOfChange) {
 
       setPoint =
-          Math.min(setPoint + climberPositionalRateOfChange, ClimberSetpoints.LEFTMAX.getValue());
+          Math.min(setPoint + climberPositionalRateOfChange, ClimberSetpoints.UPMAX.getValue());
     } else {
-      setPoint = ClimberSetpoints.LEFTMAX.getValue();
+      setPoint = ClimberSetpoints.UPMAX.getValue();
     }
   }
 
@@ -143,7 +136,7 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     double newSetPoint = setPoint + lkajfds;
 
     if (newSetPoint > ClimberSetpoints.ZERO.getValue()
-        && newSetPoint < ClimberSetpoints.LEFTMAX.getValue()) {
+        && newSetPoint < ClimberSetpoints.UPMAX.getValue()) {
 
       setPoint = newSetPoint;
     }
@@ -161,7 +154,7 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberPositionGenericEntry.setDouble(setPoint);
     climberActualPositionGenericEntry.setDouble(climberEncoder.getPosition());
 
-    climberPID.setReference(setPoint, ControlType.kSmartMotion);
+    climberPID.setReference(setPoint, ControlType.kPosition);
 
     /*
      * digiput.setDouble(digitalInput.get()?1:0);
@@ -178,5 +171,22 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     double climberSpeed = 0.0;
     climberMotor1.set(climberSpeed);
     climberMotor2.set(climberSpeed);
+  }
+
+  public void toggleTarget() {
+
+    if (targetClimb == null) {
+
+      targetClimb = ClimberSetpoints.UPMAX;
+
+    } else if (targetClimb == ClimberSetpoints.UPMAX) {
+
+      targetClimb = ClimberSetpoints.CLIMBED;
+
+    } else if (targetClimb == ClimberSetpoints.CLIMBED) {
+
+      targetClimb = ClimberSetpoints.UPMAX;
+    }
+    setPoint = targetClimb.getValue();
   }
 }

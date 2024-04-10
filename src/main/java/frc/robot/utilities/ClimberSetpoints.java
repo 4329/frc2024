@@ -2,9 +2,11 @@ package frc.robot.utilities;
 
 public enum ClimberSetpoints {
   ZERO(0),
+  CLIMBUP(5),
   // LEFTUP(110),
   // LEFTCLIMB(25.43f),
-  CLIMBERTHINGONE(5f),
+  CLIMBED(5f),
+  UPMAX(200f),
   LEFTMAX(205f),
   // RIGHTUP(110f),
   // RIGHTCLIMBED(28.09f),

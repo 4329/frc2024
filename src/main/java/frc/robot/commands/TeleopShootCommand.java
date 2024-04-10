@@ -44,8 +44,6 @@ public class TeleopShootCommand extends SequentialCommandGroup {
             drivetrain,
             AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker(),
             commandXboxController),
-
-            
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem).withTimeout(2),
             new CenterOnTargetCommandIndefinite(

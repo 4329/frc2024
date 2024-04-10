@@ -1,10 +1,8 @@
 package frc.robot.commands.shootCommands;
 
-import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
@@ -47,7 +45,6 @@ public class ShooterAimCommand extends Command {
       System.out.println("arm shooter aim command is running");
       if (pose3d != null) {
 
-
         if (MathUtils.getActualDistanceFromPose(pose3d) < ShootSubsystem.MAX_SHOT_DISTANCE) {
 
           armAngleSubsystem.setArmAngle(pose3d);
@@ -55,9 +52,7 @@ public class ShooterAimCommand extends Command {
         } else {
 
           armAngleSubsystem.setArmAngle(ArmAngle.PASS);
-
         }
-
       }
     } else {
       armAngleSubsystem.setArmAngle(ArmAngle.PASS);

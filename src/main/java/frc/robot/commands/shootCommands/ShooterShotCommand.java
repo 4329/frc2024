@@ -35,8 +35,9 @@ public class ShooterShotCommand extends Command {
     timer.reset();
 
     if (visionSubsystem.getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker())) {
-      Pose3d pose3d = visionSubsystem.getTargetPoseInRobotSpace(
-          AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
+      Pose3d pose3d =
+          visionSubsystem.getTargetPoseInRobotSpace(
+              AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
       if (pose3d != null) {
 
         if (MathUtils.getActualDistanceFromPose(pose3d) < ShootSubsystem.MAX_SHOT_DISTANCE) {
@@ -46,14 +47,11 @@ public class ShooterShotCommand extends Command {
         } else {
           shootSubsystem.changeSetpoint(ShotRpms.PASS.getValue());
         }
-
       }
     } else {
 
       shootSubsystem.changeSetpoint(ShotRpms.PASS.getValue());
-
     }
-
   }
 
   @Override
