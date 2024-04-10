@@ -31,7 +31,10 @@ public class ToggleIntakeCommand extends ReInitCommand {
     intakeSensorGroup =
         intakeSensorCommand
             .alongWith(indexSensorCommand)
-            .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE));
+            .beforeStarting(
+                new ArmAngleCommand(armAngleSubsystem, ArmAngle.INTAKE)
+                    .beforeStarting(
+                        new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO)));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
 

@@ -12,6 +12,7 @@ import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.utilities.MathUtils;
 import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
@@ -203,7 +204,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
       if (pose3d != null) {
 
         elevatorYes();
-        zGE.setDouble(pose3d.getZ());
+        zGE.setDouble(MathUtils.getActualDistanceFromPose(pose3d));
       }
     }
 

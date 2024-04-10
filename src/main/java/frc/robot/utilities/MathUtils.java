@@ -103,4 +103,9 @@ public class MathUtils {
     Rotation3d rotation3d = one.getRotation().plus(two.getRotation());
     return new Pose3d(translation3d, rotation3d);
   }
+
+  public static double getActualDistanceFromPose(Pose3d pose) {
+
+    return Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2));
+  }
 }
