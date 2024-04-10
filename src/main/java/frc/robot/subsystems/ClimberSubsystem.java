@@ -57,8 +57,10 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
     climberMotor1.setIdleMode(IdleMode.kBrake);
     climberMotor2.setIdleMode(IdleMode.kBrake);
-    climberMotor1.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.MAX.getValue());
+    climberMotor1.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.LEFTMAX.getValue());
+    climberMotor2.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.LEFTMAX.getValue());
     climberMotor1.setSoftLimit(SoftLimitDirection.kReverse, ClimberSetpoints.ZERO.getValue());
+    climberMotor2.setSoftLimit(SoftLimitDirection.kReverse, ClimberSetpoints.ZERO.getValue());
     climberMotor1.enableVoltageCompensation(Constants.voltageCompensation);
     climberMotor2.enableVoltageCompensation(Constants.voltageCompensation);
     climberMotor1.setSmartCurrentLimit(30);
@@ -117,12 +119,12 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
 
   public void climberUp() {
 
-    if (setPoint < ClimberSetpoints.MAX.getValue() - climberPositionalRateOfChange) {
+    if (setPoint < ClimberSetpoints.LEFTMAX.getValue() - climberPositionalRateOfChange) {
 
       setPoint =
-          Math.min(setPoint + climberPositionalRateOfChange, ClimberSetpoints.MAX.getValue());
+          Math.min(setPoint + climberPositionalRateOfChange, ClimberSetpoints.LEFTMAX.getValue());
     } else {
-      setPoint = ClimberSetpoints.MAX.getValue();
+      setPoint = ClimberSetpoints.LEFTMAX.getValue();
     }
   }
 
@@ -141,7 +143,7 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     double newSetPoint = setPoint + lkajfds;
 
     if (newSetPoint > ClimberSetpoints.ZERO.getValue()
-        && newSetPoint < ClimberSetpoints.MAX.getValue()) {
+        && newSetPoint < ClimberSetpoints.LEFTMAX.getValue()) {
 
       setPoint = newSetPoint;
     }
