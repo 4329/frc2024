@@ -40,9 +40,8 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   public ClimberSubsystem() {
     climberLogAutoLogged = new ClimberLogAutoLogged();
 
-    climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, true);
-    climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, true);
-    climberMotor1.setInverted(true);
+    climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, false);
+    climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, false);
     climberPID = climberMotor1.getPIDController();
     // climberPID.setSmartMotionMinOutputVelocity(1, 0);
     climberEncoder = climberMotor1.getEncoder();

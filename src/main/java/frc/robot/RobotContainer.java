@@ -417,7 +417,7 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem));
+    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem));
     driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem));
     driverController.y().onTrue(toggleShooterSourceCommand);
 

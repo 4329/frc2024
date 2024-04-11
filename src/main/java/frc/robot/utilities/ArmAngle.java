@@ -5,7 +5,7 @@ public enum ArmAngle {
   SUB(0),
   HORIZONTAL(12.5),
   INTAKE(1),
-  PASS(3),
+  PASS(1),
   CLIMB(6),
   SUBWOOF(1),
   INDEXSOURCE(12.5),

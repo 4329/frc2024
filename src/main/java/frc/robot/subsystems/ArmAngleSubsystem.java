@@ -30,7 +30,7 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
 
   private boolean brake;
 
-  private final double tolerance = 0.1;
+  private final double tolerance = 0.2;
   private double setpoint = 0;
 
   double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((59.5 * Math.PI) / (180.0));
