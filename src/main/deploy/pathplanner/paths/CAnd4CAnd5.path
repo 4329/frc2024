@@ -91,13 +91,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 133.0,
+    "rotation": 136.19,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "2NoteFar",
   "previewStartingState": {
-    "rotation": 133.0,
+    "rotation": 136.19,
     "velocity": 0
   },
   "useDefaultConstraints": true
