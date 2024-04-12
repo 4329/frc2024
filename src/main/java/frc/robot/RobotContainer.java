@@ -29,11 +29,6 @@ import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeRevCommand;
-import frc.robot.commands.LightCommands.LightBlankCommand;
-import frc.robot.commands.LightCommands.LightFastProgressCommand;
-import frc.robot.commands.LightCommands.LightProgressCommand;
-import frc.robot.commands.LightCommands.LightRambowCommand;
-import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -75,6 +70,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.LoggingSubsystem;
@@ -82,7 +78,6 @@ import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
@@ -134,12 +129,6 @@ public class RobotContainer {
   private final ToggleIntakeCommand toggleIntakeCommand;
   private final ToggleShooterSourceCommand toggleShooterSourceCommand;
 
-  private final LightProgressCommand lightProgressCommand;
-  private final LightBlankCommand lightBlankCommand;
-  private final LightsOnCommand lightsOnCommand;
-  private final LightRambowCommand lightRambowCommand;
-  private final LightFastProgressCommand lightFastProgressCommand;
-
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
   private final ShotReverseCommand shotReverseCommand;
@@ -156,10 +145,7 @@ public class RobotContainer {
    * @param drivetrain
    * @param lightSubsystem
    */
-  public RobotContainer(
-      Drivetrain drivetrain,
-      CheckLimelightCommand checkLimelightCommand,
-      LightSubsystem lightSubsystem) {
+  public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand) {
     m_robotDrive = drivetrain;
 
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -192,7 +178,7 @@ public class RobotContainer {
             lineBreakSensorSubsystem,
             poseEstimationSubsystem,
             shootSubsystem);
-    this.lightSubsystem = lightSubsystem;
+    lightSubsystem = new LightSubsystem();
 
     // commands for auto
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
@@ -284,12 +270,6 @@ public class RobotContainer {
     // armAngleSubsystem));
 
     new CommandLoginator();
-
-    lightProgressCommand = new LightProgressCommand(lightSubsystem, 0.75, 125, 200);
-    lightBlankCommand = new LightBlankCommand(lightSubsystem);
-    lightsOnCommand = new LightsOnCommand(lightSubsystem);
-    lightRambowCommand = new LightRambowCommand(lightSubsystem);
-    lightFastProgressCommand = new LightFastProgressCommand(lightSubsystem);
 
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
