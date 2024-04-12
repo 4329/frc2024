@@ -2,6 +2,8 @@ package frc.robot.subsystems.lightSubsystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.Color;
@@ -18,6 +20,8 @@ public class LightSubsystem extends SubsystemBase {
   private int brightness = 128;
 
   private List<Color8Bit> savedColors;
+
+  private SerialPort serialPort;
 
   public LightSubsystem(LightIO lightIndividualSubsystemIO) {
     this.lightIO = lightIndividualSubsystemIO;
@@ -38,6 +42,8 @@ public class LightSubsystem extends SubsystemBase {
       hue = 60;
       System.out.println("60%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
+
+    serialPort = new SerialPort(9600, Port.kUSB1);
   }
 
   public void beforeMatchColors() {
@@ -112,10 +118,18 @@ public class LightSubsystem extends SubsystemBase {
     hue %= 180;
   }
 
+  int adsa;
+
   @Override
   public void periodic() {
+    // adsa++;
     lightIO.periodic();
-
+    System.out.println(serialPort.readString());
+    // if (adsa == 200) {
+    byte[] a = "1\n".getBytes();
+    serialPort.write(a, a.length);
+    adsa = 0;
+    // }
     rainbow();
   }
 }
