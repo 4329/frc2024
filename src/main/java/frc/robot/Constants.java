@@ -192,6 +192,8 @@ public final class Constants {
 
     public static final int elevatorMotor1 = 16;
     public static final int elevatorMotor2 = 17;
+    public static final int climberMotor1 = 18;
+    public static final int climberMotor2 = 19;
   }
 
   public static final class LimlihConstants {

@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utilities.ArmAngle;
+import frc.robot.utilities.MathUtils;
 
 public class ShooterAimCommandIndefinite extends Command {
 
@@ -36,14 +39,23 @@ public class ShooterAimCommandIndefinite extends Command {
   public void execute() {
 
     if (visionSubsystem.getTargetVisible(getAprilTagSpeakerIDAprilTagIDSpeaker())) {
-
-      System.out.println("arm shooter aim command is running");
       Pose3d pose3d =
           visionSubsystem.getTargetPoseInRobotSpace(getAprilTagSpeakerIDAprilTagIDSpeaker());
+
+      System.out.println("arm shooter aim command is running");
       if (pose3d != null) {
 
-        armAngleSubsystem.setArmAngle(pose3d);
+        if (MathUtils.getActualDistanceFromPose(pose3d) < ShootSubsystem.MAX_SHOT_DISTANCE) {
+
+          armAngleSubsystem.setArmAngle(pose3d);
+
+        } else {
+
+          armAngleSubsystem.setArmAngle(ArmAngle.PASS);
+        }
       }
+    } else {
+      armAngleSubsystem.setArmAngle(ArmAngle.PASS);
     }
   }
 

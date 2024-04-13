@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.armCommands.ArmAngleCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.utilities.ArmAngle;
 
@@ -12,17 +13,20 @@ public class AmpOutdexSensorCommand extends Command {
   private LineBreakSensorSubsystem lineBreakSensorSubsystem;
   private IndexSubsystem indexSubsystem;
   private ArmAngleSubsystem armAngleSubsystem;
+  private IntakeSubsystem intakeSubsystem;
   private int checks = 0;
   private boolean isBroken;
 
   public AmpOutdexSensorCommand(
       LineBreakSensorSubsystem lineBreakSensorSubsystem,
       IndexSubsystem indexSubsystem,
-      ArmAngleSubsystem armAngleSubsystem) {
+      ArmAngleSubsystem armAngleSubsystem,
+      IntakeSubsystem intakeSubsystem) {
     this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
     this.indexSubsystem = indexSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
-    addRequirements(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
+    addRequirements(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem);
   }
 
   @Override
@@ -37,16 +41,18 @@ public class AmpOutdexSensorCommand extends Command {
 
     if (!lineBreakSensorSubsystem.isNotBroken() && armAngleSubsystem.atSetpoint()) {
       indexSubsystem.backInFrontOut();
+      intakeSubsystem.out();
 
     } else if (lineBreakSensorSubsystem.isNotBroken() && armAngleSubsystem.atSetpoint()) {
       indexSubsystem.backInFrontOut();
+      intakeSubsystem.out();
       checks++;
     }
   }
 
   @Override
   public boolean isFinished() {
-    if (checks >= 30 && lineBreakSensorSubsystem.isNotBroken()) {
+    if (checks >= 75 && lineBreakSensorSubsystem.isNotBroken()) {
 
       return true;
     } else {
@@ -58,5 +64,6 @@ public class AmpOutdexSensorCommand extends Command {
   public void end(boolean interrupted) {
     armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);
     indexSubsystem.stop();
+    intakeSubsystem.stop();
   }
 }

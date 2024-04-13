@@ -7,6 +7,8 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utilities.AprilTagUtil;
+import frc.robot.utilities.MathUtils;
+import frc.robot.utilities.ShotRpms;
 
 public class ShooterShotCommand extends Command {
 
@@ -38,8 +40,17 @@ public class ShooterShotCommand extends Command {
               AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
       if (pose3d != null) {
 
-        shootSubsystem.shooterDistance(pose3d);
+        if (MathUtils.getActualDistanceFromPose(pose3d) < ShootSubsystem.MAX_SHOT_DISTANCE) {
+
+          shootSubsystem.shooterDistance(pose3d);
+
+        } else {
+          shootSubsystem.changeSetpoint(ShotRpms.PASS.getValue());
+        }
       }
+    } else {
+
+      shootSubsystem.changeSetpoint(ShotRpms.PASS.getValue());
     }
   }
 
