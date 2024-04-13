@@ -32,6 +32,8 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   private final double tolerance = 0.1;
   private double setPoint = 0;
   private double climberPositionalRateOfChange = 2;
+  private boolean pitZero = false;
+  private double pitRate = 0.08;
 
   // private SparkAnalogSensor sparkAnalogSensor;
   // GenericEntry digiput;
@@ -45,6 +47,8 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, true);
     climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, false);
     climberPID = climberMotor1.getPIDController();
+    climberPID2 = climberMotor2.getPIDController();
+
     // climberPID.setSmartMotionMinOutputVelocity(1, 0);
     climberEncoder = climberMotor1.getEncoder();
     climberEncoder2 = climberMotor2.getEncoder();
@@ -67,8 +71,6 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberActualPositionGenericEntry =
         Shuffleboard.getTab("Arm Angle").add("Climber Actual pos", 0).getEntry();
 
-    climberMotor2.follow(climberMotor1, true);
-
     climberEncoder.setPosition(0);
     climberEncoder2.setPosition(0);
 
@@ -77,6 +79,12 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberPID.setD(0);
     climberPID.setFF(0);
     climberPID.setOutputRange(-1, 1);
+
+    climberPID2.setP(0.5);
+    climberPID2.setI(0);
+    climberPID2.setD(0);
+    climberPID2.setFF(0);
+    climberPID2.setOutputRange(-1, 1);
 
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();
@@ -158,7 +166,10 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberPositionGenericEntry.setDouble(setPoint);
     climberActualPositionGenericEntry.setDouble(climberEncoder.getPosition());
 
-    climberPID.setReference(setPoint, ControlType.kPosition);
+    if (!pitZero) {
+      climberPID.setReference(setPoint, ControlType.kPosition);
+      climberPID2.setReference(setPoint, ControlType.kPosition);
+    }
 
     /*
      * digiput.setDouble(digitalInput.get()?1:0);
@@ -192,5 +203,41 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
       targetClimb = ClimberSetpoints.UPMAX;
     }
     setPoint = targetClimb.getValue();
+  }
+
+  public void pitDownRight() {
+    pitZero = true;
+    climberMotor2.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    climberMotor2.set(-pitRate);
+  }
+
+  public void pitUpRight() {
+    pitZero = true;
+    climberMotor2.set(pitRate);
+  }
+
+  public void pitDownLeft() {
+    pitZero = true;
+    climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    climberMotor1.set(-pitRate);
+  }
+
+  public void pitUpLeft() {
+    pitZero = true;
+    climberMotor1.set(pitRate);
+  }
+
+  public void pitStopRight() {
+    pitZero = false;
+    climberMotor2.set(0);
+    climberEncoder2.setPosition(0);
+    climberMotor2.enableSoftLimit(SoftLimitDirection.kReverse, true);
+  }
+
+  public void pitStopLeft() {
+    pitZero = false;
+    climberMotor1.set(0);
+    climberEncoder.setPosition(0);
+    climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
   }
 }
