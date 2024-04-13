@@ -269,6 +269,7 @@ public class RobotContainer {
     climberManualCommand =
         new ClimberManualCommand(
             climberSubsystem,
+            armAngleSubsystem,
             () -> driverController.getLeftTriggerAxis(),
             () -> driverController.getRightTriggerAxis());
     limDriveSetCommand =

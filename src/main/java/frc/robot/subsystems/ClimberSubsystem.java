@@ -21,7 +21,9 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   private CANSparkMax climberMotor1;
   private CANSparkMax climberMotor2;
   private RelativeEncoder climberEncoder;
+  private RelativeEncoder climberEncoder2;
   private SparkPIDController climberPID;
+  private SparkPIDController climberPID2;
   private GenericEntry climberPositionGenericEntry;
   private GenericEntry climberActualPositionGenericEntry;
   private ClimberSetpoints targetClimb = null;
@@ -40,13 +42,16 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   public ClimberSubsystem() {
     climberLogAutoLogged = new ClimberLogAutoLogged();
 
-    climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, false);
+    climberMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor1, true);
     climberMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.climberMotor2, false);
     climberPID = climberMotor1.getPIDController();
     // climberPID.setSmartMotionMinOutputVelocity(1, 0);
     climberEncoder = climberMotor1.getEncoder();
+    climberEncoder2 = climberMotor2.getEncoder();
     climberMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
     climberMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    climberMotor2.enableSoftLimit(SoftLimitDirection.kForward, true);
+    climberMotor2.enableSoftLimit(SoftLimitDirection.kReverse, true);
     climberMotor1.setIdleMode(IdleMode.kBrake);
     climberMotor2.setIdleMode(IdleMode.kBrake);
     climberMotor1.setSoftLimit(SoftLimitDirection.kForward, ClimberSetpoints.LEFTMAX.getValue());
@@ -62,9 +67,10 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberActualPositionGenericEntry =
         Shuffleboard.getTab("Arm Angle").add("Climber Actual pos", 0).getEntry();
 
-    climberMotor2.follow(climberMotor1, false);
+    climberMotor2.follow(climberMotor1, true);
 
     climberEncoder.setPosition(0);
+    climberEncoder2.setPosition(0);
 
     climberPID.setP(0.5);
     climberPID.setI(0);
@@ -72,8 +78,6 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
     climberPID.setFF(0);
     climberPID.setOutputRange(-1, 1);
 
-    // elevatorEncoder.setPositionConversionFactor(1 /
-    // Constants.ArmAngleSubsystemConstants.armGearRatio);
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();
 
@@ -86,7 +90,8 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
      * .getEntry();
      */
 
-    // m_reverseLimit = elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    // m_reverseLimit =
+    // elevatorMotor1.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
     // m_reverseLimit.enableLimitSwitch(false);
     // digiputLimit = Shuffleboard.getTab("MagnetSensor").add("MagnetSwitchStatus",
     // false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
