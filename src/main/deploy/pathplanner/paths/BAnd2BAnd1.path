@@ -3,48 +3,54 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.91,
-        "y": 5.56
+        "x": 4.31,
+        "y": 6.38
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4354545632168203,
-        "y": 7.301537679998438
+        "x": 6.583009319864795,
+        "y": 6.9364607959985145
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.733583903687064,
-        "y": 7.237296985292972
+        "x": 8.43799456829683,
+        "y": 7.331138508430864
       },
       "prevControl": {
-        "x": 4.210635934714204,
-        "y": 7.217563099671353
+        "x": 8.796529851614276,
+        "y": 7.416941824096577
       },
       "nextControl": {
-        "x": 5.233228284865404,
-        "y": 7.256151490243098
+        "x": 6.129129950567596,
+        "y": 6.778589711025577
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.8649561550193,
-        "y": 7.237296985292972
+        "x": 4.313612473378794,
+        "y": 6.383911998593228
       },
       "prevControl": {
-        "x": 5.623607481166459,
-        "y": 7.249007821838753
+        "x": 6.583009319864795,
+        "y": 6.946327738809324
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": -166.57099740354323,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
@@ -57,7 +63,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intake"
+                "name": "intakeRev"
               }
             }
           ]
@@ -73,14 +79,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
-    "rotateFast": true
+    "rotation": -163.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "3Note",
+  "folder": "2CloseAndMore",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 0
+    "rotation": -163.0,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

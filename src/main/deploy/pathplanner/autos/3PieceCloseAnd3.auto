@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 4.528926750161193
+      "x": 1.47,
+      "y": 6.59
     },
     "rotation": 180.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteMoveandRot"
+            "pathName": "4NoteRotate"
           }
         },
         {
@@ -32,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteFarPath1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2NoteFarPath2"
+            "pathName": "4PieceFirstPath"
           }
         },
         {
@@ -56,13 +50,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteFarPath3"
+            "pathName": "4PieceSecondPath"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "speakershoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "And3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "speakershoot"
           }
         }
       ]
