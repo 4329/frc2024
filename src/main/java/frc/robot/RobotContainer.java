@@ -62,6 +62,7 @@ import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.CloseShotCommand;
+import frc.robot.commands.shootCommands.PassingShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterSourceCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
@@ -422,7 +423,7 @@ public class RobotContainer {
     driverController.y().onTrue(toggleShooterSourceCommand);
 
     driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
-    driverController.povRight().onTrue(exampleCommand);
+    driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
     driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
