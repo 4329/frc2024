@@ -14,46 +14,7 @@
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 4.5,
+  "maxModuleSpeed": 4.5
   
-  "rainbowString": {
-    "extensions": [
-      ".cs", 
-      ".csx", 
-      ".fs", 
-      ".fsx", 
-      ".vue", 
-      ".js", 
-      ".jsx", 
-      ".ts", 
-      ".tsx", 
-      ".csproj", 
-      ".fsproj", 
-      ".s", 
-      ".bat", 
-      ".c", 
-      ".cpp", 
-      ".d", 
-      ".ex", 
-      ".erl", 
-      ".go", 
-      ".hs", 
-      ".java", 
-      ".kt", 
-      ".lisp", 
-      ".lua", 
-      ".nim", 
-      ".ml", 
-      ".pas", 
-      ".pl", 
-      ".php", 
-      ".py", 
-      ".r", 
-      ".rb", 
-      ".rs", 
-      ".sh", 
-      ".html", 
-      ".swift"
-    ]
-}
+
 }
