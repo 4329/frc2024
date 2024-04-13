@@ -3,9 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
+import frc.robot.commands.elevatorCommands.ElevatorShootCommand;
 // import frc.robot.commands.elevatorCommands.ElevatorShootCommand;
 import frc.robot.commands.elevatorCommands.ElevatorShootCommandIndefinite;
 import frc.robot.commands.shootCommands.ShooterAimCommand;
@@ -32,9 +34,10 @@ public class AutoShootCommand extends SequentialCommandGroup {
     super(
         new ParallelRaceGroup(
             new ParallelCommandGroup(
-                new ShooterAimCommand(visionSubsystem, armAngleSubsystem),
-                // new ElevatorShootCommand(elevatorSubsystem, visionSubsystem)),
-                new ShotRevCommand(shootSubsystem, visionSubsystem))),
+                new ShooterAimCommand(visionSubsystem, armAngleSubsystem, elevatorSubsystem),
+                new ElevatorShootCommand(elevatorSubsystem, visionSubsystem)),
+            new ShotRevCommand(shootSubsystem, visionSubsystem)),
+        new WaitCommand(0.25),
         new ParallelRaceGroup(
             new ShooterShotCommand(shootSubsystem, indexSubsystem, visionSubsystem).withTimeout(2),
             new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem),

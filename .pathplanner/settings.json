@@ -3,12 +3,13 @@
   "robotLength": 0.85,
   "holonomicMode": true,
   "pathFolders": [
+    "2CloseAndMore",
     "2NoteFar",
     "2PieceBottom",
     "3CloseAndMore",
     "3Note",
     "4Note",
-    "2CloseAndMore"
+    "3NoteMid"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
@@ -16,6 +17,4 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5
-  
-
 }

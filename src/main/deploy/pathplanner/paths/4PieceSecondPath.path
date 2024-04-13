@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.91,
-        "y": 7.01
+        "x": 2.99,
+        "y": 7.06
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7989651994982219,
-        "y": 6.618097267985029
+        "x": 1.878965199498222,
+        "y": 6.668097267985029
       },
       "isLocked": false,
       "linkedName": null
@@ -79,13 +79,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 175.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "4Note",
   "previewStartingState": {
-    "rotation": -145.5,
+    "rotation": -154.84,
     "velocity": 0
   },
   "useDefaultConstraints": true

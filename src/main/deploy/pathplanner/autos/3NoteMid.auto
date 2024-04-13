@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.47,
-      "y": 6.59
+      "x": 1.4521990582442719,
+      "y": 5.574822688106915
     },
     "rotation": 180.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4NoteRotate"
+            "pathName": "3NoteMidFirstRot"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPath"
+            "pathName": "3NoteMid1"
           }
         },
         {
@@ -56,7 +56,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceSecondPath"
+            "pathName": "3NoteMid2"
           }
         },
         {
@@ -75,36 +75,6 @@
           "type": "named",
           "data": {
             "name": "speakershoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4PieceThirdPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeRev"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
           }
         }
       ]

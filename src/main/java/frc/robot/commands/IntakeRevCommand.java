@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
+import frc.robot.commands.intakeOuttakeCommands.IntakeSlowWithLineBreakSensor;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -17,8 +17,12 @@ public class IntakeRevCommand extends SequentialCommandGroup {
       ArmAngleSubsystem armAngleSubsystem,
       ShootSubsystem shootSubsystem) {
     super(
-        new IntakeWithLineBreakSensor(
-            intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
+        new IntakeSlowWithLineBreakSensor(
+            intakeSubsystem,
+            indexSubsystem,
+            lineBreakSensorSubsystem,
+            shootSubsystem,
+            armAngleSubsystem),
         new UnInstantCommand((/*portal thingy*/ ) -> shootSubsystem.changeSetpoint(3500)));
   }
 }
