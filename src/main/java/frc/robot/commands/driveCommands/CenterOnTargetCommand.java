@@ -1,11 +1,9 @@
 package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
@@ -51,45 +49,30 @@ public class CenterOnTargetCommand extends Command {
     System.out.println(
         visionSubsystem.CameraConnected() + ", " + visionSubsystem.getTargetVisible(targetId));
     System.out.println(targetId);
-
     if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
 
-      Pose3d targetPose = visionSubsystem.getTargetPoseInRobotSpace(targetId);
+      rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
 
-      double distance = MathUtils.getActualDistanceFromPose(targetPose);
-
-      if (distance >= ShootSubsystem.MAX_SHOT_DISTANCE) {
-
+      if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed) {
+        rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
+      } else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed) {
+        rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
+      } else if (rotationPID.atSetpoint()) {
         rotationCalc = 0;
-
-      } else {
-
-        rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
-
-        if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed) {
-          rotationCalc = Constants.DriveConstants.kMaxAngularSpeed;
-        } else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed) {
-          rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
-        } else if (rotationPID.atSetpoint()) {
-          rotationCalc = 0;
-        }
-
-        double adjTranslation =
-            ((Constants.DriveConstants.kMaxAngularSpeed - Math.abs(rotationCalc))
-                    / Constants.DriveConstants.kMaxAngularSpeed)
-                * 0.5;
-
-        // drivetrain.drive(xboxController.getLeftX() * 0.10, xboxController.getLeftY() * 0.10,
-        // rotationCalc, true);
-
-        System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        System.out.println("rotation output is --> " + rotationCalc);
       }
-    } else {
 
-      rotationCalc = 0;
+      double adjTranslation =
+          ((Constants.DriveConstants.kMaxAngularSpeed - Math.abs(rotationCalc))
+                  / Constants.DriveConstants.kMaxAngularSpeed)
+              * 0.5;
+
+      // drivetrain.drive(xboxController.getLeftX() * 0.10, xboxController.getLeftY() * 0.10,
+      // rotationCalc, true);
+
+      drivetrain.drive(0, 0, rotationCalc, true);
+      System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+      System.out.println("rotation output is --> " + rotationCalc);
     }
-    drivetrain.drive(0, 0, rotationCalc, true);
   }
 
   @Override
