@@ -52,7 +52,7 @@ public class AmpOutdexSensorCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    if (checks >= 30 && lineBreakSensorSubsystem.isNotBroken()) {
+    if (checks >= 75 && lineBreakSensorSubsystem.isNotBroken()) {
 
       return true;
     } else {

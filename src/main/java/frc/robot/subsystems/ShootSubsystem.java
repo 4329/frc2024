@@ -40,30 +40,27 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   private LinearInterpolationTable shotTable =
       new LinearInterpolationTable(
           new Point2D.Double(0.0, 3300),
-          new Point2D.Double(1.7, 3500),
-          new Point2D.Double(1.9, 3700),
-          new Point2D.Double(2.1, 3750),
-          new Point2D.Double(2.3, 3800),
-          new Point2D.Double(2.5, 3900),
-          new Point2D.Double(2.7, 4050),
-          new Point2D.Double(2.9, 4150),
-          new Point2D.Double(3.1, 4300),
-          new Point2D.Double(3.3, 4450),
-          new Point2D.Double(3.5, 4500),
-          new Point2D.Double(3.7, 4650),
-          new Point2D.Double(3.9, 4750),
-          new Point2D.Double(4.1, 4850),
-          new Point2D.Double(4.3, 5000),
-          new Point2D.Double(4.5, 5050),
-          new Point2D.Double(4.7, 5100),
-          new Point2D.Double(4.9, 5125),
-          new Point2D.Double(5.1, 5150),
-          new Point2D.Double(5.35, 5175),
-          new Point2D.Double(5.5, 5350),
-          new Point2D.Double(10, 5400));
-  // new Point2D.Double(3, 3300));
-  // new Point2D.Double(3.2, 3600),
-  // new Point2D.Double(4, 3700));
+          new Point2D.Double(1.8, 3500),
+          new Point2D.Double(2, 3600),
+          new Point2D.Double(2.2, 3650),
+          new Point2D.Double(2.4, 3700),
+          new Point2D.Double(2.6, 3800),
+          new Point2D.Double(2.8, 3900),
+          new Point2D.Double(3, 4000),
+          new Point2D.Double(3.2, 4100),
+          new Point2D.Double(3.4, 4200),
+          new Point2D.Double(3.6, 4300),
+          new Point2D.Double(3.8, 4400),
+          new Point2D.Double(4, 4500),
+          new Point2D.Double(4.2, 4600),
+          new Point2D.Double(4.4, 4700),
+          new Point2D.Double(4.6, 4800),
+          new Point2D.Double(4.8, 4900),
+          new Point2D.Double(5, 5000),
+          new Point2D.Double(5.2, 5050),
+          new Point2D.Double(5.4, 5100),
+          new Point2D.Double(5.6, 5200),
+          new Point2D.Double(10, 5300));
 
   private double setpoint = 0;
   private double tolerance = 40; // arbitrary
