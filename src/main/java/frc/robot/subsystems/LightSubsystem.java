@@ -29,7 +29,7 @@ public class LightSubsystem extends SubsystemBase {
 
   public enum LEDPattern {
     BLUE,
-    CYAN,
+    MAGNETA,
     GREEN,
     YELLOW,
     RED,
@@ -37,7 +37,7 @@ public class LightSubsystem extends SubsystemBase {
   }
 
   public void setLEDPattern(LEDPattern lPattern) {
-    if (currentPattern != null) {
+    if (serialPort != null) {
       byte[] bytey = ((lPattern.ordinal() + 1) + "\n").getBytes();
       serialPort.write(bytey, bytey.length);
 
