@@ -45,15 +45,10 @@ public class LightSubsystem extends SubsystemBase {
     } else {
       System.out.println("No USB");
     }
-    Logger.recordOutput("aaaah", Math.random() + ": " + lPattern);
+    Logger.recordOutput("Current pattern", lPattern);
   }
 
   public LEDPattern getLEDPattern() {
     return currentPattern;
-  }
-
-  @Override
-  public void periodic() {
-    // Logger.recordOutput("Current pattern", currentPattern + ".");
   }
 }
