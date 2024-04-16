@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Model.LimlihLog;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
+import frc.robot.subsystems.LightSubsystem.LEDPattern;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.LimelightHelpers;
 import frc.robot.utilities.LimelightHelpers.LimelightTarget_Fiducial;
@@ -30,10 +31,12 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
 
   private Timer timer;
   private CheckLimelightCommand checkLimelightCommand;
+  private LightSubsystem lightSubsystem;
 
   private LimlihLog limlihLog;
 
-  public LimlihSubsystem(CheckLimelightCommand checkLimelightCommand) {
+  public LimlihSubsystem(
+      CheckLimelightCommand checkLimelightCommand, LightSubsystem lightSubsystem) {
     timer = new Timer();
     timer.start();
     this.checkLimelightCommand = checkLimelightCommand;
@@ -209,6 +212,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
+    if (sight.getBoolean(false)) lightSubsystem.setLEDPattern(LEDPattern.CYAN);
+
     sighttwo.setBoolean(elevatorYes());
 
     updateInputs();

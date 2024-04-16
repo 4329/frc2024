@@ -1,36 +1,59 @@
 package frc.robot.subsystems;
 
-import javax.sql.rowset.serial.SerialException;
-
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class LightSubsystem extends SubsystemBase {
 
   SerialPort serialPort;
+  LEDPattern currentPattern;
 
   public LightSubsystem() {
+    int count = 0;
     try {
       serialPort = new SerialPort(9600, Port.kUSB1);
     } catch (Exception e) {
-      serialPort = new SerialPort(9600, Port.kUSB2);
+      count++;
     }
+    try {
+      serialPort = new SerialPort(9600, Port.kUSB2);
+    } catch (Exception e) {
+      count++;
+    }
+
+    if (count == 2) Logger.recordOutput("Lights", "no :(");
+    else Logger.recordOutput("Lights", "Yes!");
   }
 
   public enum LEDPattern {
     BLUE,
-    CORAL
+    CYAN,
+    GREEN,
+    YELLOW,
+    RED,
+    NOTHING
   }
 
   public void setLEDPattern(LEDPattern lPattern) {
-    byte[] bytey = ((lPattern.ordinal() + 1) + "\n").getBytes();
-    serialPort.write(bytey, bytey.length);
+    if (currentPattern != null) {
+      byte[] bytey = ((lPattern.ordinal() + 1) + "\n").getBytes();
+      serialPort.write(bytey, bytey.length);
+
+      currentPattern = lPattern;
+    } else {
+      System.out.println("No USB");
+    }
+    Logger.recordOutput("aaaah", Math.random() + ": " + lPattern);
+  }
+
+  public LEDPattern getLEDPattern() {
+    return currentPattern;
   }
 
   @Override
   public void periodic() {
-    System.out.println(serialPort.readString());
-    setLEDPattern(LEDPattern.values()[(int)(Math.random() * 2)]);
+    // Logger.recordOutput("Current pattern", currentPattern + ".");
   }
 }
