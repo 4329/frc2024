@@ -98,23 +98,23 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
             new Point2D.Double(1.8, 0),
             new Point2D.Double(2, 0),
             new Point2D.Double(2.2, 1),
-            new Point2D.Double(2.4, 1.5),
-            new Point2D.Double(2.6, 2),
-            new Point2D.Double(2.8, 2.78),
-            new Point2D.Double(3, 3.2),
-            new Point2D.Double(3.2, 3.6),
-            new Point2D.Double(3.4, 4),
-            new Point2D.Double(3.6, 4.4),
-            new Point2D.Double(3.8, 4.68),
-            new Point2D.Double(4, 4.93),
-            new Point2D.Double(4.2, 5.2),
-            new Point2D.Double(4.4, 5.52),
-            new Point2D.Double(4.6, 5.8),
-            new Point2D.Double(4.8, 6),
-            new Point2D.Double(5, 6.2),
-            new Point2D.Double(5.2, 6.4),
-            new Point2D.Double(5.4, 6.4),
-            new Point2D.Double(5.6, 6.55),
+            new Point2D.Double(2.4, 2.8), //
+            // new Point2D.Double(2.6, 2),
+            // new Point2D.Double(2.8, 2.78),
+            new Point2D.Double(3, 4.14), //
+            // new Point2D.Double(3.2, 3.6),
+            // new Point2D.Double(3.4, 4),
+            new Point2D.Double(3.6, 5.6), //
+            // new Point2D.Double(3.8, 4.68),
+            new Point2D.Double(4, 5.8), //
+            // new Point2D.Double(4.2, 5.2),
+            // new Point2D.Double(4.4, 5.52),
+            // new Point2D.Double(4.6, 5.8),
+            // new Point2D.Double(4.8, 6),
+            new Point2D.Double(5, 6.4), //
+            // new Point2D.Double(5.2, 6.4),
+            // new Point2D.Double(5.4, 6.4),
+            // new Point2D.Double(5.6, 6.55),
             new Point2D.Double(10, 6.6));
   }
 
