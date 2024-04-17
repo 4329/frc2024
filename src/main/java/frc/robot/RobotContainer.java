@@ -37,6 +37,10 @@ import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.climberCommands.ClimberClimbCommand;
 import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.climberCommands.ClimberSetCommand;
+import frc.robot.commands.climberCommands.PitDownLeft;
+import frc.robot.commands.climberCommands.PitDownRight;
+import frc.robot.commands.climberCommands.PitUpLeft;
+import frc.robot.commands.climberCommands.PitUpRight;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
@@ -48,7 +52,6 @@ import frc.robot.commands.elevatorCommands.ElevatorArmSubwoofCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
-import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
@@ -59,7 +62,6 @@ import frc.robot.commands.shootCommands.PassingShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterSourceCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
-import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
@@ -366,16 +368,16 @@ public class RobotContainer {
 
 
     // shot tuning
-    operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
-    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    operatorController.y().whileTrue(toggleShooterSourceCommand);
+    // operatorController.a().onTrue(toggleIntakeCommand);
+    // operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
+    // operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    // operatorController.y().whileTrue(toggleShooterSourceCommand);
 
     // // climber zeroing
-    // operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
-    // operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
-    // operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));
-    // operatorController.y().whileTrue(new PitUpLeft(climberSubsystem));
+    operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
+    operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
+    operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));
+    operatorController.y().whileTrue(new PitUpLeft(climberSubsystem));
 
 
 

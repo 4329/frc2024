@@ -30,7 +30,7 @@ public class LightSubsystem extends SubsystemBase {
 
   public enum LEDPattern {
     BLUE,
-    MAGNETA,
+    MAGENTA,
     GREEN,
     YELLOW,
     RED,

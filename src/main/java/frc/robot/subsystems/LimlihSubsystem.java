@@ -213,8 +213,10 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
-    if (sight.getBoolean(false) && LEDPattern.ORANGE.equals(lightSubsystem.getLEDPattern())) {
-      lightSubsystem.setLEDPattern(LEDPattern.MAGNETA);
+    if (LEDPattern.ORANGE.equals(lightSubsystem.getLEDPattern())
+        || LEDPattern.MAGENTA.equals(lightSubsystem.getLEDPattern())) {
+      if (sight.getBoolean(false)) lightSubsystem.setLEDPattern(LEDPattern.MAGENTA);
+      else lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
     }
 
     sighttwo.setBoolean(elevatorYes());

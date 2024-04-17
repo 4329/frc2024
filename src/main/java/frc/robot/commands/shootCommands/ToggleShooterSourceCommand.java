@@ -48,6 +48,8 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
             .withSize(3, 1)
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#000000"))
             .getEntry();
+
+    // addRequirements(elevatorSubsystem, armAngleSubsystem, shootSubsystem);
   }
 
   @Override
