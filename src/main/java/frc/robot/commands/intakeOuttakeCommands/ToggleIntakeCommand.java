@@ -72,10 +72,12 @@ public class ToggleIntakeCommand extends ReInitCommand {
   public void end(boolean interrupted) {
     intakeSensorGroup.cancel();
     toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
-    lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
 
     if (!interrupted) {
       indexReverseForShotCommand.schedule();
+      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+    } else {
+      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
     }
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();

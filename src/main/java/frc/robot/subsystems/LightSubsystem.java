@@ -23,6 +23,7 @@ public class LightSubsystem extends SubsystemBase {
       count++;
     }
 
+    setLEDPattern(LEDPattern.NOTHING);
     if (count == 2) Logger.recordOutput("Lights", "no :(");
     else Logger.recordOutput("Lights", "Yes!");
   }
@@ -33,12 +34,13 @@ public class LightSubsystem extends SubsystemBase {
     GREEN,
     YELLOW,
     RED,
+    ORANGE,
     NOTHING
   }
 
   public void setLEDPattern(LEDPattern lPattern) {
     if (serialPort != null) {
-      byte[] bytey = ((lPattern.ordinal() + 1) + "\n").getBytes();
+      byte[] bytey = (lPattern.ordinal() + "\n").getBytes();
       serialPort.write(bytey, bytey.length);
 
       currentPattern = lPattern;
@@ -50,5 +52,12 @@ public class LightSubsystem extends SubsystemBase {
 
   public LEDPattern getLEDPattern() {
     return currentPattern;
+  }
+
+  @Override
+  public void periodic() {
+    // if (LineBreakSensorSubsystem.NoteStore.isNoted()) {
+    //   setLEDPattern(LEDPattern.ORANGE);
+    // }
   }
 }

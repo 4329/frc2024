@@ -39,12 +39,12 @@ public class AmpOutdexSensorCommand extends Command {
     checks = 0;
     new ArmAngleCommand(armAngleSubsystem, ArmAngle.AMPDEX);
 
+    LineBreakSensorSubsystem.NoteStore.setNoted(false);
     lightSubsystem.setLEDPattern(LEDPattern.RED);
   }
 
   @Override
   public void execute() {
-
     if (!lineBreakSensorSubsystem.isNotBroken() && armAngleSubsystem.atSetpoint()) {
       indexSubsystem.backInFrontOut();
       intakeSubsystem.out();
@@ -58,7 +58,6 @@ public class AmpOutdexSensorCommand extends Command {
   @Override
   public boolean isFinished() {
     if (checks >= 75 && lineBreakSensorSubsystem.isNotBroken()) {
-
       return true;
     } else {
       return false;
@@ -67,8 +66,9 @@ public class AmpOutdexSensorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);
     lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+
+    armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);
     indexSubsystem.stop();
     intakeSubsystem.stop();
   }

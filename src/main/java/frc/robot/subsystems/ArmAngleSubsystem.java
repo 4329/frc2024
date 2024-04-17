@@ -26,24 +26,18 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   private CANSparkMax armMotor;
 
   private RelativeEncoder armEncoder;
-  // private SparkPIDController armPID;
-
-  private boolean brake;
 
   private final double tolerance = 0.1;
   private double setpoint = 0;
 
   double ticksPerRad = ArmAngle.HORIZONTAL.getValue() / ((59.5 * Math.PI) / (180.0));
 
-  private final double speakerHeight = 2.15;
-  private double speakerMod = 0;
   private double rateOfChange = 0.2;
-  private final double goalConstant = speakerHeight - Constants.LimlihConstants.limlihHeight;
+
   private GenericEntry setpointGE;
   private GenericEntry positionGE;
   private GenericEntry velocity;
-  private GenericEntry radians2RotatedGE;
-  private GenericEntry speakerModGE;
+
   private GenericEntry armpidthing;
   private GenericEntry armpidthingagain;
   private ArmAngleLogAutoLogged armAngleLogAutoLogged;
@@ -73,8 +67,6 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
     velocity = Shuffleboard.getTab("Arm Angle").add("velocity", 0).getEntry();
     armpidthing = Shuffleboard.getTab("Arm Angle").add("pidthing POSITION", 0).getEntry();
     armpidthingagain = Shuffleboard.getTab("Arm Angle").add("pidthing VELOCITY", 0).getEntry();
-    // speakerModGE = Shuffleboard.getTab("Arm Angle").add("speakerMod", 0).getEntry();
-    // radians2RotatedGE = Shuffleboard.getTab("Arm Angle").add("Radians2Rotated", 0).getEntry();
 
     armMotor.burnFlash();
     enable();
@@ -96,24 +88,10 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   }
 
   public void setArmAngle(Pose3d pose) {
-
-    // double radians1 = Math.atan2(goalConstant, pose.getZ());
-    // speakerMod = speakerHeight - (radians1 * 0.6) ;
-    // radians1 = MathUtils.clamp(0, 1.03, radians1); //was 1.22
-
-    // double radians2 = Math.atan2(speakerMod, pose.getZ());
-
-    // speakerModGE.setDouble(speakerMod);
-    // radiansRotatedGE.setDouble(radians1);
-    // radians2RotatedGE.setDouble(radians2);
-
-    // setpoint = ArmAngle.HORIZONTAL.getValue() - (radians2 * ticksPerRad);
-
     setpoint = armTable.getOutput(Math.sqrt(Math.pow(pose.getZ(), 2) + Math.pow(pose.getX(), 2)));
   }
 
   public void armInterpolationTable() {
-
     armTable =
         new LinearInterpolationTable(
             new Point2D.Double(0.0, 0),
@@ -138,11 +116,6 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
             new Point2D.Double(5.4, 6.4),
             new Point2D.Double(5.6, 6.55),
             new Point2D.Double(10, 6.6));
-    // new Point2D.Double(2.87, 1.85));
-    // new Point2D.Double(3, 1.59));
-    // new Point2D.Double(3.2, 1.48),
-    // new Point2D.Double(4, 1.5));
-
   }
 
   public boolean atSetpoint() {

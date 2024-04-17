@@ -195,6 +195,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     } else {
       rm_aimBot.setReference(setpoint * speedPercent, CANSparkMax.ControlType.kVelocity);
       lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+      LineBreakSensorSubsystem.NoteStore.setNoted(false);
     }
   }
 

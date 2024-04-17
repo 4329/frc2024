@@ -165,7 +165,7 @@ public class RobotContainer {
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
-    lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
+    lineBreakSensorSubsystem = new LineBreakSensorSubsystem(lightSubsystem);
     poseEstimationSubsystem =
         new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem =
@@ -365,13 +365,13 @@ public class RobotContainer {
 
 
 
-    // // shot tuning
+    // shot tuning
     operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
     operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
     operatorController.y().whileTrue(toggleShooterSourceCommand);
 
-    // //climber zeroing
+    // // climber zeroing
     // operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
     // operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
     // operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));

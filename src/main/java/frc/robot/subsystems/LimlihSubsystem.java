@@ -40,6 +40,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     timer = new Timer();
     timer.start();
     this.checkLimelightCommand = checkLimelightCommand;
+    this.lightSubsystem = lightSubsystem;
 
     zGE = Shuffleboard.getTab("shoot").add("zPose", 0).getEntry();
     sight =
@@ -212,7 +213,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     }
 
     sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
-    if (sight.getBoolean(false)) lightSubsystem.setLEDPattern(LEDPattern.MAGNETA);
+    if (sight.getBoolean(false) && LEDPattern.ORANGE.equals(lightSubsystem.getLEDPattern())) {
+      lightSubsystem.setLEDPattern(LEDPattern.MAGNETA);
+    }
 
     sighttwo.setBoolean(elevatorYes());
 

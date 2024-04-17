@@ -71,7 +71,12 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   public void end(boolean interrupted) {
     indexShooterSensorGroup.cancel();
     toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
-    lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+
+    if (!interrupted) {
+      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+    } else {
+      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+    }
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
     new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE).schedule();
