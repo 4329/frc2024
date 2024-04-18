@@ -45,7 +45,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
     toggleEntry =
         Shuffleboard.getTab("RobotData")
             .add("Intake Toggled", false)
-            .withPosition(7, 3)
+            .withPosition(8, 3)
             .withSize(3, 1)
             .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#000000"))
             .getEntry();

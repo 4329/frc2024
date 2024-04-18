@@ -1,7 +1,12 @@
 package frc.robot.commands.indexCommands;
 
+import java.util.Map;
+
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.armCommands.ArmAngleCommand;
+import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -18,6 +23,7 @@ public class AmpOutdexSensorCommand extends Command {
   private IntakeSubsystem intakeSubsystem;
   private LightSubsystem lightSubsystem;
   private int checks = 0;
+  private GenericEntry amping;
 
   public AmpOutdexSensorCommand(
       LineBreakSensorSubsystem lineBreakSensorSubsystem,
@@ -31,6 +37,8 @@ public class AmpOutdexSensorCommand extends Command {
     this.intakeSubsystem = intakeSubsystem;
     this.lightSubsystem = lightSubsystem;
 
+    amping = Shuffleboard.getTab("RobotData").add("Amping", false).withPosition(7, 4).withSize(3, 2).withProperties(Map.of("Color when true", "FF0000", "Color when false", "000000")).getEntry();
+
     addRequirements(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem);
   }
 
@@ -41,6 +49,7 @@ public class AmpOutdexSensorCommand extends Command {
 
     LineBreakSensorSubsystem.NoteStore.setNoted(false);
     lightSubsystem.setLEDPattern(LEDPattern.RED);
+    amping.setBoolean(true);
   }
 
   @Override
@@ -60,6 +69,7 @@ public class AmpOutdexSensorCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+    amping.setBoolean(false);
 
     armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);
     indexSubsystem.stop();

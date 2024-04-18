@@ -28,6 +28,8 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   private GenericEntry sight;
   private GenericEntry sighttwo;
   private Boolean elevator;
+  
+  private boolean lastSight;
 
   private Timer timer;
   private CheckLimelightCommand checkLimelightCommand;
@@ -46,7 +48,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     sight =
         Shuffleboard.getTab("RobotData")
             .add("Seeing Speaker", false)
-            .withPosition(3, 0)
+            .withPosition(4, 0)
             .withSize(10, 2)
             .withProperties(Map.of("Color when true", "#0000FF", "Color when false", "#000000"))
             .getEntry();
@@ -54,7 +56,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     sighttwo =
         Shuffleboard.getTab("RobotData")
             .add("Need Elevator?", false)
-            .withPosition(3, 2)
+            .withPosition(4, 2)
             .withSize(10, 1)
             .withProperties(Map.of("Color when true", "#00FFFF", "Color when false", "#000000"))
             .getEntry();
@@ -215,9 +217,13 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     sight.setBoolean(getTargetVisible(AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker()));
     if (LEDPattern.ORANGE.equals(lightSubsystem.getLEDPattern())
         || LEDPattern.MAGENTA.equals(lightSubsystem.getLEDPattern())) {
-      if (sight.getBoolean(false)) lightSubsystem.setLEDPattern(LEDPattern.MAGENTA);
-      else lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+      if (sight.getBoolean(false)) {
+        lightSubsystem.setLEDPattern(LEDPattern.MAGENTA);
+      } else if (sight.getBoolean(false) != lastSight) {
+        lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+      }
     }
+    lastSight = sight.getBoolean(false);
 
     sighttwo.setBoolean(elevatorYes());
 

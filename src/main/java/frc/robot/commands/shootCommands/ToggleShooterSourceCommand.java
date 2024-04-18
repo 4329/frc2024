@@ -44,7 +44,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     toggleEntry =
         Shuffleboard.getTab("RobotData")
             .add("Source Intake Toggled", false)
-            .withPosition(3, 3)
+            .withPosition(4, 3)
             .withSize(3, 1)
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#000000"))
             .getEntry();

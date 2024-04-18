@@ -435,7 +435,7 @@ public class RobotContainer {
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
-    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
+    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(4, 2).withPosition(0, 0);
   }
 
   public void robotInit() {
@@ -450,6 +450,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
+    new InstantCommand(() -> shootSubsystem.changeSetpoint(0));
     // limDriveSetCommand.schedule();
     // autoZero.schedule();
   }

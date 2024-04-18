@@ -70,24 +70,6 @@
           "data": {
             "name": "speakershoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "DAnd3Final"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
-          }
         }
       ]
     }
