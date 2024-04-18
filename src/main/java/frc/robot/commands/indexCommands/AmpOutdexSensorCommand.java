@@ -37,7 +37,7 @@ public class AmpOutdexSensorCommand extends Command {
     this.intakeSubsystem = intakeSubsystem;
     this.lightSubsystem = lightSubsystem;
 
-    amping = Shuffleboard.getTab("RobotData").add("Amping", false).withPosition(7, 4).withSize(3, 2).withProperties(Map.of("Color when true", "FF0000", "Color when false", "000000")).getEntry();
+    amping = Shuffleboard.getTab("RobotData").add("Amping", false).withPosition(7, 3).withSize(3, 2).withProperties(Map.of("Color when true", "FF0000", "Color when false", "000000")).getEntry();
 
     addRequirements(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem);
   }
