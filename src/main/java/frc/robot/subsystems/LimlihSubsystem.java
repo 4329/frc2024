@@ -28,7 +28,7 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
   private GenericEntry sight;
   private GenericEntry sighttwo;
   private Boolean elevator;
-  
+
   private boolean lastSight;
 
   private Timer timer;

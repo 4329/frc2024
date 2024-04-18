@@ -11,6 +11,7 @@ import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.LightSubsystem.LEDPattern;
+import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
@@ -21,6 +22,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
   IndexReverseForShotCommand indexReverseForShotCommand;
   ElevatorSubsystem elevatorSubsystem;
   LightSubsystem lightSubsystem;
+  ShootSubsystem shootSubsystem;
 
   private GenericEntry toggleEntry;
 
@@ -30,7 +32,8 @@ public class ToggleIntakeCommand extends ReInitCommand {
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
-      LightSubsystem lightSubsystem) {
+      LightSubsystem lightSubsystem,
+      ShootSubsystem shootSubsystem) {
     intakeSensorGroup =
         intakeSensorCommand
             .alongWith(indexSensorCommand)
@@ -41,6 +44,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
     this.lightSubsystem = lightSubsystem;
+    this.shootSubsystem = shootSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
@@ -56,6 +60,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
     if (!intakeSensorGroup.isScheduled()) {
       intakeSensorGroup.schedule();
       lightSubsystem.setLEDPattern(LEDPattern.GREEN);
+      shootSubsystem.setRPM(-100);
     } else {
       this.cancel();
     }
@@ -70,6 +75,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
 
   @Override
   public void end(boolean interrupted) {
+    shootSubsystem.changeSetpoint(0);
     intakeSensorGroup.cancel();
     toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
 

@@ -237,7 +237,8 @@ public class RobotContainer {
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             armAngleSubsystem,
-            lightSubsystem);
+            lightSubsystem,
+            shootSubsystem);
 
     toggleShooterSourceCommand =
         new ToggleShooterSourceCommand(

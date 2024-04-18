@@ -1,12 +1,9 @@
 package frc.robot.commands.indexCommands;
 
-import java.util.Map;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.armCommands.ArmAngleCommand;
-import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -14,6 +11,7 @@ import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.LightSubsystem.LEDPattern;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.utilities.ArmAngle;
+import java.util.Map;
 
 public class AmpOutdexSensorCommand extends Command {
 
@@ -37,7 +35,13 @@ public class AmpOutdexSensorCommand extends Command {
     this.intakeSubsystem = intakeSubsystem;
     this.lightSubsystem = lightSubsystem;
 
-    amping = Shuffleboard.getTab("RobotData").add("Amping", false).withPosition(7, 3).withSize(3, 2).withProperties(Map.of("Color when true", "FF0000", "Color when false", "000000")).getEntry();
+    amping =
+        Shuffleboard.getTab("RobotData")
+            .add("Amping", false)
+            .withPosition(7, 3)
+            .withSize(3, 2)
+            .withProperties(Map.of("Color when true", "FF0000", "Color when false", "000000"))
+            .getEntry();
 
     addRequirements(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem);
   }
