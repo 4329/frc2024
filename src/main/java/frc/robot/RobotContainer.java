@@ -5,8 +5,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,11 +27,6 @@ import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeRevCommand;
-import frc.robot.commands.LightCommands.LightBlankCommand;
-import frc.robot.commands.LightCommands.LightFastProgressCommand;
-import frc.robot.commands.LightCommands.LightProgressCommand;
-import frc.robot.commands.LightCommands.LightRambowCommand;
-import frc.robot.commands.LightCommands.LightsOnCommand;
 import frc.robot.commands.TeleopShootCommand;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.armCommands.ArmDownCommand;
@@ -44,6 +37,10 @@ import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.climberCommands.ClimberClimbCommand;
 import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.climberCommands.ClimberSetCommand;
+import frc.robot.commands.climberCommands.PitDownLeft;
+import frc.robot.commands.climberCommands.PitDownRight;
+import frc.robot.commands.climberCommands.PitUpLeft;
+import frc.robot.commands.climberCommands.PitUpRight;
 import frc.robot.commands.driveCommands.CenterOnTargetCommand;
 import frc.robot.commands.driveCommands.ChangeFieldOrientCommand;
 import frc.robot.commands.driveCommands.CoastCommand;
@@ -55,7 +52,6 @@ import frc.robot.commands.elevatorCommands.ElevatorArmSubwoofCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
-import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
@@ -66,7 +62,6 @@ import frc.robot.commands.shootCommands.PassingShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterSourceCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
-import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
@@ -75,6 +70,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.LimlihSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.LoggingSubsystem;
@@ -82,7 +78,6 @@ import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.PoseEstimationSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.lightSubsystem.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.ArmAngle;
@@ -134,12 +129,6 @@ public class RobotContainer {
   private final ToggleIntakeCommand toggleIntakeCommand;
   private final ToggleShooterSourceCommand toggleShooterSourceCommand;
 
-  private final LightProgressCommand lightProgressCommand;
-  private final LightBlankCommand lightBlankCommand;
-  private final LightsOnCommand lightsOnCommand;
-  private final LightRambowCommand lightRambowCommand;
-  private final LightFastProgressCommand lightFastProgressCommand;
-
   private final CenterOnTargetCommand centerOnTargetCommand;
   private final ShootCommand shootCommand;
   private final ShotReverseCommand shotReverseCommand;
@@ -156,10 +145,7 @@ public class RobotContainer {
    * @param drivetrain
    * @param lightSubsystem
    */
-  public RobotContainer(
-      Drivetrain drivetrain,
-      CheckLimelightCommand checkLimelightCommand,
-      LightSubsystem lightSubsystem) {
+  public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand) {
     m_robotDrive = drivetrain;
 
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -167,11 +153,12 @@ public class RobotContainer {
     m_drive = new DriveByController(m_robotDrive, driverController);
 
     // Subsystem Instantiations
+    lightSubsystem = new LightSubsystem();
     if (HoorayConfig.gimmeConfig().getUsesPhotonVision()) {
       visionSubsystem = new PhotonVisionSubsystem();
       Shuffleboard.getTab("Config").add("Camera", "Photon");
     } else {
-      visionSubsystem = new LimlihSubsystem(checkLimelightCommand);
+      visionSubsystem = new LimlihSubsystem(checkLimelightCommand, lightSubsystem);
       Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
     shootSubsystem = new ShootSubsystem();
@@ -180,7 +167,7 @@ public class RobotContainer {
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
-    lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
+    lineBreakSensorSubsystem = new LineBreakSensorSubsystem(lightSubsystem);
     poseEstimationSubsystem =
         new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem =
@@ -192,7 +179,6 @@ public class RobotContainer {
             lineBreakSensorSubsystem,
             poseEstimationSubsystem,
             shootSubsystem);
-    this.lightSubsystem = lightSubsystem;
 
     // commands for auto
     NamedCommands.registerCommand("rotatie", new PPCenterOnTarget(visionSubsystem));
@@ -250,7 +236,8 @@ public class RobotContainer {
             new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem),
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
-            armAngleSubsystem);
+            armAngleSubsystem,
+            lightSubsystem);
 
     toggleShooterSourceCommand =
         new ToggleShooterSourceCommand(
@@ -259,7 +246,8 @@ public class RobotContainer {
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             shootSubsystem,
-            armAngleSubsystem);
+            armAngleSubsystem,
+            lightSubsystem);
 
     elevatorManualCommand =
         new ElevatorManualCommand(
@@ -274,73 +262,39 @@ public class RobotContainer {
             () -> driverController.getRightTriggerAxis());
     limDriveSetCommand =
         new LimDriveSetCommand(visionSubsystem, drivetrain, poseEstimationSubsystem);
-    // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
     driveToTargetCommand = new DriveToTargetCommand(drivetrain, visionSubsystem, 4, -3);
-
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(visionSubsystem,
-    // armAngleSubsystem));
-
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
-    // armAngleSubsystem));
 
     new CommandLoginator();
 
-    lightProgressCommand = new LightProgressCommand(lightSubsystem, 0.75, 125, 200);
-    lightBlankCommand = new LightBlankCommand(lightSubsystem);
-    lightsOnCommand = new LightsOnCommand(lightSubsystem);
-    lightRambowCommand = new LightRambowCommand(lightSubsystem);
-    lightFastProgressCommand = new LightFastProgressCommand(lightSubsystem);
-
-    // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    // shootSubsystem.setDefaultCommand(shuffleBoardShootCommand);
-    // lightUnderGlowSubsystem.setDefaultCommand(lightBlankCommand);
-
-    // driveToTargetCommand = new DriveToTargetCommand(drivetrain, limlihSubsystem, 4, -3);
-    // armAngleSubsystem.setDefaultCommand(new ShooterAimCommand(limlihSubsystem,
-    // armAngleSubsystem));
-
     m_chooser = new SendableChooser<>();
-    initializeCamera();
+    // initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
   }
 
-  /** Creates and establishes camera streams for the shuffleboard ~Ben */
-  HttpCamera limelight;
+  // /** Creates and establishes camera streams for the shuffleboard ~Ben */
+  // HttpCamera limelight;
 
-  private void initializeCamera() {
+  // private void initializeCamera() {
 
-    // CameraServer.startAutomaticCapture();
-    // // System.out.println(CameraServer.getVideo());
-    // VideoSource[] enumerateSources = VideoSource.enumerateSources();
-    // System.out.println(enumerateSources[0].getName());
-    // if (enumerateSources.length > 0 &&
-    // enumerateSources[0].getName().contains("USB")) {
-    // Shuffleboard.getTab("RobotData").add("Camera",
-    // enumerateSources[0]).withPosition(5, 0).withSize(3, 3)
-    // .withWidget(BuiltInWidgets.kCameraStream);
-    // }
+  //   // CameraServer.startAutomaticCapture();
+  //   // // System.out.println(CameraServer.getVideo());
+  //   // VideoSource[] enumerateSources = VideoSource.enumerateSources();
+  //   // System.out.println(enumerateSources[0].getName());
+  //   // if (enumerateSources.length > 0 &&
+  //   // enumerateSources[0].getName().contains("USB")) {
+  //   // Shuffleboard.getTab("RobotData").add("Camera",
+  //   // enumerateSources[0]).withPosition(5, 0).withSize(3, 3)
+  //   // .withWidget(BuiltInWidgets.kCameraStream);
+  //   // }
 
-    limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
-    System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
-    CameraServer.startAutomaticCapture(limelight);
-    // Shuffleboard.getTab("RobotData").add("Limelight Camera",
-    // limelight).withPosition(2, 0).withSize(2, 2)
-    // .withWidget(BuiltInWidgets.kCameraStream);
-  }
-
-  /* Autonomous :D */
-  private Map<String, Command> createEventMap() {
-    Map<String, Command> eventMap = new HashMap<>();
-    eventMap.put("Example Command", new ExampleCommand());
-    // eventMap.put("shootyshootshoot", CommandGroups.aimAndShoot(shootSubsystem,
-    // m_robotDrive, indexSubsystem, limlihSubsystem, driverController,
-    // armAngleSubsystem).withTimeout(10));
-    // eventMap.put("knomknom", CommandGroups.intakeFull(intakeSubsystem,
-    // indexSubsystem).withTimeout(5));
-
-    return eventMap;
-  }
+  //   limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
+  //   System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
+  //   CameraServer.startAutomaticCapture(limelight);
+  //   // Shuffleboard.getTab("RobotData").add("Limelight Camera",
+  //   // limelight).withPosition(2, 0).withSize(2, 2)
+  //   // .withWidget(BuiltInWidgets.kCameraStream);
+  // }
 
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
@@ -367,36 +321,6 @@ public class RobotContainer {
         m_robotDrive);
   }
 
-  // private SwerveAutoBuilder createAutoBuilder() {
-  //
-  // SwerveAutoBuilder autoBuilder = new GimmeSwerve(
-  //
-  // m_robotDrive::getPose, // Pose2d supplier
-  // m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at
-  // the beginning of auto
-  // Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-  // new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID
-  // constants to correct for translation
-  // // error (used to create the X and Y PID
-  // // controllers)
-  // new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID
-  // constants to correct for rotation
-  // // error (used to create the rotation
-  //
-  // m_robotDrive::setModuleStates, // Module states consumer used to output to
-  // the drive subsystem
-  // createEventMap(),
-  // true, // Should the path be automatically mirrored depending on alliance
-  // color.
-  // // Optional, defaults to true
-  // m_robotDrive // The drive subsystem. Used to properly set the requirements of
-  // path following
-  // // commands
-  // );
-  //
-  // return autoBuilder;
-  // }
-
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
@@ -418,8 +342,8 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem));
-    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem));
+    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
+    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
     driverController.y().onTrue(toggleShooterSourceCommand);
 
     driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
@@ -443,17 +367,17 @@ public class RobotContainer {
 
 
 
-    // // shot tuning
-    operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
-    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    operatorController.y().whileTrue(toggleShooterSourceCommand);
+    // shot tuning
+    // operatorController.a().onTrue(toggleIntakeCommand);
+    // operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
+    // operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    // operatorController.y().whileTrue(toggleShooterSourceCommand);
 
-    // //climber zeroing
-    // operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
-    // operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
-    // operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));
-    // operatorController.y().whileTrue(new PitUpLeft(climberSubsystem));
+    // // climber zeroing
+    operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
+    operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
+    operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));
+    operatorController.y().whileTrue(new PitUpLeft(climberSubsystem));
 
 
 
@@ -461,8 +385,6 @@ public class RobotContainer {
     operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
     operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
     operatorController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
-    
-    
   }
 
   // spotless:on

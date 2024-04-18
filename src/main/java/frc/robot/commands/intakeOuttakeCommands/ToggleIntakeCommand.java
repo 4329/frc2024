@@ -9,6 +9,8 @@ import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LightSubsystem;
+import frc.robot.subsystems.LightSubsystem.LEDPattern;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
 import frc.robot.utilities.ReInitCommand;
@@ -18,8 +20,8 @@ public class ToggleIntakeCommand extends ReInitCommand {
   SequentialCommandGroup intakeSensorGroup;
   IndexReverseForShotCommand indexReverseForShotCommand;
   ElevatorSubsystem elevatorSubsystem;
+  LightSubsystem lightSubsystem;
 
-  // private boolean toggled;
   private GenericEntry toggleEntry;
 
   public ToggleIntakeCommand(
@@ -27,7 +29,8 @@ public class ToggleIntakeCommand extends ReInitCommand {
       IndexSensorCommand indexSensorCommand,
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
-      ArmAngleSubsystem armAngleSubsystem) {
+      ArmAngleSubsystem armAngleSubsystem,
+      LightSubsystem lightSubsystem) {
     intakeSensorGroup =
         intakeSensorCommand
             .alongWith(indexSensorCommand)
@@ -37,6 +40,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
                         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO)));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
+    this.lightSubsystem = lightSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
@@ -51,14 +55,12 @@ public class ToggleIntakeCommand extends ReInitCommand {
   public void initialize() {
     if (!intakeSensorGroup.isScheduled()) {
       intakeSensorGroup.schedule();
-    } else this.cancel();
-    // toggled = !toggled;
-    toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
-  }
+      lightSubsystem.setLEDPattern(LEDPattern.GREEN);
+    } else {
+      this.cancel();
+    }
 
-  @Override
-  public void execute() {
-    System.out.println(intakeSensorGroup.isScheduled());
+    toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
   }
 
   @Override
@@ -69,13 +71,13 @@ public class ToggleIntakeCommand extends ReInitCommand {
   @Override
   public void end(boolean interrupted) {
     intakeSensorGroup.cancel();
-    // toggled = false;
     toggleEntry.setBoolean(intakeSensorGroup.isScheduled());
-    System.out.println(
-        intakeSensorGroup.isScheduled()
-            + "{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+
     if (!interrupted) {
       indexReverseForShotCommand.schedule();
+      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+    } else {
+      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
     }
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();

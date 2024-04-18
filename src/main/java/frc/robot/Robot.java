@@ -13,15 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
-import frc.robot.subsystems.lightSubsystem.LightIO;
-import frc.robot.subsystems.lightSubsystem.LightIOReal;
-import frc.robot.subsystems.lightSubsystem.LightIOSim;
-import frc.robot.subsystems.lightSubsystem.LightSubsystem;
+import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
-import frc.robot.utilities.LEDAllocator.LEDAllocator;
-import frc.robot.utilities.LEDAllocator.RealAllocator;
-import frc.robot.utilities.LEDAllocator.SimAllocator;
 import frc.robot.utilities.SwerveAlignment;
 import java.io.File;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -42,7 +36,6 @@ public class Robot extends LoggedRobot {
   public Robot() {}
 
   private LightSubsystem lightSubsystem;
-  private LEDAllocator ledAllocator;
 
   private File findThumbDir() {
     File f = new File("/media");
@@ -82,12 +75,10 @@ public class Robot extends LoggedRobot {
       // logging
       Constants.robotMode = Mode.REAL;
 
-      ledAllocator = new RealAllocator();
     } else if (isSimulation()) {
       Logger.addDataReceiver(new NT4Publisher());
       Constants.robotMode = Mode.SIM;
 
-      ledAllocator = new SimAllocator();
     } else {
       setUseTiming(false); // Run as fast as possible
       String logPath =
@@ -111,19 +102,11 @@ public class Robot extends LoggedRobot {
     // and put our
     // autonomous chooser on the dashboard.
 
-    lightSubsystem =
-        new LightSubsystem(
-            switch (Constants.robotMode) {
-              case REAL -> new LightIOReal((RealAllocator) ledAllocator, 60);
-              case SIM -> new LightIOSim((SimAllocator) ledAllocator, 60);
-              default -> new LightIO() {};
-            });
-
     drivetrain = new Drivetrain();
     drivetrain.resetOdometry(new Pose2d());
 
     checkLimelightCommand = new CheckLimelightCommand();
-    m_robotContainer = new RobotContainer(drivetrain, checkLimelightCommand, lightSubsystem);
+    m_robotContainer = new RobotContainer(drivetrain, checkLimelightCommand);
 
     drivetrain.resetOdometry(new Pose2d());
     m_robotContainer.robotInit();

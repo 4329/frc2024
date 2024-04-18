@@ -56,7 +56,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
           new Point2D.Double(4.4, 4700),
           new Point2D.Double(4.6, 4800),
           new Point2D.Double(4.8, 4900),
-          new Point2D.Double(5, 5000),
+          new Point2D.Double(5, 5100),
           new Point2D.Double(5.2, 5050),
           new Point2D.Double(5.4, 5100),
           new Point2D.Double(5.6, 5200),
@@ -195,6 +195,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
     } else {
       rm_aimBot.setReference(setpoint * speedPercent, CANSparkMax.ControlType.kVelocity);
       lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
+      LineBreakSensorSubsystem.NoteStore.setNoted(false);
     }
   }
 

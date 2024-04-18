@@ -8,6 +8,8 @@ import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LightSubsystem;
+import frc.robot.subsystems.LightSubsystem.LEDPattern;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ElevatorSetpoints;
@@ -20,8 +22,8 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   ShootSubsystem shootSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   ArmAngleSubsystem armAngleSubsystem;
+  LightSubsystem lightSubsystem;
 
-  // private boolean toggled;
   private GenericEntry toggleEntry;
 
   public ToggleShooterSourceCommand(
@@ -29,15 +31,15 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
       ShootSubsystem shootSubsystem,
-      ArmAngleSubsystem armAngleSubsystem) {
+      ArmAngleSubsystem armAngleSubsystem,
+      LightSubsystem lightSubsystem) {
 
     indexShooterSensorGroup = new SequentialCommandGroup(shooterSourceCommand);
-    // .alongWith(shooterSourceCommand);
-    // .beforeStarting(new ArmAngleCommand(armAngleSubsystem, ArmAngle.SHOOTERSOURCE));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
     this.shootSubsystem = shootSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
+    this.lightSubsystem = lightSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
@@ -46,20 +48,20 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
             .withSize(3, 1)
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#000000"))
             .getEntry();
+
+    // addRequirements(elevatorSubsystem, armAngleSubsystem, shootSubsystem);
   }
 
   @Override
   public void initialize() {
     if (!indexShooterSensorGroup.isScheduled()) {
       indexShooterSensorGroup.schedule();
-    } else this.cancel();
-    // toggled = !toggled;
-    toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
-  }
+      lightSubsystem.setLEDPattern(LEDPattern.YELLOW);
+    } else {
+      this.cancel();
+    }
 
-  @Override
-  public void execute() {
-    System.out.println(indexShooterSensorGroup.isScheduled());
+    toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
   }
 
   @Override
@@ -70,8 +72,13 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   @Override
   public void end(boolean interrupted) {
     indexShooterSensorGroup.cancel();
-    // toggled = false;
     toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
+
+    if (!interrupted) {
+      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+    } else {
+      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+    }
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
     new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE).schedule();
