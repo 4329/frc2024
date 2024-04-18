@@ -21,11 +21,11 @@ public class IntakeSlowWithLineBreakSensor extends SequentialCommandGroup {
       ShootSubsystem shootSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
     super(
+        new UnInstantCommand(() -> shootSubsystem.changeSetpoint(-100)),
         new ParallelCommandGroup(
             new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
             new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),
             new IndexSensorCommand(lineBreakSensorSubsystem, indexSubsystem)),
-        new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
-        new UnInstantCommand(() -> shootSubsystem.changeSetpoint(-100)));
+        new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem));
   }
 }

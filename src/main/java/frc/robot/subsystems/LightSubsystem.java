@@ -35,7 +35,10 @@ public class LightSubsystem extends SubsystemBase {
     YELLOW,
     RED,
     ORANGE,
-    NOTHING
+    NOTHING,
+    ALRED,
+    ALBLUE,
+    CLIMB
   }
 
   public void setLEDPattern(LEDPattern lPattern) {

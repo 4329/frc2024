@@ -100,8 +100,8 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
             new Point2D.Double(2.2, 1),
             new Point2D.Double(2.4, 2.8),
             new Point2D.Double(3, 4.14),
-            new Point2D.Double(3.6, 5.6),
-            new Point2D.Double(4, 5.8),
+            new Point2D.Double(3.6, 4.8),
+            new Point2D.Double(4, 5.3),
             new Point2D.Double(5, 6.4),
             new Point2D.Double(10, 6.6));
   }
@@ -156,6 +156,10 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
   public void setArmAngle(ArmAngle armAngle) {
 
     setpoint = armAngle.getValue();
+  }
+
+  public void setArmAngle(double armAngle) {
+    setpoint = armAngle;
   }
 
   public double getAngleRadians() {

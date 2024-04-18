@@ -58,11 +58,11 @@ public class AmpOutdexSensorCommand extends Command {
 
   @Override
   public void execute() {
-    if (armAngleSubsystem.atSetpoint()) {
-      indexSubsystem.backInFrontOut();
-      intakeSubsystem.out();
-      if (lineBreakSensorSubsystem.isNotBroken()) checks++;
-    }
+    // if (armAngleSubsystem.atSetpoint()) {
+    indexSubsystem.backInFrontOut();
+    intakeSubsystem.out();
+    if (lineBreakSensorSubsystem.isNotBroken()) checks++;
+    // }
   }
 
   @Override

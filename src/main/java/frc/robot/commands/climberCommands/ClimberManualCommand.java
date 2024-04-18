@@ -3,6 +3,8 @@ package frc.robot.commands.climberCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.LightSubsystem;
+import frc.robot.subsystems.LightSubsystem.LEDPattern;
 import frc.robot.utilities.ArmAngle;
 import java.util.function.Supplier;
 
@@ -10,24 +12,29 @@ public class ClimberManualCommand extends Command {
 
   private ClimberSubsystem climberSubsystem;
   private ArmAngleSubsystem armAngleSubsystem;
+  private LightSubsystem lightSubsystem;
   private Supplier<Double> rightTriggerSupplier;
   private Supplier<Double> leftTriggerSupplier;
 
   public ClimberManualCommand(
       ClimberSubsystem climberSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
+      LightSubsystem lightSubsystem,
       Supplier<Double> leftTriggerSupplier,
       Supplier<Double> rightTriggerSupplier) {
 
     this.climberSubsystem = climberSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
+    this.lightSubsystem = lightSubsystem;
 
     this.leftTriggerSupplier = leftTriggerSupplier;
     this.rightTriggerSupplier = rightTriggerSupplier;
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    lightSubsystem.setLEDPattern(LEDPattern.CLIMB);
+  }
 
   @Override
   public void execute() {
