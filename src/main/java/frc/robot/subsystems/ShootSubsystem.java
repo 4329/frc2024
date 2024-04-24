@@ -79,7 +79,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   private double rP = 0.00006;
   private double rI = 0.000001;
   private double rD = 0.005;
-  private double rFF = 0.0001737;
+  private double rFF = 0.000175;
   private double rIZ = 30;
 
   // private double rP = 0.0000785;
