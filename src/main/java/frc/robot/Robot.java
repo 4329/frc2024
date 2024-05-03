@@ -135,8 +135,6 @@ public class Robot extends LoggedRobot {
     m_robotContainer.robotInit();
 
     checkLimelightCommand.schedule();
-
-    table = Shuffleboard.getTab("field").add("disp", 7).withWidget(BuiltInWidgets.kField).getEntry();
   }
 
   @Override
