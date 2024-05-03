@@ -27,6 +27,13 @@
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
   "wpilib.autoStartRioLog": true,
-  "java.configuration.runtimes": [],
-  "graalvm.installations": []
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "c:\\Users\\Matthew Borchert\\Documents\\graalvm-ce-java17-22.3.3"
+    }
+  ],
+  "graalvm.installations": [
+    "c:\\Users\\Matthew Borchert\\Documents\\graalvm-ce-java17-22.3.3"
+  ]
 }
