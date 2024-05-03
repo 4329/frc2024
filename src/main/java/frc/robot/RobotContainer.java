@@ -1,10 +1,15 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -84,9 +89,6 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ClimberSetpoints;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -392,7 +394,7 @@ public class RobotContainer {
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
   // SwerveAutoBuilder swerveAutoBuilder;
-  Map<Command, String> autoName = new HashMap<Command, String>();
+  Map<Command, PathPlannerAuto> autoName = new HashMap<>();
 
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
@@ -405,7 +407,7 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
 
         String name = pathFile.getName().replace(".auto", "");
-        Command pathCommand = new PathPlannerAuto(name);
+        PathPlannerAuto pathCommand = new PathPlannerAuto(name);
         Command autoCommand =
             new SequentialCommandGroup(
                 new IntakeWithLineBreakSensor(
@@ -414,7 +416,7 @@ public class RobotContainer {
                 new InstantCommand(drivetrain::stop));
         m_chooser.addOption(name, autoCommand);
 
-        autoName.put(autoCommand, name);
+        autoName.put(autoCommand, pathCommand);
       }
 
       SysIdRoutine sysIdRoutine =
@@ -471,6 +473,10 @@ public class RobotContainer {
   }
 
   public String getAutoName(Command command) {
-    return autoName.containsKey(command) ? autoName.get(command) : "Nothing?????/?///?";
+    return autoName.containsKey(command) ? autoName.get(command).getName() : "Nothing?????/?///?";
+  }
+
+  public Map<Command, PathPlannerAuto> yes() {
+    return autoName;
   }
 }
