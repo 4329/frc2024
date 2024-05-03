@@ -54,7 +54,6 @@ public class Robot extends LoggedRobot {
   private CheckLimelightCommand checkLimelightCommand;
 
   private Field2d field = new Field2d();
-  private GenericEntry table;
 
   Timer timer = new Timer();
 
@@ -88,9 +87,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-
-    Shuffleboard.getTab("Path").add("Disp", field);
-
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
     if (isReal()) {
       File logFolder = findThumbDir();
