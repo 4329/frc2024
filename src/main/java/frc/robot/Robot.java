@@ -4,36 +4,15 @@
 
 package frc.robot;
 
-import java.io.File;
-import java.util.List;
-
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +24,14 @@ import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
+import java.io.File;
+import java.util.List;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -57,8 +44,7 @@ public class Robot extends LoggedRobot {
 
   Timer timer = new Timer();
 
-  public Robot() {
-  }
+  public Robot() {}
 
   private LightSubsystem lightSubsystem;
 
@@ -105,8 +91,9 @@ public class Robot extends LoggedRobot {
 
     } else {
       setUseTiming(false); // Run as fast as possible
-      String logPath = LogFileUtil
-          .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      String logPath =
+          LogFileUtil
+              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
       Logger.addDataReceiver(
           new WPILOGWriter(
@@ -165,7 +152,10 @@ public class Robot extends LoggedRobot {
       Trajectory accumulator = new Trajectory();
       List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
       for (int i = 0; i < paths.size(); i++) {
-        accumulator = accumulator.concatenate(pathTrajToTragTraj(paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
+        accumulator =
+            accumulator.concatenate(
+                pathTrajToTragTraj(
+                    paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
       }
       field.getObject("traj").setTrajectory(accumulator);
       SmartDashboard.putData(field);
@@ -185,12 +175,17 @@ public class Robot extends LoggedRobot {
   }
 
   private Trajectory pathTrajToTragTraj(PathPlannerTrajectory pathPlannerTrajectory) {
-    return new Trajectory(pathPlannerTrajectory.getStates().stream().map((state) -> new Trajectory.State(
-        state.timeSeconds,
-        state.velocityMps,
-        state.accelerationMpsSq,
-        new Pose2d(state.positionMeters, state.targetHolonomicRotation),
-        state.curvatureRadPerMeter)).toList());
+    return new Trajectory(
+        pathPlannerTrajectory.getStates().stream()
+            .map(
+                (state) ->
+                    new Trajectory.State(
+                        state.timeSeconds,
+                        state.velocityMps,
+                        state.accelerationMpsSq,
+                        new Pose2d(state.positionMeters, state.targetHolonomicRotation),
+                        state.curvatureRadPerMeter))
+            .toList());
   }
 
   @Override
@@ -202,8 +197,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousExit() {
 
-    Command resetForTeliOp = new InstantCommand(
-        () -> drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
+    Command resetForTeliOp =
+        new InstantCommand(
+            () -> drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
     resetForTeliOp.schedule();
   }
 
