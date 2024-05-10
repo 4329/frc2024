@@ -392,7 +392,7 @@ public class RobotContainer {
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
   // SwerveAutoBuilder swerveAutoBuilder;
-  Map<Command, String> autoName = new HashMap<Command, String>();
+  Map<Command, PathPlannerAuto> autoName = new HashMap<>();
 
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
@@ -405,7 +405,7 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".auto")) {
 
         String name = pathFile.getName().replace(".auto", "");
-        Command pathCommand = new PathPlannerAuto(name);
+        PathPlannerAuto pathCommand = new PathPlannerAuto(name);
         Command autoCommand =
             new SequentialCommandGroup(
                 new IntakeWithLineBreakSensor(
@@ -414,7 +414,7 @@ public class RobotContainer {
                 new InstantCommand(drivetrain::stop));
         m_chooser.addOption(name, autoCommand);
 
-        autoName.put(autoCommand, name);
+        autoName.put(autoCommand, pathCommand);
       }
 
       SysIdRoutine sysIdRoutine =
@@ -471,6 +471,10 @@ public class RobotContainer {
   }
 
   public String getAutoName(Command command) {
-    return autoName.containsKey(command) ? autoName.get(command) : "Nothing?????/?///?";
+    return autoName.containsKey(command) ? autoName.get(command).getName() : "Nothing?????/?///?";
+  }
+
+  public Map<Command, PathPlannerAuto> yes() {
+    return autoName;
   }
 }

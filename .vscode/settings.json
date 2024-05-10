@@ -30,11 +30,10 @@
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-17",
-      "path": "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3"
+      "path": "c:\\Users\\Matthew Borchert\\Documents\\graalvm-ce-java17-22.3.3"
     }
   ],
   "graalvm.installations": [
-    "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3"
-  ],
-  "graalvm.home": "c:\\Users\\Public\\wpilib\\2024\\graalvm-ce-java17-22.3.3"
+    "c:\\Users\\Matthew Borchert\\Documents\\graalvm-ce-java17-22.3.3"
+  ]
 }

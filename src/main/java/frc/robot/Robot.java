@@ -4,10 +4,17 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +25,7 @@ import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
 import java.io.File;
+import java.util.List;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -31,6 +39,9 @@ public class Robot extends LoggedRobot {
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
   private CheckLimelightCommand checkLimelightCommand;
+
+  private Field2d field = new Field2d();
+
   Timer timer = new Timer();
 
   public Robot() {}
@@ -62,7 +73,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
     if (isReal()) {
       File logFolder = findThumbDir();
@@ -135,7 +145,22 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
+
+    if (name != "Nothing?????/?///?") {
+      Trajectory accumulator = new Trajectory();
+      List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
+      for (int i = 0; i < paths.size(); i++) {
+        accumulator =
+            accumulator.concatenate(
+                pathTrajToTragTraj(
+                    paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
+      }
+      field.getObject("traj").setTrajectory(accumulator);
+      SmartDashboard.putData(field);
+    }
+  }
 
   @Override
   public void autonomousInit() {
@@ -147,6 +172,20 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     m_robotContainer.autonomousInit();
+  }
+
+  private Trajectory pathTrajToTragTraj(PathPlannerTrajectory pathPlannerTrajectory) {
+    return new Trajectory(
+        pathPlannerTrajectory.getStates().stream()
+            .map(
+                (state) ->
+                    new Trajectory.State(
+                        state.timeSeconds,
+                        state.velocityMps,
+                        state.accelerationMpsSq,
+                        new Pose2d(state.positionMeters, state.targetHolonomicRotation),
+                        state.curvatureRadPerMeter))
+            .toList());
   }
 
   @Override
