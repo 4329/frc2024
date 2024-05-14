@@ -3,6 +3,8 @@
 
 src/main/java/frc/robot/BuildConstants.java
 
+.vscode
+
 ### C++ ###
 # Prerequisites
 *.d
