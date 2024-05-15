@@ -1,10 +1,15 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -34,6 +39,7 @@ import frc.robot.commands.armCommands.ArmUpCommand;
 import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.MoveArmCommand;
 import frc.robot.commands.armCommands.ShootAmpCommand;
+import frc.robot.commands.armCommands.ShuffleboardArmCommand;
 import frc.robot.commands.climberCommands.ClimberClimbCommand;
 import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.climberCommands.ClimberSetCommand;
@@ -52,6 +58,7 @@ import frc.robot.commands.elevatorCommands.ElevatorArmSubwoofCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
+import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
@@ -62,6 +69,7 @@ import frc.robot.commands.shootCommands.PassingShotCommand;
 import frc.robot.commands.shootCommands.ShootCommand;
 import frc.robot.commands.shootCommands.ShooterSourceCommand;
 import frc.robot.commands.shootCommands.ShotReverseCommand;
+import frc.robot.commands.shootCommands.ShuffleBoardShootCommand;
 import frc.robot.commands.shootCommands.ToggleShooterSourceCommand;
 import frc.robot.commands.visionCommands.CheckLimelightCommand;
 import frc.robot.commands.visionCommands.LimDriveSetCommand;
@@ -84,9 +92,6 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ClimberSetpoints;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -100,6 +105,7 @@ public class RobotContainer {
   // The driver's controllers
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
+  private final CommandXboxController pitController;
   private final DriveByController m_drive;
 
   // Subsystem Declarations
@@ -150,6 +156,7 @@ public class RobotContainer {
 
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    pitController = new CommandXboxController(OIConstants.kPitControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
 
     // Subsystem Instantiations
@@ -237,7 +244,8 @@ public class RobotContainer {
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             armAngleSubsystem,
-            lightSubsystem);
+            lightSubsystem,
+            shootSubsystem);
 
     toggleShooterSourceCommand =
         new ToggleShooterSourceCommand(
@@ -258,6 +266,7 @@ public class RobotContainer {
         new ClimberManualCommand(
             climberSubsystem,
             armAngleSubsystem,
+            lightSubsystem,
             () -> driverController.getLeftTriggerAxis(),
             () -> driverController.getRightTriggerAxis());
     limDriveSetCommand =
@@ -367,24 +376,25 @@ public class RobotContainer {
 
 
 
-    // shot tuning
-    // operatorController.a().onTrue(toggleIntakeCommand);
-    // operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
-    // operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    // operatorController.y().whileTrue(toggleShooterSourceCommand);
-
-    // // climber zeroing
-    operatorController.a().whileTrue(new PitDownRight(climberSubsystem));
-    operatorController.b().whileTrue(new PitUpRight(climberSubsystem));
-    operatorController.x().whileTrue(new PitDownLeft(climberSubsystem));
-    operatorController.y().whileTrue(new PitUpLeft(climberSubsystem));
+    // // shot tuning
+    operatorController.a().onTrue(toggleIntakeCommand);
+    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
+    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    operatorController.y().whileTrue(toggleShooterSourceCommand);
 
 
-
-    operatorController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
+    operatorController.povUp().onTrue(new ShuffleboardArmCommand(armAngleSubsystem));
     operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
     operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
     operatorController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+
+
+
+     // climber zeroing
+    pitController.a().whileTrue(new PitDownRight(climberSubsystem));
+    pitController.b().whileTrue(new PitUpRight(climberSubsystem));
+    pitController.x().whileTrue(new PitDownLeft(climberSubsystem));
+    pitController.y().whileTrue(new PitUpLeft(climberSubsystem));
   }
 
   // spotless:on
@@ -435,7 +445,7 @@ public class RobotContainer {
     }
     // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
-    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
+    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(4, 2).withPosition(0, 0);
   }
 
   public void robotInit() {
@@ -450,6 +460,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_robotDrive.setDefaultCommand(m_drive);
+    new InstantCommand(() -> shootSubsystem.changeSetpoint(0));
     // limDriveSetCommand.schedule();
     // autoZero.schedule();
   }
