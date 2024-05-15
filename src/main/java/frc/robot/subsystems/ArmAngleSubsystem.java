@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
@@ -19,6 +20,7 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.LinearInterpolationTable;
 import frc.robot.utilities.SparkFactory;
 import java.awt.geom.Point2D;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSubsystem {
@@ -149,6 +151,8 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
     armpidthing.setDouble(getController().getPositionError());
     armpidthingagain.setDouble(getController().getVelocityError());
     setGoal(setpoint);
+
+    Logger.recordOutput("dumb", armTable.getOutput(Timer.getFPGATimestamp() % 10));
 
     super.periodic();
   }

@@ -9,6 +9,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utilities.AprilTagUtil;
 import frc.robot.utilities.MathUtils;
 import frc.robot.utilities.ShotRpms;
+import org.littletonrobotics.junction.Logger;
 
 public class ShooterShotCommand extends Command {
 
@@ -30,7 +31,7 @@ public class ShooterShotCommand extends Command {
 
   @Override
   public void initialize() {
-
+    Logger.recordOutput("why", true);
     shot = false;
     timer.reset();
 
@@ -74,6 +75,7 @@ public class ShooterShotCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    Logger.recordOutput("why", false);
 
     shootSubsystem.stop();
     indexSubsystem.stop();

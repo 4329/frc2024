@@ -11,6 +11,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -78,7 +79,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   private double rP = 0.00006;
   private double rI = 0.000001;
   private double rD = 0.005;
-  private double rFF = 0.0001725;
+  private double rFF = 0.000175;
   private double rIZ = 30;
 
   // private double rP = 0.0000785;
@@ -197,6 +198,8 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
       lm_aimBot.setReference(setpoint, CANSparkMax.ControlType.kVelocity);
       LineBreakSensorSubsystem.NoteStore.setNoted(false);
     }
+
+    Logger.recordOutput("ack", shotTable.getOutput(Timer.getFPGATimestamp() % 10));
   }
 
   public void setRPM(double rpm) {

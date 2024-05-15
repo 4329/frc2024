@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.47,
-      "y": 6.6
+      "x": 0.6727105761903848,
+      "y": 4.420390379242297
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4NoteRotate"
+            "pathName": "Spk2NoteMoveandRot"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPath"
+            "pathName": "Spk2NoteFarAnd5"
           }
         },
         {
@@ -50,37 +50,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceSecondPath"
+            "pathName": "2NoteFarPath3"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "And1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
           }
         }
       ]
