@@ -19,7 +19,6 @@ public class AmpOutdexSensorCommand extends Command {
   private IndexSubsystem indexSubsystem;
   private ArmAngleSubsystem armAngleSubsystem;
   private IntakeSubsystem intakeSubsystem;
-  private LightSubsystem lightSubsystem;
   private int checks = 0;
   private GenericEntry amping;
 
@@ -27,13 +26,11 @@ public class AmpOutdexSensorCommand extends Command {
       LineBreakSensorSubsystem lineBreakSensorSubsystem,
       IndexSubsystem indexSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
-      IntakeSubsystem intakeSubsystem,
-      LightSubsystem lightSubsystem) {
+      IntakeSubsystem intakeSubsystem) {
     this.lineBreakSensorSubsystem = lineBreakSensorSubsystem;
     this.indexSubsystem = indexSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
     this.intakeSubsystem = intakeSubsystem;
-    this.lightSubsystem = lightSubsystem;
 
     amping =
         Shuffleboard.getTab("RobotData")

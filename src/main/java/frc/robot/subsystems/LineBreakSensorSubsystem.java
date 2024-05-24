@@ -12,12 +12,10 @@ public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSub
   private DigitalInput shooterLineBreak;
   private DigitalInput telemetryLineBreak;
   private LineBreakAutoLogged lineBreakAutoLogged;
-  private LightSubsystem lightSubsystem;
 
-  public LineBreakSensorSubsystem(LightSubsystem lightSubsystem) {
+  public LineBreakSensorSubsystem() {
 
     this.shooterLineBreak = new DigitalInput(1);
-    this.lightSubsystem = lightSubsystem;
     lineBreakAutoLogged = new LineBreakAutoLogged();
   }
 

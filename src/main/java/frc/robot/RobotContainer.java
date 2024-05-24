@@ -165,7 +165,7 @@ public class RobotContainer {
       visionSubsystem = new PhotonVisionSubsystem();
       Shuffleboard.getTab("Config").add("Camera", "Photon");
     } else {
-      visionSubsystem = new LimlihSubsystem(checkLimelightCommand, lightSubsystem);
+      visionSubsystem = new LimlihSubsystem(checkLimelightCommand);
       Shuffleboard.getTab("Config").add("Camera", "Limlih");
     }
     shootSubsystem = new ShootSubsystem();
@@ -174,7 +174,7 @@ public class RobotContainer {
     indexSubsystem = new IndexSubsystem();
     armAngleSubsystem = new ArmAngleSubsystem();
     elevatorSubsystem = new ElevatorSubsystem();
-    lineBreakSensorSubsystem = new LineBreakSensorSubsystem(lightSubsystem);
+    lineBreakSensorSubsystem = new LineBreakSensorSubsystem();
     poseEstimationSubsystem =
         new PoseEstimationSubsystem(drivetrain, visionSubsystem, armAngleSubsystem);
     loggingSubsystem =
@@ -244,7 +244,6 @@ public class RobotContainer {
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             armAngleSubsystem,
-            lightSubsystem,
             shootSubsystem);
 
     toggleShooterSourceCommand =
@@ -254,8 +253,7 @@ public class RobotContainer {
             new IndexReverseForShotCommand(lineBreakSensorSubsystem, indexSubsystem),
             elevatorSubsystem,
             shootSubsystem,
-            armAngleSubsystem,
-            lightSubsystem);
+            armAngleSubsystem);
 
     elevatorManualCommand =
         new ElevatorManualCommand(
@@ -266,7 +264,6 @@ public class RobotContainer {
         new ClimberManualCommand(
             climberSubsystem,
             armAngleSubsystem,
-            lightSubsystem,
             () -> driverController.getLeftTriggerAxis(),
             () -> driverController.getRightTriggerAxis());
     limDriveSetCommand =
@@ -351,8 +348,8 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
-    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
+    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem));
+    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem));
     driverController.y().onTrue(toggleShooterSourceCommand);
 
     driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));

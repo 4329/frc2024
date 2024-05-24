@@ -21,7 +21,6 @@ public class ToggleIntakeCommand extends ReInitCommand {
   SequentialCommandGroup intakeSensorGroup;
   IndexReverseForShotCommand indexReverseForShotCommand;
   ElevatorSubsystem elevatorSubsystem;
-  LightSubsystem lightSubsystem;
   ShootSubsystem shootSubsystem;
 
   private GenericEntry toggleEntry;
@@ -32,7 +31,6 @@ public class ToggleIntakeCommand extends ReInitCommand {
       IndexReverseForShotCommand indexReverseForShotCommand,
       ElevatorSubsystem elevatorSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
-      LightSubsystem lightSubsystem,
       ShootSubsystem shootSubsystem) {
     intakeSensorGroup =
         intakeSensorCommand
@@ -43,7 +41,6 @@ public class ToggleIntakeCommand extends ReInitCommand {
                         new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO)));
     this.indexReverseForShotCommand = indexReverseForShotCommand;
     this.elevatorSubsystem = elevatorSubsystem;
-    this.lightSubsystem = lightSubsystem;
     this.shootSubsystem = shootSubsystem;
 
     toggleEntry =

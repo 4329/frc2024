@@ -34,8 +34,7 @@ public class TeleopShootCommand extends SequentialCommandGroup {
       VisionSubsystem visionSubsystem,
       CommandXboxController commandXboxController,
       ElevatorSubsystem elevatorSubsystem,
-      ArmAngleSubsystem armAngleSubsystem,
-      LightSubsystem lightSubsystem) {
+      ArmAngleSubsystem armAngleSubsystem) {
 
     super(
         new UnInstantCommand(() -> LightSubsystem.State.setShooting(true)),

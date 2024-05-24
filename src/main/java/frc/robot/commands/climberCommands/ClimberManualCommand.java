@@ -12,20 +12,17 @@ public class ClimberManualCommand extends Command {
 
   private ClimberSubsystem climberSubsystem;
   private ArmAngleSubsystem armAngleSubsystem;
-  private LightSubsystem lightSubsystem;
   private Supplier<Double> rightTriggerSupplier;
   private Supplier<Double> leftTriggerSupplier;
 
   public ClimberManualCommand(
       ClimberSubsystem climberSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
-      LightSubsystem lightSubsystem,
       Supplier<Double> leftTriggerSupplier,
       Supplier<Double> rightTriggerSupplier) {
 
     this.climberSubsystem = climberSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
-    this.lightSubsystem = lightSubsystem;
 
     this.leftTriggerSupplier = leftTriggerSupplier;
     this.rightTriggerSupplier = rightTriggerSupplier;
