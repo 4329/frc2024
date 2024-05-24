@@ -37,7 +37,6 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     this.elevatorSubsystem = elevatorSubsystem;
     this.shootSubsystem = shootSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
-    this.lightSubsystem = lightSubsystem;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
