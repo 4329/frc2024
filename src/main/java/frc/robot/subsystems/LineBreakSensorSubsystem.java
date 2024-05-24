@@ -33,7 +33,7 @@ public class LineBreakSensorSubsystem extends SubsystemBase implements LoggedSub
 
   @Override
   public void periodic() {
-    if (NoteStore.isNoted()) lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+    if (NoteStore.isNoted()) LightSubsystem.State.setHasNote(true);
   }
 
   public static class NoteStore {

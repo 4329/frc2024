@@ -56,7 +56,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   public void initialize() {
     if (!indexShooterSensorGroup.isScheduled()) {
       indexShooterSensorGroup.schedule();
-      lightSubsystem.setLEDPattern(LEDPattern.YELLOW);
+      LightSubsystem.State.setSourcing(true);
     } else {
       this.cancel();
     }
@@ -74,11 +74,8 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     indexShooterSensorGroup.cancel();
     toggleEntry.setBoolean(indexShooterSensorGroup.isScheduled());
 
-    if (!interrupted) {
-      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
-    } else {
-      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
-    }
+    LightSubsystem.State.setHasNote(!interrupted);
+    LightSubsystem.State.setSourcing(false);
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
     new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE).schedule();

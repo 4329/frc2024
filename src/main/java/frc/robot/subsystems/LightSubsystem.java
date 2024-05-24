@@ -10,6 +10,59 @@ public class LightSubsystem extends SubsystemBase {
   SerialPort serialPort;
   LEDPattern currentPattern;
 
+  public static class State {
+    public static boolean shooting;
+    public static boolean climbing;
+    public static boolean outdexing;
+    public static boolean intaking;
+    public static boolean hasNote;
+    public static boolean sourcing;
+    public static boolean inRange;
+
+    public static boolean isShooting() {
+      return shooting;
+    }
+    public static void setShooting(boolean shooting) {
+      State.shooting = shooting;
+    }
+    public static boolean isClimbing() {
+      return climbing;
+    }
+    public static void setClimbing(boolean climbing) {
+      State.climbing = climbing;
+    }
+    public static boolean isOutdexing() {
+      return outdexing;
+    }
+    public static void setOutdexing(boolean outdexing) {
+      State.outdexing = outdexing;
+    }
+    public static boolean isIntaking() {
+      return intaking;
+    }
+    public static void setIntaking(boolean intaking) {
+      State.intaking = intaking;
+    }
+    public static boolean isHasNote() {
+      return hasNote;
+    }
+    public static void setHasNote(boolean hasNote) {
+      State.hasNote = hasNote;
+    }
+    public static boolean isSourcing() {
+      return sourcing;
+    }
+    public static void setSourcing(boolean sourcing) {
+      State.sourcing = sourcing;
+    }
+    public static boolean isInRange() {
+      return inRange;
+    }
+    public static void setInRange(boolean inRange) {
+      State.inRange = inRange;
+    }
+  }
+
   public LightSubsystem() {
     int count = 0;
     try {
@@ -23,7 +76,6 @@ public class LightSubsystem extends SubsystemBase {
       count++;
     }
 
-    setLEDPattern(LEDPattern.NOTHING);
     if (count == 2) Logger.recordOutput("Lights", "no :(");
     else Logger.recordOutput("Lights", "Yes!");
   }
@@ -59,8 +111,6 @@ public class LightSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if (LineBreakSensorSubsystem.NoteStore.isNoted()) {
-    //   setLEDPattern(LEDPattern.ORANGE);
-    // }
+    
   }
 }

@@ -59,7 +59,7 @@ public class ToggleIntakeCommand extends ReInitCommand {
   public void initialize() {
     if (!intakeSensorGroup.isScheduled()) {
       intakeSensorGroup.schedule();
-      lightSubsystem.setLEDPattern(LEDPattern.GREEN);
+      LightSubsystem.State.setIntaking(true);
       shootSubsystem.setRPM(-100);
     } else {
       this.cancel();
@@ -81,10 +81,9 @@ public class ToggleIntakeCommand extends ReInitCommand {
 
     if (!interrupted) {
       indexReverseForShotCommand.schedule();
-      lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
-    } else {
-      lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+      LightSubsystem.State.setHasNote(false);
     }
+    LightSubsystem.State.setIntaking(false);
 
     new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO).schedule();
   }

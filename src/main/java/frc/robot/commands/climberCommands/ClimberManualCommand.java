@@ -33,7 +33,7 @@ public class ClimberManualCommand extends Command {
 
   @Override
   public void initialize() {
-    lightSubsystem.setLEDPattern(LEDPattern.CLIMB);
+    LightSubsystem.State.setClimbing(true);
   }
 
   @Override
@@ -58,5 +58,7 @@ public class ClimberManualCommand extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    LightSubsystem.State.setClimbing(false);
+  }
 }

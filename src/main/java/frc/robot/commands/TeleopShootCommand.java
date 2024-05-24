@@ -38,7 +38,7 @@ public class TeleopShootCommand extends SequentialCommandGroup {
       LightSubsystem lightSubsystem) {
 
     super(
-        new UnInstantCommand(() -> lightSubsystem.setLEDPattern(LEDPattern.BLUE)),
+        new UnInstantCommand(() -> LightSubsystem.State.setShooting(true)),
         new ParallelRaceGroup(
             new ParallelCommandGroup(
                 new ShooterAimCommand(visionSubsystem, armAngleSubsystem, elevatorSubsystem),
@@ -61,6 +61,6 @@ public class TeleopShootCommand extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
             new ElevatorCommand(elevatorSubsystem, ElevatorSetpoints.ZERO)),
-        new UnInstantCommand(() -> lightSubsystem.setLEDPattern(LEDPattern.NOTHING)));
+        new UnInstantCommand(() -> LightSubsystem.State.setShooting(false)));
   }
 }

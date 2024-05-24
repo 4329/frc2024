@@ -52,7 +52,7 @@ public class AmpOutdexSensorCommand extends Command {
     new ArmAngleCommand(armAngleSubsystem, ArmAngle.AMPDEX);
 
     LineBreakSensorSubsystem.NoteStore.setNoted(false);
-    lightSubsystem.setLEDPattern(LEDPattern.RED);
+    LightSubsystem.State.setOutdexing(true);
     amping.setBoolean(true);
   }
 
@@ -72,7 +72,7 @@ public class AmpOutdexSensorCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
+    LightSubsystem.State.setOutdexing(false);
     amping.setBoolean(false);
 
     armAngleSubsystem.setArmAngle(ArmAngle.INTAKE);

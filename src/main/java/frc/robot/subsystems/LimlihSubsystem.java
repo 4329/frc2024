@@ -219,9 +219,9 @@ public class LimlihSubsystem extends SubsystemBase implements VisionSubsystem {
     if (LEDPattern.ORANGE.equals(lightSubsystem.getLEDPattern())
         || LEDPattern.MAGENTA.equals(lightSubsystem.getLEDPattern())) {
       if (tv) {
-        lightSubsystem.setLEDPattern(LEDPattern.MAGENTA);
+        LightSubsystem.State.setInRange(true);
       } else if (tv != lastSight) {
-        lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+        LightSubsystem.State.setInRange(false);
       }
     }
     lastSight = tv;
