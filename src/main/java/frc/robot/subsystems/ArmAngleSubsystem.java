@@ -102,9 +102,13 @@ public class ArmAngleSubsystem extends ProfiledPIDSubsystem implements LoggedSub
             new Point2D.Double(2.2, 1),
             new Point2D.Double(2.4, 2.8),
             new Point2D.Double(3, 4.14),
-            new Point2D.Double(3.6, 4.8),
-            new Point2D.Double(4, 5.3),
-            new Point2D.Double(5, 6.4),
+            new Point2D.Double(3.3, 4.5),
+            new Point2D.Double(3.6, 4.85),
+            new Point2D.Double(3.8, 5.18),
+            new Point2D.Double(4, 5.32),
+            new Point2D.Double(4.4, 5.73),
+            new Point2D.Double(4.7, 6.05),
+            new Point2D.Double(5, 6.05),
             new Point2D.Double(10, 6.6));
   }
 
