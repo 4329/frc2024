@@ -17,16 +17,12 @@ public class IntakeCommand extends Command {
 
   @Override
   public void execute() {
-
-    System.out.println("intake in");
     intakeSubsystem.in();
   }
 
   @Override
   public void end(boolean interrupted) {
     intakeSubsystem.stop();
-
-    System.out.println("intake in stop");
   }
 
   @Override

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.armCommands.ArmCommand;
 import frc.robot.commands.elevatorCommands.ElevatorCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
+import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.subsystems.ArmAngleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LightSubsystem;
@@ -23,6 +24,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
   ElevatorSubsystem elevatorSubsystem;
   ArmAngleSubsystem armAngleSubsystem;
   LightSubsystem lightSubsystem;
+  ToggleIntakeCommand toggleIntakeCommand;
 
   private GenericEntry toggleEntry;
 
@@ -32,7 +34,8 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
       ElevatorSubsystem elevatorSubsystem,
       ShootSubsystem shootSubsystem,
       ArmAngleSubsystem armAngleSubsystem,
-      LightSubsystem lightSubsystem) {
+      LightSubsystem lightSubsystem,
+      ToggleIntakeCommand toggleIntakeCommand) {
 
     indexShooterSensorGroup = shooterSourceCommand;
     this.indexReverseForShotCommand = indexReverseForShotCommand;
@@ -40,6 +43,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
     this.shootSubsystem = shootSubsystem;
     this.armAngleSubsystem = armAngleSubsystem;
     this.lightSubsystem = lightSubsystem;
+    this.toggleIntakeCommand = toggleIntakeCommand;
 
     toggleEntry =
         Shuffleboard.getTab("RobotData")
@@ -76,6 +80,7 @@ public class ToggleShooterSourceCommand extends ReInitCommand {
 
     if (!interrupted) {
       lightSubsystem.setLEDPattern(LEDPattern.ORANGE);
+      toggleIntakeCommand.schedule();
     } else {
       lightSubsystem.setLEDPattern(LEDPattern.NOTHING);
     }

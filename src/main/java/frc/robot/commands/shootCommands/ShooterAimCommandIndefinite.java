@@ -37,7 +37,6 @@ public class ShooterAimCommandIndefinite extends Command {
           visionSubsystem.getTargetPoseInRobotSpace(
               AprilTagUtil.getAprilTagSpeakerIDAprilTagIDSpeaker());
 
-      System.out.println("arm shooter aim command is running");
       if (pose3d != null) {
 
         if (MathUtils.getActualDistanceFromPose(pose3d) < ShootSubsystem.MAX_SHOT_DISTANCE) {

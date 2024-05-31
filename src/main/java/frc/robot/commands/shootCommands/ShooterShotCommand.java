@@ -57,8 +57,6 @@ public class ShooterShotCommand extends Command {
 
   @Override
   public void execute() {
-
-    System.out.println("is shooting from shootershot");
     if (!shot && shootSubsystem.aboveSetpoint() == true) {
 
       timer.start();

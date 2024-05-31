@@ -253,7 +253,8 @@ public class RobotContainer {
             elevatorSubsystem,
             shootSubsystem,
             armAngleSubsystem,
-            lightSubsystem);
+            lightSubsystem,
+            toggleIntakeCommand);
 
     elevatorManualCommand =
         new ElevatorManualCommand(

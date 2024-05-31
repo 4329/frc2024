@@ -46,9 +46,7 @@ public class CenterOnTargetCommand extends Command {
   @Override
   public void execute() {
     double rotationCalc = 0;
-    System.out.println(
-        visionSubsystem.CameraConnected() + ", " + visionSubsystem.getTargetVisible(targetId));
-    System.out.println(targetId);
+    
     if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
 
       rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
@@ -70,8 +68,6 @@ public class CenterOnTargetCommand extends Command {
       // rotationCalc, true);
 
       drivetrain.drive(0, 0, rotationCalc, true);
-      System.out.println("EXECUTE PHOTON VISION IS DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-      System.out.println("rotation output is --> " + rotationCalc);
     }
   }
 

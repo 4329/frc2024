@@ -112,8 +112,6 @@ public class ElevatorSubsystem extends SubsystemBase implements LoggedSubsystem 
           new Point2D.Double(10, 0));
 
   public boolean atSetpoint() {
-
-    System.out.println(elevatorEncoder.getPosition() - setPoint);
     return Math.abs(elevatorEncoder.getPosition() - setPoint) <= tolerance;
   }
 

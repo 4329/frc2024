@@ -18,16 +18,12 @@ public class IndexCommand extends Command {
 
   @Override
   public void execute() {
-
-    System.out.println("index in");
     indexSubsystem.bothIn();
   }
 
   @Override
   public void end(boolean interrupted) {
     indexSubsystem.stop();
-
-    System.out.println("index in stop");
   }
 
   @Override

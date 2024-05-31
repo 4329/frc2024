@@ -117,8 +117,6 @@ public class ClimberSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public boolean atSetpoint() {
-
-    System.out.println(climberEncoder.getPosition() - setPoint);
     return Math.abs(climberEncoder.getPosition() - setPoint) <= tolerance;
   }
 
