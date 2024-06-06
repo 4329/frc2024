@@ -18,16 +18,12 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.*;
-import frc.robot.Model.DrivetrainLog;
-import frc.robot.Model.DrivetrainLogAutoLogged;
 import frc.robot.utilities.FieldRelativeAccel;
 import frc.robot.utilities.FieldRelativeSpeed;
 import org.littletonrobotics.junction.Logger;
 
 /** Implements a swerve Drivetrain Subsystem for the Robot */
 public class Drivetrain extends SubsystemBase {
-
-  private DrivetrainLogAutoLogged drivetrainLogAutoLogged;
 
   public boolean isLocked;
 
@@ -107,8 +103,6 @@ public class Drivetrain extends SubsystemBase {
 
   /** Constructs a Drivetrain and resets the Gyro and Keep Angle parameters */
   public Drivetrain() {
-    drivetrainLogAutoLogged = new DrivetrainLogAutoLogged();
-
     keepAngleTimer.reset();
     keepAngleTimer.start();
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
@@ -167,17 +161,9 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
     // roll.setDouble(getOffsetRoll());
     // pitch.setDouble(ahrs.getPitch());
-    updateInputs(drivetrainLogAutoLogged);
     // Calls get pose function which sends the Pose information to the
     getPose();
   }
-
-  private void updateInputs(DrivetrainLog drivetrainLog) {
-    drivetrainLog.swerveModuleStates = getModuleStates();
-    drivetrainLog.rotation = getGyro();
-    Logger.processInputs("Drivetrain", drivetrainLogAutoLogged);
-  }
-
   /**
    * Sets the swerve ModuleStates.
    *

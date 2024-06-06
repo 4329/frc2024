@@ -4,9 +4,20 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.util.List;
+
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,34 +30,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.visionCommands.CheckLimelightCommand;
-import frc.robot.subsystems.LightSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
-import java.io.File;
-import java.util.List;
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
-  private CheckLimelightCommand checkLimelightCommand;
 
   private Field2d field = new Field2d();
 
   Timer timer = new Timer();
 
   public Robot() {}
-
-  private LightSubsystem lightSubsystem;
 
   private File findThumbDir() {
     File f = new File("/media");
@@ -115,13 +113,11 @@ public class Robot extends LoggedRobot {
     drivetrain = new Drivetrain();
     drivetrain.resetOdometry(new Pose2d());
 
-    checkLimelightCommand = new CheckLimelightCommand();
-    m_robotContainer = new RobotContainer(drivetrain, checkLimelightCommand);
+    m_robotContainer = new RobotContainer(drivetrain);
 
     drivetrain.resetOdometry(new Pose2d());
     m_robotContainer.robotInit();
 
-    checkLimelightCommand.schedule();
   }
 
   @Override
