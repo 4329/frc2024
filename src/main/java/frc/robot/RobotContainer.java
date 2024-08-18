@@ -103,6 +103,7 @@ public class RobotContainer {
   // The driver's controllers
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
+  private final CommandXboxController calibrateController;
   private final CommandXboxController pitController;
   private final DriveByController m_drive;
 
@@ -152,6 +153,7 @@ public class RobotContainer {
   public RobotContainer(Drivetrain drivetrain, CheckLimelightCommand checkLimelightCommand) {
     m_robotDrive = drivetrain;
 
+    calibrateController = new CommandXboxController(OIConstants.kCalibratorControllePort);
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     pitController = new CommandXboxController(OIConstants.kPitControllerPort);
@@ -258,8 +260,8 @@ public class RobotContainer {
     elevatorManualCommand =
         new ElevatorManualCommand(
             elevatorSubsystem,
-            () -> operatorController.getLeftTriggerAxis(),
-            () -> operatorController.getRightTriggerAxis());
+            () -> calibrateController.getLeftTriggerAxis(),
+            () -> calibrateController.getRightTriggerAxis());
     climberManualCommand =
         new ClimberManualCommand(
             climberSubsystem,
@@ -339,60 +341,82 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(climberManualCommand);
-    driverController.leftTrigger().whileTrue(climberManualCommand);
+    // driverController.rightTrigger().whileTrue(climberManualCommand);
+    // driverController.leftTrigger().whileTrue(climberManualCommand);
 
-    driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
-    driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
+    // driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
+    // driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
+    // driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
-    driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
-    driverController.y().onTrue(toggleShooterSourceCommand);
+    // driverController.a().onTrue(toggleIntakeCommand);
+    // driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
+    // driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
+    // driverController.y().onTrue(toggleShooterSourceCommand);
 
-    driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
-    driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
-    driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
-    driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    driverController.povUp().onTrue(resetOdometryCommandForward);
+    // driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
+    // driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
+    driverController.povDown().onTrue(resetOdometryCommandBackward);
 
-    driverController.rightStick().whileTrue(exampleCommand);
-    driverController.leftStick().whileTrue(resetOdometryCommandForward);
-
-    // Operator Controller
-    operatorController.rightTrigger().whileTrue(elevatorManualCommand);
-    operatorController.leftTrigger().whileTrue(elevatorManualCommand);
-
-
-    operatorController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.01));
-    operatorController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.01));
-
-    operatorController.start().whileTrue(new ClimberSetCommand(climberSubsystem, ClimberSetpoints.CLIMBED));
-    operatorController.back().onTrue(changeFieldOrientCommand);
+    // driverController.rightStick().whileTrue(exampleCommand);
+    // driverController.leftStick().onTrue(resetOdometryCommandForward);
 
 
 
-    // // shot tuning
+    //Operator Controller
+    operatorController.rightTrigger().whileTrue(climberManualCommand);
+    operatorController.leftTrigger().whileTrue(climberManualCommand);
+
+    operatorController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
+    operatorController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
+
+    operatorController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
+    // operatorController.back().onTrue(changeFieldOrientCommand);
+
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().whileTrue(new IndexCommand(indexSubsystem));
-    operatorController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
-    operatorController.y().whileTrue(toggleShooterSourceCommand);
+    operatorController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
+    operatorController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
+    // operatorController.y().onTrue(toggleShooterSourceCommand);
 
+    operatorController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
+    operatorController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
+    operatorController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
+    operatorController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
-    operatorController.povUp().onTrue(new ShuffleboardArmCommand(armAngleSubsystem));
-    operatorController.povLeft().onTrue(new DriveByController(m_robotDrive, operatorController, false));
-    operatorController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
-    operatorController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
+    operatorController.rightStick().whileTrue(exampleCommand);
+    // operatorController.leftStick().whileTrue(resetOdometryCommandForward);
 
+    
 
-
+    
      // climber zeroing
     pitController.a().whileTrue(new PitDownRight(climberSubsystem));
     pitController.b().whileTrue(new PitUpRight(climberSubsystem));
     pitController.x().whileTrue(new PitDownLeft(climberSubsystem));
     pitController.y().whileTrue(new PitUpLeft(climberSubsystem));
+    
+     // Calibrater Controller
+    calibrateController.rightTrigger().whileTrue(elevatorManualCommand);
+    calibrateController.leftTrigger().whileTrue(elevatorManualCommand);
+    
+    calibrateController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.01));
+    calibrateController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.01));
+    
+    calibrateController.start().whileTrue(new ClimberSetCommand(climberSubsystem, ClimberSetpoints.CLIMBED));
+    calibrateController.back().onTrue(changeFieldOrientCommand);
+    
+    calibrateController.a().onTrue(toggleIntakeCommand);
+    calibrateController.b().whileTrue(new IndexCommand(indexSubsystem));
+    calibrateController.x().whileTrue(new ShuffleBoardShootCommand(shootSubsystem));
+    calibrateController.y().whileTrue(toggleShooterSourceCommand);
+            
+        
+    calibrateController.povUp().onTrue(new ShuffleboardArmCommand(armAngleSubsystem));
+    calibrateController.povLeft().onTrue(new DriveByController(m_robotDrive, calibrateController, false));
+    calibrateController.povRight().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
+    calibrateController.povDown().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE));
   }
 
   // spotless:on

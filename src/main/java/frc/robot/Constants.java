@@ -160,6 +160,8 @@ public final class Constants {
     // controller will be on a different port
     public static final int kPitControllerPort =
         2; //  When making blah blah blah make the ports different!
+    public static final int kCalibratorControllePort =
+        3; // Is this port different from the others? Good, because it better be...
   }
 
   /*
