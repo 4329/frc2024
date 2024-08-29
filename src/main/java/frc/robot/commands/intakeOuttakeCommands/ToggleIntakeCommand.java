@@ -60,7 +60,6 @@ public class ToggleIntakeCommand extends ReInitCommand {
     if (!intakeSensorGroup.isScheduled()) {
       intakeSensorGroup.schedule();
       lightSubsystem.setLEDPattern(LEDPattern.GREEN);
-      shootSubsystem.setRPM(-100);
     } else {
       this.cancel();
     }

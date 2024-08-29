@@ -5,9 +5,9 @@ public enum ElevatorSetpoints {
   INTAKE(10),
   SOURCE(0),
   SUBWOOF(106),
-  AMPPOINT(108),
+  AMPPOINT(115),
   FULL(109),
-  HIGHLIMIT(110);
+  HIGHLIMIT(115);
 
   private float value;
 

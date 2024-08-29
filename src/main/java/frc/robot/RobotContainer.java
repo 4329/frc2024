@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.ElevatorAngleToAmpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeRevCommand;
 import frc.robot.commands.TeleopShootCommand;
@@ -35,7 +36,6 @@ import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.MoveArmCommand;
 import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.armCommands.ShuffleboardArmCommand;
-import frc.robot.commands.climberCommands.ClimberClimbCommand;
 import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.climberCommands.ClimberSetCommand;
 import frc.robot.commands.climberCommands.PitDownLeft;
@@ -277,6 +277,8 @@ public class RobotContainer {
     // initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
+    // shootSubsystem.setDefaultCommand(
+    // new DefaultShoot(shootSubsystem, visionSubsystem));
   }
 
   // /** Creates and establishes camera streams for the shuffleboard ~Ben */
@@ -339,13 +341,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(climberManualCommand);
-    driverController.leftTrigger().whileTrue(climberManualCommand);
+    // driverController.rightTrigger().whileTrue(climberManualCommand);
+    // driverController.leftTrigger().whileTrue(climberManualCommand);
 
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
+    // driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
+    driverController.start().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
@@ -353,7 +356,7 @@ public class RobotContainer {
     driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
     driverController.y().onTrue(toggleShooterSourceCommand);
 
-    driverController.povUp().onTrue(new ArmCommand(armAngleSubsystem, ArmAngle.AMPDEX));
+    driverController.povUp().onTrue(new ElevatorAngleToAmpCommand(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
     driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
@@ -366,8 +369,8 @@ public class RobotContainer {
     operatorController.leftTrigger().whileTrue(elevatorManualCommand);
 
 
-    operatorController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.01));
-    operatorController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.01));
+    operatorController.rightBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, 0.05));
+    operatorController.leftBumper().whileTrue(new MoveArmCommand(armAngleSubsystem, -0.05));
 
     operatorController.start().whileTrue(new ClimberSetCommand(climberSubsystem, ClimberSetpoints.CLIMBED));
     operatorController.back().onTrue(changeFieldOrientCommand);
