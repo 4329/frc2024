@@ -11,7 +11,7 @@ public class ShootAmpCommand extends Command {
   private IndexSubsystem indexSubsystem;
   private double setPoint = ShotRpms.AMP.getValue();
   private Timer timer = new Timer();
-  private boolean reachedSetpoint = false;
+  private boolean timerStarted = false;
 
   public ShootAmpCommand(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem) {
     this.shootSubsystem = shootSubsystem;
@@ -23,15 +23,15 @@ public class ShootAmpCommand extends Command {
   public void initialize() {
     shootSubsystem.changeSetpoint(setPoint);
     timer.reset();
-    reachedSetpoint = false;
+    timerStarted = false;
   }
 
   @Override
   public void execute() {
-    if (shootSubsystem.aboveSetpoint() && !reachedSetpoint) {
+    if (!timerStarted) {
       indexSubsystem.inShoot();
       timer.start();
-      reachedSetpoint = true;
+      timerStarted = true;
     }
   }
 
