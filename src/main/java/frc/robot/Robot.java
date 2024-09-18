@@ -139,23 +139,25 @@ public class Robot extends LoggedRobot {
     drivetrain.brakeMode();
   }
 
-  // @Override
-  // public void disabledPeriodic() {
-  //   String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
+  String lastName = "";
+  @Override
+  public void disabledPeriodic() {
+    String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
 
-  //   if (name != "Nothing?????/?///?") {
-  //     Trajectory accumulator = new Trajectory();
-  //     List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-  //     for (int i = 0; i < paths.size(); i++) {
-  //       accumulator =
-  //           accumulator.concatenate(
-  //               pathTrajToTragTraj(
-  //                   paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
-  //     }
-  //     field.getObject("traj").setTrajectory(accumulator);
-  //     SmartDashboard.putData(field);
-  //   }
-  // }
+    if (name != lastName && name != "Nothing?????/?///?") {
+      Trajectory accumulator = new Trajectory();
+      List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
+      for (int i = 0; i < paths.size(); i++) {
+        accumulator =
+            accumulator.concatenate(
+                pathTrajToTragTraj(
+                    paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
+      }
+      field.getObject("traj").setTrajectory(accumulator);
+      SmartDashboard.putData(field);
+    }
+    lastName = name;
+  }
 
   @Override
   public void autonomousInit() {
