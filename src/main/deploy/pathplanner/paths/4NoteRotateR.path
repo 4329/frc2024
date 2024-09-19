@@ -3,43 +3,30 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.91,
-        "y": 5.56
+        "x": 1.47,
+        "y": 6.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5242570485140985,
-        "y": 7.449541822160567
+        "x": 1.6077892211212184,
+        "y": 6.556290647373993
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 7.439674879349759
+        "x": 1.91,
+        "y": 6.464381773271393
       },
       "prevControl": {
-        "x": 7.4907071537254275,
-        "y": 7.439674879349759
+        "x": 1.91,
+        "y": 6.464381773271393
       },
       "nextControl": {
-        "x": 9.08927369854397,
-        "y": 7.439674879349759
+        "x": 1.7301393119752462,
+        "y": 6.520769653255081
       },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.688556300189524,
-        "y": 6.699654168539107
-      },
-      "prevControl": {
-        "x": 5.053633184189446,
-        "y": 6.778589711025576
-      },
-      "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
@@ -49,7 +36,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,7 +44,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intakeRev"
+                "name": "revenald"
               }
             }
           ]
@@ -73,11 +60,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -165.81305782773103,
+    "rotation": -139.78,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3CloseAndMore",
+  "folder": "4NoteR",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0
