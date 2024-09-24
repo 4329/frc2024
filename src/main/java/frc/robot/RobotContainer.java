@@ -1,10 +1,15 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -36,6 +41,7 @@ import frc.robot.commands.armCommands.AutoZero;
 import frc.robot.commands.armCommands.MoveArmCommand;
 import frc.robot.commands.armCommands.ShootAmpCommand;
 import frc.robot.commands.armCommands.ShuffleboardArmCommand;
+import frc.robot.commands.climberCommands.ClimberClimbCommand;
 import frc.robot.commands.climberCommands.ClimberManualCommand;
 import frc.robot.commands.climberCommands.ClimberSetCommand;
 import frc.robot.commands.climberCommands.PitDownLeft;
@@ -49,7 +55,6 @@ import frc.robot.commands.driveCommands.DriveByController;
 import frc.robot.commands.driveCommands.DriveToTargetCommand;
 import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
-import frc.robot.commands.elevatorCommands.ElevatorArmSubwoofCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
 import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
@@ -87,9 +92,6 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ClimberSetpoints;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -341,14 +343,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    // driverController.rightTrigger().whileTrue(climberManualCommand);
-    // driverController.leftTrigger().whileTrue(climberManualCommand);
+    driverController.rightTrigger().whileTrue(climberManualCommand);
+    driverController.leftTrigger().whileTrue(climberManualCommand);
 
     driverController.rightBumper().whileTrue(new ArmUpCommand(armAngleSubsystem));
     driverController.leftBumper().whileTrue(new ArmDownCommand(armAngleSubsystem));
 
-    // driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
-    driverController.start().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
+    driverController.start().onTrue(new ClimberClimbCommand(armAngleSubsystem, climberSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
@@ -358,7 +359,7 @@ public class RobotContainer {
 
     driverController.povUp().onTrue(new ElevatorAngleToAmpCommand(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
     driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
-    driverController.povLeft().onTrue(new ElevatorArmSubwoofCommand(elevatorSubsystem, armAngleSubsystem));
+    driverController.povLeft().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 
     driverController.rightStick().whileTrue(exampleCommand);
@@ -374,8 +375,6 @@ public class RobotContainer {
 
     operatorController.start().whileTrue(new ClimberSetCommand(climberSubsystem, ClimberSetpoints.CLIMBED));
     operatorController.back().onTrue(changeFieldOrientCommand);
-
-
 
     // // shot tuning
     operatorController.a().onTrue(toggleIntakeCommand);
