@@ -1,15 +1,10 @@
 package frc.robot;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,12 +52,12 @@ import frc.robot.commands.driveCommands.PPCenterOnTarget;
 import frc.robot.commands.driveCommands.ResetOdometryCommand;
 import frc.robot.commands.elevatorCommands.ElevatorManualCommand;
 import frc.robot.commands.elevatorCommands.ElevatorToAmpCommand;
-import frc.robot.commands.indexCommands.AmpOutdexSensorCommand;
 import frc.robot.commands.indexCommands.IndexCommand;
 import frc.robot.commands.indexCommands.IndexReverseForShotCommand;
 import frc.robot.commands.indexCommands.IndexSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeSensorCommand;
 import frc.robot.commands.intakeOuttakeCommands.IntakeWithLineBreakSensor;
+import frc.robot.commands.intakeOuttakeCommands.OutakeFull;
 import frc.robot.commands.intakeOuttakeCommands.ToggleIntakeCommand;
 import frc.robot.commands.shootCommands.CloseShotCommand;
 import frc.robot.commands.shootCommands.PassingShotCommand;
@@ -92,6 +87,9 @@ import frc.robot.utilities.ArmAngle;
 import frc.robot.utilities.ClimberSetpoints;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -353,7 +351,7 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(new AmpOutdexSensorCommand(lineBreakSensorSubsystem, indexSubsystem, armAngleSubsystem, intakeSubsystem, lightSubsystem));
+    driverController.b().whileTrue(new OutakeFull(intakeSubsystem, indexSubsystem));
     driverController.x().onTrue(new TeleopShootCommand(shootSubsystem, indexSubsystem, m_robotDrive, visionSubsystem, driverController, elevatorSubsystem, armAngleSubsystem, lightSubsystem));
     driverController.y().onTrue(toggleShooterSourceCommand);
 

@@ -32,7 +32,7 @@ public class IntakeSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void in() {
-    topIntakeMotor.set(0.50);
+    topIntakeMotor.set(0.65);
   }
 
   public void out() {
