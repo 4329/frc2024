@@ -46,7 +46,7 @@ public class CenterOnTargetCommand extends Command {
   @Override
   public void execute() {
     double rotationCalc = 0;
-    
+
     if (visionSubsystem.CameraConnected() && visionSubsystem.getTargetVisible(targetId)) {
 
       rotationCalc = rotationPID.calculate(visionSubsystem.getTargetX(targetId));
