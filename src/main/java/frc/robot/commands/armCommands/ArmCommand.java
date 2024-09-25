@@ -18,7 +18,6 @@ public class ArmCommand extends Command {
   @Override
   public void execute() {
     armAngleSubsystem.setArmAngle(armAngle);
-    System.out.println("lkdsjfa;lkdsajf;lsajffdsaf");
   }
 
   @Override

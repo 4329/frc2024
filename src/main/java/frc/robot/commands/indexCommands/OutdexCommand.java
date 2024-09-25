@@ -17,16 +17,12 @@ public class OutdexCommand extends Command {
 
   @Override
   public void execute() {
-
-    System.out.println("index out");
     indexSubsystem.bothOut();
   }
 
   @Override
   public void end(boolean interrupted) {
     indexSubsystem.stop();
-
-    System.out.println("index out stop");
   }
 
   @Override

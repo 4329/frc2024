@@ -164,8 +164,6 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
   }
 
   public void stop() {
-    System.out.println("shootSTOP");
-
     setpoint = 0;
     rightMotor.stopMotor();
     leftMotor.stopMotor();
