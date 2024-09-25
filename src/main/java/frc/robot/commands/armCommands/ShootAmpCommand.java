@@ -4,13 +4,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.utilities.ShotRpms;
 
 public class ShootAmpCommand extends Command {
   private ShootSubsystem shootSubsystem;
   private IndexSubsystem indexSubsystem;
-  private double setPoint = 1500;
+  private double setPoint = ShotRpms.AMP.getValue();
   private Timer timer = new Timer();
-  private boolean reachedSetpoint = false;
+  private boolean timerStarted = false;
 
   public ShootAmpCommand(ShootSubsystem shootSubsystem, IndexSubsystem indexSubsystem) {
     this.shootSubsystem = shootSubsystem;
@@ -22,15 +23,15 @@ public class ShootAmpCommand extends Command {
   public void initialize() {
     shootSubsystem.changeSetpoint(setPoint);
     timer.reset();
-    reachedSetpoint = false;
+    timerStarted = false;
   }
 
   @Override
   public void execute() {
-    if (shootSubsystem.aboveSetpoint() && !reachedSetpoint) {
+    if (!timerStarted) {
       indexSubsystem.inShoot();
       timer.start();
-      reachedSetpoint = true;
+      timerStarted = true;
     }
   }
 

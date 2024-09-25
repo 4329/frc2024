@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4NoteRotate"
+            "pathName": "4NoteRotateB"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPath"
+            "pathName": "4PieceFirstPathB"
           }
         },
         {

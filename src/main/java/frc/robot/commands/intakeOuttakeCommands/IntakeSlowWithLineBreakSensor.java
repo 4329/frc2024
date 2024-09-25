@@ -11,7 +11,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LineBreakSensorSubsystem;
 import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.utilities.ArmAngle;
-import frc.robot.utilities.UnInstantCommand;
 
 public class IntakeSlowWithLineBreakSensor extends SequentialCommandGroup {
   public IntakeSlowWithLineBreakSensor(
@@ -21,7 +20,6 @@ public class IntakeSlowWithLineBreakSensor extends SequentialCommandGroup {
       ShootSubsystem shootSubsystem,
       ArmAngleSubsystem armAngleSubsystem) {
     super(
-        new UnInstantCommand(() -> shootSubsystem.changeSetpoint(-100)),
         new ParallelCommandGroup(
             new ArmCommand(armAngleSubsystem, ArmAngle.INTAKE),
             new IntakeSensorCommand(intakeSubsystem, lineBreakSensorSubsystem),

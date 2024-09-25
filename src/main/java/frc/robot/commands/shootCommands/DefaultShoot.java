@@ -6,15 +6,22 @@ import frc.robot.subsystems.ShootSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utilities.AprilTagUtil;
 
-public class ShooterShotCommandIndefinite extends Command {
+public class DefaultShoot extends Command {
 
   private ShootSubsystem shootSubsystem;
   private VisionSubsystem visionSubsystem;
 
-  public ShooterShotCommandIndefinite(
-      ShootSubsystem shootSubsystem, VisionSubsystem visionSubsystem) {
+  public DefaultShoot(ShootSubsystem shootSubsystem, VisionSubsystem visionSubsystem) {
+
     this.shootSubsystem = shootSubsystem;
     this.visionSubsystem = visionSubsystem;
+    addRequirements(shootSubsystem, visionSubsystem);
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    // TODO Auto-generated method stub
+    super.end(interrupted);
   }
 
   @Override
@@ -29,13 +36,18 @@ public class ShooterShotCommandIndefinite extends Command {
       if (pose3d != null) {
 
         shootSubsystem.shooterDistance(pose3d);
+
+      } else {
+
+        shootSubsystem.setRPM(500);
       }
+
+    } else {
+
+      shootSubsystem.setRPM(500);
     }
   }
 
   @Override
-  public boolean isFinished() {
-
-    return false;
-  }
+  public void initialize() {}
 }

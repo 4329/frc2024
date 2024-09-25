@@ -14,7 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4NoteRotateB"
+            "pathName": "4NoteRotateR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "closeShot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceFirstPathR"
           }
         },
         {
@@ -32,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPathB"
+            "pathName": "4PieceSecondPathR"
           }
         },
         {
@@ -50,7 +68,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BAnd1"
+            "pathName": "4PieceThirdPathR"
           }
         },
         {
@@ -62,7 +80,19 @@
         {
           "type": "named",
           "data": {
+            "name": "intakeRev"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "speakershoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
           }
         }
       ]

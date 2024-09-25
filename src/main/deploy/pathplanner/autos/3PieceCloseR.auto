@@ -14,7 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4NoteRotate"
+            "pathName": "4NoteRotateR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "closeShot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceFirstPathR"
           }
         },
         {
@@ -32,19 +50,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceFirstPath"
+            "pathName": "4PieceSecondPathR"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeRev"
           }
         },
         {
@@ -56,49 +68,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4PieceSecondPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeRev"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4PieceThirdPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeRev"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speakershoot"
+            "pathName": "3PieceLastPathB"
           }
         },
         {
