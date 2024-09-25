@@ -140,6 +140,7 @@ public class Robot extends LoggedRobot {
   }
 
   String lastName = "";
+
   @Override
   public void disabledPeriodic() {
     String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
