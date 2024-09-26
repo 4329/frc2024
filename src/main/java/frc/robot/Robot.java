@@ -150,7 +150,7 @@ public class Robot extends LoggedRobot {
   public void disabledPeriodic() {
     String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
 
-    if (name != lastName && name != "Nothing?????/?///?") {
+    if (!name.equals(lastName) && !name.equals("Nothing?????/?///?")) {
       Trajectory accumulator = new Trajectory();
       List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
       for (int i = 0; i < paths.size(); i++) {
