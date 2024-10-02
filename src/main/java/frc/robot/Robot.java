@@ -40,7 +40,6 @@ public class Robot extends LoggedRobot {
   private Drivetrain drivetrain;
   private CheckLimelightCommand checkLimelightCommand;
 
-  private Field2d field = new Field2d();
 
   Timer timer = new Timer();
 
@@ -144,25 +143,9 @@ public class Robot extends LoggedRobot {
     drivetrain.brakeMode();
   }
 
-  String lastName = "";
-
   @Override
   public void disabledPeriodic() {
-    String name = m_robotContainer.getAutoName(m_robotContainer.getAuto());
-
-    if (!name.equals(lastName) && !name.equals("Nothing?????/?///?")) {
-      Trajectory accumulator = new Trajectory();
-      List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-      for (int i = 0; i < paths.size(); i++) {
-        accumulator =
-            accumulator.concatenate(
-                pathTrajToTragTraj(
-                    paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
-      }
-      field.getObject("traj").setTrajectory(accumulator);
-      SmartDashboard.putData(field);
-    }
-    lastName = name;
+    m_robotContainer.disabledPeriodic();
   }
 
   @Override
@@ -177,19 +160,6 @@ public class Robot extends LoggedRobot {
     m_robotContainer.autonomousInit();
   }
 
-  private Trajectory pathTrajToTragTraj(PathPlannerTrajectory pathPlannerTrajectory) {
-    return new Trajectory(
-        pathPlannerTrajectory.getStates().stream()
-            .map(
-                (state) ->
-                    new Trajectory.State(
-                        state.timeSeconds,
-                        state.velocityMps,
-                        state.accelerationMpsSq,
-                        new Pose2d(state.positionMeters, state.targetHolonomicRotation),
-                        state.curvatureRadPerMeter))
-            .toList());
-  }
 
   @Override
   public void autonomousPeriodic() {
