@@ -2,6 +2,7 @@ package frc.robot.Model;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +45,19 @@ public class AutoDisp extends SendableChooser<Command> {
         if (name == lastName || name == "") return;
 
         List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-        field.getObject("traj").setTrajectory(accumFromPaths(paths));
-        field.getObject("traj1").setTrajectory(accumFromPaths(PathPlannerAuto.getPathGroupFromAutoFile("2NoteFarAnd4")));
+        mapPaths(paths).forEach(path -> field.getObject(path + "").setTrajectory(path));
         SmartDashboard.putData(field);
         lastName = name;
     }
 
-    private Trajectory accumFromPaths(List<PathPlannerPath> paths) {
-        Trajectory accumulator = new Trajectory();
-        for (int i = 0; i < paths.size(); i++) {
-            accumulator = accumulator.concatenate(
+    private List<Trajectory> mapPaths(List<PathPlannerPath> paths) {
+        List<Trajectory> trajectories = new ArrayList<>();
+        for (int i = 0; i < trajectories.size(); i++) {
+            trajectories.add(
                     pathTrajToTragTraj(
                             paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
         }
-        return accumulator;
+        return trajectories;
     }
 
     private Trajectory pathTrajToTragTraj(PathPlannerTrajectory pathPlannerTrajectory) {
