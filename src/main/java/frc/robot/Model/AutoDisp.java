@@ -22,11 +22,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AutoDisp extends SendableChooser<Command> {
 
     private final Map<Command, String> autoNames;
-    private final Field2d field;
+    private final Map<String, List<Trajectory>> cachedPaths;
+    private Field2d field;
     private String lastName;
+    private int numObjects;
 
     public AutoDisp() {
         autoNames = new HashMap<>();
+        cachedPaths = new HashMap<>();
         field = new Field2d();
     }
 
@@ -44,15 +47,23 @@ public class AutoDisp extends SendableChooser<Command> {
         String name = getAutoName(getSelected());
         if (name == lastName || name == "") return;
 
-        List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-        mapPaths(paths).forEach(path -> field.getObject(path + "").setTrajectory(path));
+        if (!cachedPaths.containsKey(name)) {
+            cachedPaths.put(name, mapPaths(PathPlannerAuto.getPathGroupFromAutoFile(name)));
+        }
+
+        List<Trajectory> paths = cachedPaths.get(name);
+        for (int i = 0; i < Math.max(paths.size(), numObjects); i++) {
+            Trajectory tmp = i < paths.size() ? paths.get(i) : new Trajectory();
+            field.getObject(i + "").setTrajectory(tmp);
+        }
+        numObjects = paths.size();
         SmartDashboard.putData(field);
         lastName = name;
     }
 
     private List<Trajectory> mapPaths(List<PathPlannerPath> paths) {
         List<Trajectory> trajectories = new ArrayList<>();
-        for (int i = 0; i < trajectories.size(); i++) {
+        for (int i = 0; i < paths.size(); i++) {
             trajectories.add(
                     pathTrajToTragTraj(
                             paths.get(i).getTrajectory(new ChassisSpeeds(), new Rotation2d())));
