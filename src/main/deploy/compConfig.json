@@ -15,9 +15,9 @@
     "backRightTurningEncoderPort": 2,
 
     "frontLeftOffset": 6.0546,
-    "frontRightOffset": 3.761,
+    "frontRightOffset": 3.8127,
     "backLeftOffset": 1.2780,
-    "backRightOffset": 5.6427,
+    "backRightOffset": 5.6643,
     
     "extraShuffleBoardToggle": false,
     "limelighturl": "http://10.43.29.11:5800",
