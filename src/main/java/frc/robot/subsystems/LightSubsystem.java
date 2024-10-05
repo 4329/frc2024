@@ -24,6 +24,7 @@ public class LightSubsystem extends SubsystemBase {
     private static boolean hasNote;
     private static boolean sourcing;
     private static boolean inRange;
+    private static boolean isConnected;
 
     protected static boolean isShooting() {
       return shooting;
@@ -66,6 +67,12 @@ public class LightSubsystem extends SubsystemBase {
     }
     public static void setInRange(boolean inRange) {
       State.inRange = inRange;
+    }
+    protected static boolean isConnected() {
+      return isConnected;
+    }
+    public static void setIsConnected(boolean isConnected) {
+      State.isConnected = isConnected;
     }
   }
 

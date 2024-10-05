@@ -1,6 +1,8 @@
 package frc.robot.commands.visionCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LightSubsystem;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -50,7 +52,9 @@ public class CheckLimelightCommand extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    LightSubsystem.State.setIsConnected(connected);
+  }
 
   @Override
   public boolean runsWhenDisabled() {
