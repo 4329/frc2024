@@ -46,7 +46,7 @@ public class AutoDisp extends SendableChooser<Command> {
     if (name == lastName || name == "") return;
 
     List<Trajectory> paths = cachedPaths.get(name);
-    drawPath(paths);
+    addToField(paths);
 
     SmartDashboard.putData(field);
 
@@ -54,7 +54,7 @@ public class AutoDisp extends SendableChooser<Command> {
     lastName = name;
   }
 
-  private void drawPath(List<Trajectory> paths) {
+  private void addToField(List<Trajectory> paths) {
     // FieldObjects cannot be cleared, so must have their data removed
     // in order to cease being displayed
     for (int i = 0; i < Math.max(paths.size(), numObjects); i++) {
