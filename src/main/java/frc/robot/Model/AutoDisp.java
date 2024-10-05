@@ -33,7 +33,7 @@ public class AutoDisp extends SendableChooser<Command> {
   @Override
   public void addOption(String key, Command value) {
     autoNames.put(value, key);
-
+    addToCache(key);
     super.addOption(key, value);
   }
 
@@ -44,10 +44,6 @@ public class AutoDisp extends SendableChooser<Command> {
   public void drawPath() {
     String name = getAutoName(getSelected());
     if (name == lastName || name == "") return;
-
-    if (!cachedPaths.containsKey(name)) {
-      addToCache(name);
-    }
 
     List<Trajectory> paths = cachedPaths.get(name);
     drawPath(paths);
