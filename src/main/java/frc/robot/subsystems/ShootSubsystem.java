@@ -66,7 +66,7 @@ public class ShootSubsystem extends SubsystemBase implements LoggedSubsystem {
           new Point2D.Double(10, 5300));
 
   private double setpoint = 0;
-  private double tolerance = 40; // arbitrary
+  private double tolerance = 80; // arbitrary
   private double speedPercent = 0.90;
 
   public static final double MAX_SHOT_DISTANCE = 5.7;

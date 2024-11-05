@@ -277,8 +277,9 @@ public class RobotContainer {
     // initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
-    // shootSubsystem.setDefaultCommand(
-    // new DefaultShoot(shootSubsystem, visionSubsystem));
+    // shootSubsystem.setDefaultCommand(new DefaultShoot(shootSubsystem, visionSubsystem));
+    // armAngleSubsystem.setDefaultCommand(
+    //     new ShooterAimCommandIndefinite(visionSubsystem, armAngleSubsystem, elevatorSubsystem));
   }
 
   // /** Creates and establishes camera streams for the shuffleboard ~Ben */
@@ -356,7 +357,7 @@ public class RobotContainer {
     driverController.y().onTrue(toggleShooterSourceCommand);
 
     driverController.povUp().onTrue(new ElevatorAngleToAmpCommand(shootSubsystem, indexSubsystem, armAngleSubsystem, elevatorSubsystem));
-    driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, armAngleSubsystem, indexSubsystem));
+    driverController.povRight().onTrue(new PassingShotCommand(shootSubsystem, indexSubsystem));
     driverController.povLeft().onTrue(new ShootAmpCommand(shootSubsystem, indexSubsystem));
     driverController.povDown().onTrue(new ArmToIntakeCommand(armAngleSubsystem, elevatorSubsystem));
 

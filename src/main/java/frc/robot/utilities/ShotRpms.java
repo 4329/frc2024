@@ -2,7 +2,7 @@ package frc.robot.utilities;
 
 public enum ShotRpms {
   AMP(500),
-  PASS(2750),
+  PASS(3950),
   REV(3300);
 
   private int value;

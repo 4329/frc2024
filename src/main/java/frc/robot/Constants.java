@@ -103,9 +103,9 @@ public final class Constants {
             new Translation2d(-kWheelBaseLength / 2, -kWheelBaseWidth / 2));
 
     // public static final double kMaxAcceleration = 3.0;
-    public static final double kMaxSpeedMetersPerSecond = 4.0;
-    public static final double kMaxAngularSpeed = Math.PI;
-    public static final double kMaxAngularAccel = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = 4;
+    public static final double kMaxAngularSpeed = (Math.PI) * 2;
+    public static final double kMaxAngularAccel = (Math.PI);
 
     public static final double kInnerDeadband = 0.10;
     public static final double kOuterDeadband = 0.98;
@@ -141,7 +141,7 @@ public final class Constants {
     // NOTE: You shoulds ALWAYS define a reasonable current limit when using
     // brushless motors due to the extremely high stall current available
     public static final int kDriveCurrentLimit = 30;
-    public static final int kTurnCurrentLimit = 25;
+    public static final int kTurnCurrentLimit = 25; // RR runs 60
 
     public static final double[] kTurnPID = {
       0.65, 0, 0
