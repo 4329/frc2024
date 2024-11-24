@@ -4,20 +4,11 @@
 
 package frc.robot;
 
-import java.io.File;
-import java.util.List;
-
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,12 +24,22 @@ import frc.robot.Constants.Mode;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
+import java.io.File;
+import java.util.List;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
+
+  private Orchestra orchestra;
 
   private Field2d field = new Field2d();
 
@@ -118,6 +119,14 @@ public class Robot extends LoggedRobot {
     drivetrain.resetOdometry(new Pose2d());
     m_robotContainer.robotInit();
 
+    orchestra = new Orchestra();
+    System.out.println(orchestra.addInstrument(new TalonFX(31, "rio")));
+    System.out.println(orchestra.addInstrument(new TalonFX(30, "rio")));
+    System.out.println(orchestra.addInstrument(new TalonFX(5, "rio")));
+    System.out.println(orchestra.addInstrument(new TalonFX(9, "rio")));
+    System.out.println(orchestra.addInstrument(new TalonFX(18, "rio")));
+    var ok = orchestra.loadMusic("/home/lvuser/He's a Pirate (Isolated Channels).chrp");
+    System.out.println(ok.isOK());
   }
 
   @Override
@@ -212,6 +221,10 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    orchestra.stop();
+    var a = orchestra.play();
+    System.out.println(a.isOK());
   }
 
   @Override

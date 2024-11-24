@@ -77,9 +77,13 @@ deploy {
     }
 }
 
-task cleanPathPlanner(type: Exec) {
+//task cleanPathPlanner(type: Exec) {
+//
+//    commandLine "git-bash", './cleanPathPlanner.sh'
+//}
 
-    commandLine "git-bash", './cleanPathPlanner.sh'
+task shoveAudio(type: Exec) {
+    commandLine "git-bash", './copyAudio.sh'
 }
 
 task cleanCode(type: Exec) {
@@ -157,7 +161,6 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
-deployArtifact.dependsOn(cleanPathPlanner)
 deployArtifact.dependsOn(spotlessApply)
 
 // Configure string concat to always inline compile

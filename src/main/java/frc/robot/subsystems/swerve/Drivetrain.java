@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.*;
 import frc.robot.utilities.FieldRelativeAccel;
 import frc.robot.utilities.FieldRelativeSpeed;
-import org.littletonrobotics.junction.Logger;
 
 /** Implements a swerve Drivetrain Subsystem for the Robot */
 public class Drivetrain extends SubsystemBase {
@@ -164,6 +163,7 @@ public class Drivetrain extends SubsystemBase {
     // Calls get pose function which sends the Pose information to the
     getPose();
   }
+
   /**
    * Sets the swerve ModuleStates.
    *
