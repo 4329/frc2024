@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Model.AutoDisp;
 import frc.robot.commands.ArmToIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ElevatorAngleToAmpCommand;
@@ -88,8 +88,6 @@ import frc.robot.utilities.ClimberSetpoints;
 import frc.robot.utilities.CommandLoginator;
 import frc.robot.utilities.HoorayConfig;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /* (including subsystems, commands, and button mappings) should be declared here
  */
@@ -98,7 +96,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
 
-  final SendableChooser<Command> m_chooser;
+  AutoDisp autoDisp;
 
   // The driver's controllers
   private final CommandXboxController driverController;
@@ -273,7 +271,8 @@ public class RobotContainer {
 
     new CommandLoginator();
 
-    m_chooser = new SendableChooser<>();
+    autoDisp = new AutoDisp();
+
     // initializeCamera();
     configureButtonBindings();
     configureAutoChooser(drivetrain);
@@ -400,7 +399,7 @@ public class RobotContainer {
   // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
   // SwerveAutoBuilder swerveAutoBuilder;
-  Map<Command, PathPlannerAuto> autoName = new HashMap<>();
+  // Map<Command, PathPlannerAuto> autoName = new HashMap<>();
 
   private void configureAutoChooser(Drivetrain drivetrain) {
     configureAutoBuilder();
@@ -420,9 +419,7 @@ public class RobotContainer {
                     intakeSubsystem, indexSubsystem, lineBreakSensorSubsystem, armAngleSubsystem),
                 pathCommand,
                 new InstantCommand(drivetrain::stop));
-        m_chooser.addOption(name, autoCommand);
-
-        autoName.put(autoCommand, pathCommand);
+        autoDisp.addOption(name, autoCommand);
       }
 
       SysIdRoutine sysIdRoutine =
@@ -430,7 +427,7 @@ public class RobotContainer {
               new SysIdRoutine.Config(),
               new SysIdRoutine.Mechanism(
                   shootSubsystem::setVoltage, shootSubsystem::getData, shootSubsystem));
-      m_chooser.addOption(
+      autoDisp.addOption(
           "yes",
           new SequentialCommandGroup(
               sysIdRoutine.dynamic(Direction.kForward),
@@ -441,14 +438,17 @@ public class RobotContainer {
               new WaitCommand(5),
               sysIdRoutine.quasistatic(Direction.kReverse)));
     }
-    // m_chooser.addOption("Example Path", new PathPlannerAuto("New Auto"));
 
-    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(4, 2).withPosition(0, 0);
+    Shuffleboard.getTab("RobotData").add("SelectAuto", autoDisp).withSize(4, 2).withPosition(0, 0);
   }
 
   public void robotInit() {
     // new AutoZero(elevatorSubsystem, armAngleSubsystem).schedule();
     // limDriveSetCommand.schedule();
+  }
+
+  public void disabledPeriodic() {
+    autoDisp.drawPath();
   }
 
   public void autonomousInit() {
@@ -471,7 +471,7 @@ public class RobotContainer {
    * @return Selected Auto
    */
   public Command getAuto() {
-    return m_chooser.getSelected();
+    return autoDisp.getSelected();
   }
 
   public void configureTestMode() {
@@ -480,10 +480,6 @@ public class RobotContainer {
   }
 
   public String getAutoName(Command command) {
-    return autoName.containsKey(command) ? autoName.get(command).getName() : "Nothing?????/?///?";
-  }
-
-  public Map<Command, PathPlannerAuto> yes() {
-    return autoName;
+    return autoDisp.getAutoName(command);
   }
 }
